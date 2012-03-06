@@ -1,0 +1,28 @@
+<!doctype html>
+<link rel="icon" href="icon128.png" />
+<script>
+function d(){
+  document.getElementById("timeParsed").innerHTML = new Date(document.getElementById('time').value).toString();
+}
+function val(name) {
+  var $ = document.getElementById(name).value;
+  return ($ ? $ : undefined);
+}
+function post(){
+  var post = {
+    'content': val('content'),
+    'share_id': val('share_id')
+  }
+  var link = val('link');
+  if (link) {
+    post.media = [];
+    post.media.push({'type': 'document', 'href': link});
+  }
+  chrome.extension.sendRequest({'post': post, 'time': new Date(val('time')).getTime()}, function(){});
+}
+</script>
+<textarea id='content'>Content</textarea>
+<input id='time' /><button onclick='d()'>Parse</button>
+<p id='timeParsed'></p>
+<input id='share_id' placeholder="shared id" />
+<input id='link' placeholder="link" />

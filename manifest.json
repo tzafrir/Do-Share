@@ -1,0 +1,19 @@
+{
+  "name": "Night Watch",
+  "description": "",
+  "version": "0",
+  "background_page": "background.html",
+  "app": {
+    "launch": {
+      "local_path": "main.html"
+    }
+  },
+  "icons": {
+    "128": "icon128.png"
+  },
+   "permissions": [ "notifications",
+                    "unlimitedStorage",
+                    "https://plus.google.com/*",
+                    "background"
+   ]
+}

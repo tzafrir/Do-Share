@@ -1,0 +1,44 @@
+<script type="text/javascript" src="/libs/jquery-1.6.3.min.js"></script>
+<script type="text/javascript" src="/jsapi/jsapi_helper.js"></script>
+<script type="text/javascript" src="/jsapi/jsapi_abstract_database.js"></script>
+<script type="text/javascript" src="/jsapi/jsapi_database.js"></script>
+<script type="text/javascript" src="/jsapi/jsapi_for_google_plus.js"></script>
+
+<script src="/Sched5.js"></script>
+<script>
+
+function c(){}
+
+function publish(post) {
+  plus.newPost(c, post);
+}
+
+var s = new Sched5("nightwatch", publish, c);
+s.init(c);
+
+localStorage['a'] = 0;
+
+window.setInterval(function() {localStorage['a']++;}, 1000);
+
+// Set up the API
+var plus = new GooglePlusAPI();
+
+function checkInit(ok) {
+  if (!ok) {
+    window.setTimeout(function() {
+      plus.init(checkInit);
+    }, 1000);
+  } else {
+    plus.refreshInfo();
+  }
+}
+checkInit(false);
+
+function onRequest(request, sender, callback) {
+  if (request.post) {
+    s.schedule(request.post, request.time, c);
+  }
+}
+chrome.extension.onRequest.addListener(onRequest);
+
+</script>
