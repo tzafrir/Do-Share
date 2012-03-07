@@ -17,7 +17,7 @@ function post(){
   if (link) {
     post.link = link;
   }
-  chrome.extension.sendRequest({'post': post, 'time': new Date(val('time')).getTime()}, function(){});
+  chrome.extension.sendRequest({'type': 'post', 'post': post, 'time': new Date(val('time')).getTime()}, function(){});
 }
 </script>
 <textarea id='content'>Content</textarea>

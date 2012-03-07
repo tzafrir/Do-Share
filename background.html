@@ -18,7 +18,7 @@ function checkInit(ok) {
 }
 checkInit(false);
 
-function c(){}
+function c(e){console.log(e)}
 
 function publish(post) {
   plus.newPost(c, post);
@@ -36,17 +36,20 @@ var plus = new GooglePlusAPI();
 
 
 function onRequest(request, sender, callback) {
-  var post = request.post;
-  if (post) {
-    if (post.link) {
-      plus.fetchLinkMedia(function(response) {
-        if (response.items) {
-          post.rawMedia = response.items;
-        }
+  var type = request.type;
+  if (type == "post") {
+    var post = request.post;
+    if (post) {
+      if (post.link) {
+        plus.fetchLinkMedia(function(response) {
+          if (response.items) {
+            post.rawMedia = response.items;
+          }
+          s.schedule(post, request.time, c);
+        }, post.link);
+      } else {
         s.schedule(post, request.time, c);
-      }, post.link);
-    } else {
-      s.schedule(post, request.time, c);
+      }
     }
   }
 }
