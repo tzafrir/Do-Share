@@ -7,6 +7,17 @@
 <script src="/Sched5.js"></script>
 <script>
 
+function checkInit(ok) {
+  if (!ok) {
+    window.setTimeout(function() {
+      plus.init(checkInit);
+    }, 1000);
+  } else {
+    plus.refreshInfo();
+  }
+}
+checkInit(false);
+
 function c(){}
 
 function publish(post) {
@@ -23,20 +34,20 @@ window.setInterval(function() {localStorage['a']++;}, 1000);
 // Set up the API
 var plus = new GooglePlusAPI();
 
-function checkInit(ok) {
-  if (!ok) {
-    window.setTimeout(function() {
-      plus.init(checkInit);
-    }, 1000);
-  } else {
-    plus.refreshInfo();
-  }
-}
-checkInit(false);
 
 function onRequest(request, sender, callback) {
-  if (request.post) {
-    s.schedule(request.post, request.time, c);
+  var post = request.post;
+  if (post) {
+    if (post.link) {
+      plus.fetchLinkMedia(function(response) {
+        if (response.items) {
+          post.rawMedia = response.items;
+        }
+        s.schedule(post, request.time, c);
+      }, post.link);
+    } else {
+      s.schedule(post, request.time, c);
+    }
   }
 }
 chrome.extension.onRequest.addListener(onRequest);

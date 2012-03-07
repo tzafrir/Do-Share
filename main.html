@@ -15,8 +15,7 @@ function post(){
   }
   var link = val('link');
   if (link) {
-    post.media = [];
-    post.media.push({'type': 'document', 'href': link});
+    post.link = link;
   }
   chrome.extension.sendRequest({'post': post, 'time': new Date(val('time')).getTime()}, function(){});
 }
