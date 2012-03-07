@@ -11,13 +11,14 @@ function val(name) {
 function post(){
   var post = {
     'content': val('content'),
-    'share_id': val('share_id')
+    'share_id': val('share_id'),
+    'timeStamp': new Date(val('time')).getTime()
   }
   var link = val('link');
   if (link) {
     post.link = link;
   }
-  chrome.extension.sendRequest({'type': 'post', 'post': post, 'time': new Date(val('time')).getTime()}, function(){});
+  chrome.extension.sendRequest({'type': 'post', 'post': post, 'time': post.timestamp}, function(){});
 }
 </script>
 <textarea id='content'>Content</textarea>
