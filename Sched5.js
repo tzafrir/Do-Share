@@ -54,6 +54,16 @@ Sched5.prototype.schedule = function(item, timeStamp, callback) {
   request.onerror = this._onError(callback);
 }
 
+/**
+ * Run callback on every scheduled item.
+ *
+ * @param {Function(Object)} callback The callback to be run.
+ */
+Sched5.prototype.processAllItems = function(callback) {
+  var keyRange = IDBKeyRange.lowerBound(0);
+  this._processAllItemsByRange(keyRange, callback);
+}
+
 Sched5.prototype._initDb = function(callback) {
   // Only Chrome is supported officially. Chrome's indexedDB implementation is a bit different than
   // other browsers', pull requests to handle multi browser are welcome.
@@ -100,12 +110,11 @@ function fail(callback, message) {
   console.error(message);
 }
 
-Sched5.prototype._processAllItemsBefore = function(timeStamp, callback) {
+Sched5.prototype._processAllItemsByRange = function(keyRange, callback) {
   var db = this._db;
   var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_ONLY);
   var store = trans.objectStore(this.STORE_NAME);
 
-  var keyRange = IDBKeyRange.upperBound(timeStamp);
   var cursorRequest = store.openCursor(keyRange);
 
   cursorRequest.onsuccess = function(e) {
@@ -116,6 +125,11 @@ Sched5.prototype._processAllItemsBefore = function(timeStamp, callback) {
     callback(result.value);
     result.continue();
   };
+}
+
+Sched5.prototype._processAllItemsBefore = function(timeStamp, callback) {
+  var keyRange = IDBKeyRange.upperBound(timeStamp);
+  this._processAllItemsByRange(keyRange, callback);
 }
 
 Sched5.prototype._removeItem = function(key, callback) {
