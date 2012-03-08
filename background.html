@@ -49,10 +49,10 @@ function onRequest(request, sender, callback) {
           if (response.items) {
             post.rawMedia = response.items;
           }
-          schedule(post, request.time, c);
+          schedule(post, request.time, callback);
         }, post.link);
       } else {
-        schedule(post, request.time, c);
+        schedule(post, request.time, callback);
       }
     }
   } else if (type == "fetchAll") {
@@ -68,6 +68,8 @@ function onRequest(request, sender, callback) {
         }
       });
     });
+  } else if (type == "delPost") {
+    s._removeItem(request.timeStamp, callback);
   }
 }
 chrome.extension.onRequest.addListener(onRequest);

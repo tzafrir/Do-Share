@@ -24,7 +24,7 @@ function post() {
   if (link) {
     post.link = link;
   }
-  chrome.extension.sendRequest({'type': 'post', 'post': post, 'time': post.timeStamp}, function(){});
+  chrome.extension.sendRequest({'type': 'post', 'post': post, 'time': post.timeStamp}, drafts);
 }
 
 function processMediaItems(mediaArray) {
@@ -44,30 +44,49 @@ function processMediaItems(mediaArray) {
   return result;
 }
 
+function delPost(timeStamp) {
+  chrome.extension.sendRequest({'type': 'delPost', 'timeStamp': timeStamp}, drafts);
+}
+
 function renderPost(post) {
-  var p = document.createElement('p');
-  p.innerHTML = new Date(post.timeStamp).toString() + '<br >' + post.content;
-  return p;
+  var div = document.createElement('div');
+  div.style.border = "1px solid black";
+  div.style.width = "600px";
+  var date = new Date(post.timeStamp).toString();
+  if (post.rawMedia) {
+    var medias = processMediaItems(post.rawMedia);
+    var image = medias.images[0];
+    var link = medias.link;
+  }
+  div.innerHTML = "<small>" + date + "</small><br>" +
+                  post.content + "<br>\n" +
+                  (link && link.title ? "<h3>" + link.title + "</h3>\n" : "") +
+                  (image ? "<img src='" + image.url + "' width='" + image.w +
+                    "' height='" + image.h + "' /"+">" : "") +
+                  (link && link.description ? "<p>" + link.description + "</p>" : "") +
+                  "<button onclick='delPost(" + post.timeStamp +")'>Delete</button>";
+  return div;
 }
 
 function drafts() {
   chrome.extension.sendRequest({'type': 'fetchAll'}, function(result) {
     var postsDiv = document.getElementById('posts');
-    result.posts.forEach(function(post) {
-      console.log(post);
+    postsDiv.innerHTML = '';
+    result.posts && result.posts.forEach(function(post) {
       postsDiv.appendChild(renderPost(post));
     });
   });
 }
   </script>
 </head>
-<body>
-  <div>
-    <p><textarea id='content' cols="30" rows="10">Content</textarea></p>
+<body onload="drafts()">
+  <div style="border: 1px solid black; width: 600px;">
+    <p><textarea id='content' cols="70" rows="10">Content</textarea></p>
     <p><input id='time' placeholder="Time" /><button onclick='parseTimeField()'>Parse</button></p>
     <p id='timeParsed'></p>
     <p><input id='share_id' placeholder="shared id" /></p>
     <p><input id='link' placeholder="link" /></p>
+    <button onclick="post()">Post</button>
 </div>
 <div id="posts">
 </div>
