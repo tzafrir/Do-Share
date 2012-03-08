@@ -4,14 +4,17 @@
   <!-- TODO: Need icon -->
   <link rel="icon" href="icon128.png" />
   <script>
-function d(){
-  document.getElementById("timeParsed").innerHTML = new Date(document.getElementById('time').value).toString();
-}
 function val(name) {
   var $ = document.getElementById(name).value;
   return ($ ? $ : undefined);
 }
-function post(){
+
+function parseTimeField() {
+  document.getElementById("timeParsed").innerHTML =
+      new Date(val('time')).toString();
+}
+
+function post() {
   var post = {
     'content': val('content'),
     'share_id': val('share_id'),
@@ -22,6 +25,23 @@ function post(){
     post.link = link;
   }
   chrome.extension.sendRequest({'type': 'post', 'post': post, 'time': post.timeStamp}, function(){});
+}
+
+function processMediaItems(mediaArray) {
+  var result = {'images': [], 'link': {}};
+  mediaArray.forEach(function(media) {
+    var type = media[24][3];
+    if (!type) {
+      return;
+    }
+    if (type == 'image/jpeg') {
+      var image = {'url': media[5][1], '2': media[24][12], 'h': media[24][13]};
+      result.images.push(image);
+    } else if (type == "text/html") {
+      result.link = {'url': media[24][1], 'title': media[3], 'description': media[21]};
+    }
+  });
+  return result;
 }
 
 function renderPost(post) {
@@ -44,7 +64,7 @@ function drafts() {
 <body>
   <div>
     <p><textarea id='content' cols="30" rows="10">Content</textarea></p>
-    <p><input id='time' placeholder="Time" /><button onclick='d()'>Parse</button></p>
+    <p><input id='time' placeholder="Time" /><button onclick='parseTimeField()'>Parse</button></p>
     <p id='timeParsed'></p>
     <p><input id='share_id' placeholder="shared id" /></p>
     <p><input id='link' placeholder="link" /></p>
