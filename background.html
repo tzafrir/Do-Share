@@ -18,12 +18,6 @@ function checkInit(ok) {
 }
 checkInit(false);
 
-var POST_COUNT_VAR = 'postCount';
-// Initialize post count.
-if (!localStorage[POST_COUNT_VAR]) {
-  localStorage[POST_COUNT_VAR] = 0;
-}
-
 function c(e){console.log(e)}
 
 function publish(post) {
@@ -42,7 +36,6 @@ window.setInterval(function() {localStorage['a']++;}, 1000);
 var plus = new GooglePlusAPI();
 
 function schedule(post, timeStamp, c) {
-  localStorage[POST_COUNT_VAR]++;
   s.schedule(post, timeStamp, c);
 }
 
@@ -64,15 +57,16 @@ function onRequest(request, sender, callback) {
     }
   } else if (type == "fetchAll") {
     var result = {'posts': []};
-    var count = localStorage[POST_COUNT_VAR];
-    if (localStorage[POST_COUNT_VAR] == 0) {
-      callback(result);
-    }
-    s.processAllItems(function(item) {
-      result.posts.push(item);
-      if (--count == 0) {
+    s.count(function(count) {
+      if (count == 0) {
         callback(result);
       }
+      s.processAllItems(function(item) {
+        result.posts.push(item);
+        if (--count == 0) {
+          callback(result);
+        }
+      });
     });
   }
 }
