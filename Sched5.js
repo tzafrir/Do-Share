@@ -55,13 +55,15 @@ Sched5.prototype.schedule = function(item, timeStamp, callback) {
 }
 
 /**
- * Run callback on every scheduled item.
+ * Run callback on every scheduled container.
  *
  * @param {Function(Object)} callback The callback to be run.
  */
 Sched5.prototype.processAllItems = function(callback) {
   var keyRange = IDBKeyRange.lowerBound(0);
-  this._processAllItemsByRange(keyRange, callback);
+  this._processAllContainersByRange(keyRange, function(itemContainer) {
+    callback(itemContainer.item);
+  });
 }
 
 Sched5.prototype._initDb = function(callback) {
@@ -69,7 +71,7 @@ Sched5.prototype._initDb = function(callback) {
   // other browsers', pull requests to handle multi browser are welcome.
   var indexedDB = window.indexedDB || window.webkitIndexedDB;
   if (!indexedDB) {
-    fail('Sched5 requires a browser with IndexedDB support');
+    _fail('Sched5 requires a browser with IndexedDB support');
   }
   if ('webkitIndexedDB' in window) {
     window.IDBTransaction = window.webkitIDBTransaction;
@@ -105,12 +107,12 @@ Sched5.prototype._initDb = function(callback) {
   request.onerror = this._onError(callback);
 }
 
-function fail(callback, message) {
+Sched5.prototype._fail(callback, message) {
   callback(false);
   console.error(message);
 }
 
-Sched5.prototype._processAllItemsByRange = function(keyRange, callback) {
+Sched5.prototype._processAllContainersByRange = function(keyRange, callback) {
   var db = this._db;
   var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_ONLY);
   var store = trans.objectStore(this.STORE_NAME);
@@ -127,9 +129,9 @@ Sched5.prototype._processAllItemsByRange = function(keyRange, callback) {
   };
 }
 
-Sched5.prototype._processAllItemsBefore = function(timeStamp, callback) {
+Sched5.prototype._processAllContainersBefore = function(timeStamp, callback) {
   var keyRange = IDBKeyRange.upperBound(timeStamp);
-  this._processAllItemsByRange(keyRange, callback);
+  this._processAllContainersByRange(keyRange, callback);
 }
 
 Sched5.prototype._removeItem = function(key, callback) {
@@ -150,7 +152,7 @@ Sched5.prototype._onSuccess = function(callback) {
 
 Sched5.prototype._onError =  function(callback) {
   return function(event) {
-    fail(callback, 'Failed with errorCode ' + event.target.errorCode);
+    _fail(callback, 'Failed with errorCode ' + event.target.errorCode);
   };
 }
 
@@ -183,7 +185,7 @@ Sched5.prototype._startPolling = function() {
 
 Sched5.prototype._runAndRemove = function(func) {
   var self = this;
-  this._processAllItemsBefore(new Date().getTime(), function(value) {
+  this._processAllContainersBefore(new Date().getTime(), function(value) {
     self._removeItem(value.timeStamp, function(){});
     func(value);
   });

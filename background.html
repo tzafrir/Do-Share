@@ -18,10 +18,17 @@ function checkInit(ok) {
 }
 checkInit(false);
 
+var POST_COUNT_VAR = 'postCount';
+// Initialize post count.
+if (!localStorage[POST_COUNT_VAR]) {
+  localStorage[POST_COUNT_VAR] = 0;
+}
+
 function c(e){console.log(e)}
 
 function publish(post) {
   plus.newPost(c, post);
+  localStorage[POST_COUNT_VAR]--;
 }
 
 var s = new Sched5("nightwatch", publish, c);
@@ -34,6 +41,10 @@ window.setInterval(function() {localStorage['a']++;}, 1000);
 // Set up the API
 var plus = new GooglePlusAPI();
 
+function schedule(post, timeStamp, c) {
+  localStorage[POST_COUNT_VAR]++;
+  s.schedule(post, timeStamp, c);
+}
 
 function onRequest(request, sender, callback) {
   var type = request.type;
@@ -45,12 +56,24 @@ function onRequest(request, sender, callback) {
           if (response.items) {
             post.rawMedia = response.items;
           }
-          s.schedule(post, request.time, c);
+          schedule(post, request.time, c);
         }, post.link);
       } else {
-        s.schedule(post, request.time, c);
+        schedule(post, request.time, c);
       }
     }
+  } else if (type == "fetchAll") {
+    var result = {'posts': []};
+    var count = localStorage[POST_COUNT_VAR];
+    if (localStorage[POST_COUNT_VAR] == 0) {
+      callback(result);
+    }
+    s.processAllItems(function(item) {
+      result.posts.push(item);
+      if (--count == 0) {
+        callback(result);
+      }
+    });
   }
 }
 chrome.extension.onRequest.addListener(onRequest);

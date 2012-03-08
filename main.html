@@ -18,7 +18,23 @@ function post(){
   if (link) {
     post.link = link;
   }
-  chrome.extension.sendRequest({'type': 'post', 'post': post, 'time': post.timestamp}, function(){});
+  chrome.extension.sendRequest({'type': 'post', 'post': post, 'time': post.timeStamp}, function(){});
+}
+
+function renderPost(post) {
+  var p = document.createElement('p');
+  p.innerHTML = new Date(post.timeStamp).toString() + '<br >' + post.content;
+  return p;
+}
+
+function drafts() {
+  chrome.extension.sendRequest({'type': 'fetchAll'}, function(result) {
+    var postsDiv = document.getElementById('posts');
+    result.posts.forEach(function(post) {
+      console.log(post);
+      postsDiv.appendChild(renderPost(post));
+    });
+  });
 }
 </script>
 <textarea id='content'>Content</textarea>
@@ -26,3 +42,5 @@ function post(){
 <p id='timeParsed'></p>
 <input id='share_id' placeholder="shared id" />
 <input id='link' placeholder="link" />
+<div id="posts">
+</div>
