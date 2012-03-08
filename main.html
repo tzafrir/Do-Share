@@ -1,6 +1,9 @@
 <!doctype html>
-<link rel="icon" href="icon128.png" />
-<script>
+<head>
+  <title>Night Watch</title>
+  <!-- TODO: Need icon -->
+  <link rel="icon" href="icon128.png" />
+  <script>
 function d(){
   document.getElementById("timeParsed").innerHTML = new Date(document.getElementById('time').value).toString();
 }
@@ -36,11 +39,15 @@ function drafts() {
     });
   });
 }
-</script>
-<textarea id='content'>Content</textarea>
-<input id='time' /><button onclick='d()'>Parse</button>
-<p id='timeParsed'></p>
-<input id='share_id' placeholder="shared id" />
-<input id='link' placeholder="link" />
+  </script>
+</head>
+<body>
+  <div>
+    <p><textarea id='content' cols="30" rows="10">Content</textarea></p>
+    <p><input id='time' placeholder="Time" /><button onclick='d()'>Parse</button></p>
+    <p id='timeParsed'></p>
+    <p><input id='share_id' placeholder="shared id" /></p>
+    <p><input id='link' placeholder="link" /></p>
+</div>
 <div id="posts">
 </div>

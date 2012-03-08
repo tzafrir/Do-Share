@@ -66,6 +66,23 @@ Sched5.prototype.processAllItems = function(callback) {
   });
 }
 
+/**
+ * Count how many items are in the database.
+ *
+ * @param {Function(Number)} callback.
+ */
+Sched5.prototype.count = function(callback) {
+  var store = this._getItemStore();
+  var countRequest = store.count(IDBKeyRange.lowerBound(0));
+  countRequest.onsuccess = function(e) {
+    var result = e.target.result;
+    if (!result) {
+      return;
+    }
+    callback(result);
+  };
+}
+
 Sched5.prototype._initDb = function(callback) {
   // Only Chrome is supported officially. Chrome's indexedDB implementation is a bit different than
   // other browsers', pull requests to handle multi browser are welcome.
@@ -107,16 +124,19 @@ Sched5.prototype._initDb = function(callback) {
   request.onerror = this._onError(callback);
 }
 
-Sched5.prototype._fail(callback, message) {
+Sched5.prototype._fail = function(callback, message) {
   callback(false);
   console.error(message);
 }
 
-Sched5.prototype._processAllContainersByRange = function(keyRange, callback) {
+Sched5.prototype._getItemStore = function() {
   var db = this._db;
   var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_ONLY);
-  var store = trans.objectStore(this.STORE_NAME);
+  return trans.objectStore(this.STORE_NAME);
+}
 
+Sched5.prototype._processAllContainersByRange = function(keyRange, callback) {
+  var store = this._getItemStore();
   var cursorRequest = store.openCursor(keyRange);
 
   cursorRequest.onsuccess = function(e) {
