@@ -48,6 +48,10 @@ IDBWrap.prototype.count = function(callback) {
   };
 }
 
+IDBWrap.prototype.processItem = function(key, callback) {
+  this._processAllItemsByRange(IDBKeyRange.only(key), callback);
+}
+
 IDBWrap.prototype._initDb = function(callback) {
   // Only Chrome is supported officially. Chrome's indexedDB implementation is a bit different than
   // other browsers', pull requests to handle multi browser are welcome.

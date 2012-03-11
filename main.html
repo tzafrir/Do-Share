@@ -22,7 +22,7 @@ function post(state) {
   var post = {
     'content': val('content'),
     'share_id': val('share_id'),
-    'timeStamp': new Date(val('time')).getTime(),
+    'timeStamp': new Date(val('time')).getTime() || undefined,
     'writeTimeStamp': new Date().getTime()
   }
   var link = val('link');
@@ -61,6 +61,16 @@ function getDateString(post) {
   }
 }
 
+function publishDraft(writeTimeStamp) {
+  chrome.extension.sendRequest({'type': 'publishDraft', 'writeTimeStamp': writeTimeStamp},
+      function(ok) {
+    if (ok) {
+      var draftDiv = document.getElementById("d" + writeTimeStamp);
+      draftDiv.parentElement.removeChild(draftDiv);
+    }
+  });
+}
+
 function renderPost(post) {
   var div = document.createElement('div');
   div.style.border = "1px solid black";
@@ -72,6 +82,7 @@ function renderPost(post) {
     var link = medias.link;
   }
   var isDraft = !post.timeStamp;
+  div.id = isDraft ? "d" + post.writeTimeStamp : "s" + post.timeStamp;
   div.innerHTML = "<small>" + date + "</small><br>" +
                   post.content + "<br>\n" +
                   (link && link.title ? "<h3>" + link.title + "</h3>\n" : "") +
@@ -80,7 +91,8 @@ function renderPost(post) {
                   (link && link.description ? "<p>" + link.description + "</p>" : "") +
                   "<button onclick='delPost(" +
                   (isDraft ? "\"draft\", " + post.writeTimeStamp : "\"scheduled\", " + post.timeStamp) +
-                  ")'>Delete</button>";
+                  ")'>Delete</button>" +
+                  (isDraft ? "<button onclick='publishDraft(" + post.writeTimeStamp + ")'>Publish</button>" : '');
   return div;
 }
 
@@ -104,6 +116,7 @@ function drafts() {
     <p><input id='time' placeholder="Time" /><button onclick='parseTimeField()'>Parse</button></p>
     <button onclick="post('draft')">Save Draft</button>
     <button onclick="post('scheduled')">Schedule</button>
+    <button onclick="console.log(this)">Post immediately</button>
 </div>
 <div id="posts">
 </div>

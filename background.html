@@ -31,8 +31,7 @@ s.init(c);
 var plus = new GooglePlusAPI();
 
 function publish(post, callback) {
-  callback || callback = c;
-  plus.newPost(callback, post);
+  plus.newPost(callback || c, post);
 }
 
 function schedule(post, c) {
@@ -85,6 +84,20 @@ function fetchAll(callback) {
   });
 }
 
+function publishDraft(writeTimeStamp, callback) {
+  db.processItem(writeTimeStamp, function(post) {
+    db._removeItem(writeTimeStamp, function(ok) {
+      if (ok) {
+        // TODO: go back to a sane state if posting failed.
+        publish(post, callback);
+      } else {
+        console.error('Unable to remove item by key: ' + writeTimeStamp);
+        callback(false);
+      }
+    });
+  });
+}
+
 function onRequest(request, sender, callback) {
   var type = request.type;
   if (type == "post") {
@@ -122,6 +135,14 @@ function onRequest(request, sender, callback) {
       console.error('Invalid request.state');
       callback(false);
       return;
+    }
+  } else if (type == "publishDraft") {
+    var writeTimeStamp = request.writeTimeStamp;
+    if (!writeTimeStamp) {
+      console.error("Invalid request.writeTimeStamp");
+      callback(false);
+    } else {
+      publishDraft(writeTimeStamp, callback);
     }
   }
 }
