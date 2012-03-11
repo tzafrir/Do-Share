@@ -4,6 +4,7 @@
 <script type="text/javascript" src="/jsapi/jsapi_database.js"></script>
 <script type="text/javascript" src="/jsapi/jsapi_for_google_plus.js"></script>
 
+<script src="IDBWrap/wrap.js"></script>
 <script src="/Sched5.js"></script>
 <script>
 
@@ -20,43 +21,44 @@ checkInit(false);
 
 function c(e){console.log(e)}
 
-function publish(post) {
-  plus.newPost(c, post);
-  localStorage[POST_COUNT_VAR]--;
-}
+var db = new IDBWrap("nightwatchDb", "writeTimeStamp");
+db.init(c);
 
 var s = new Sched5("nightwatch", publish, c);
 s.init(c);
 
-localStorage['a'] = 0;
-
-window.setInterval(function() {localStorage['a']++;}, 1000);
-
 // Set up the API
 var plus = new GooglePlusAPI();
 
-function schedule(post, timeStamp, c) {
-  s.schedule(post, timeStamp, c);
+function publish(post, callback) {
+  callback || callback = c;
+  plus.newPost(callback, post);
 }
 
-function onRequest(request, sender, callback) {
-  var type = request.type;
-  if (type == "post") {
-    var post = request.post;
-    if (post) {
-      if (post.link) {
-        plus.fetchLinkMedia(function(response) {
-          if (response.items) {
-            post.rawMedia = response.items;
-          }
-          schedule(post, request.time, callback);
-        }, post.link);
-      } else {
-        schedule(post, request.time, callback);
-      }
-    }
-  } else if (type == "fetchAll") {
-    var result = {'posts': []};
+function schedule(post, c) {
+  s.schedule(post, post.timeStamp, c);
+}
+
+function draft(post, c) {
+  db.put(post, c);
+}
+
+function addPost(post, state, callback) {
+  if (state == "scheduled") {
+    schedule(post, callback);
+  } else if (state == "draft") {
+    draft(post, callback);
+  } else if (state == "post") {
+    publish(post, callback);
+  } else {
+    console.error('Invalid state');
+    callback(false);
+  }
+}
+
+function fetchAll(callback) {
+  var result = {'posts': []};
+  var wrapCallback = function() {
     s.count(function(count) {
       if (count == 0) {
         callback(result);
@@ -68,8 +70,59 @@ function onRequest(request, sender, callback) {
         }
       });
     });
+  }
+  db.count(function(count) {
+    if (count == 0) {
+      wrapCallback();
+    }
+    db._processAllItemsByRange(undefined, function(post) {
+      post.timeStamp = undefined;
+      result.posts.push(post);
+      if (--count == 0) {
+        wrapCallback();
+      }
+    });
+  });
+}
+
+function onRequest(request, sender, callback) {
+  var type = request.type;
+  if (type == "post") {
+    var state = request.state;
+    if (!state) {
+      console.error('Missing request.state');
+      callback(false);
+      return;
+    }
+    var post = request.post;
+    if (!post) {
+      console.error('Missing request.post');
+      callback(false);
+    } else {
+      if (post.link) {
+        plus.fetchLinkMedia(function(response) {
+          if (response.items) {
+            post.rawMedia = response.items;
+          }
+          addPost(post, state, callback);
+        }, post.link);
+      } else {
+        addPost(post, state, callback);
+      }
+    }
+  } else if (type == "fetchAll") {
+    fetchAll(callback);
   } else if (type == "delPost") {
-    s._removeItem(request.timeStamp, callback);
+    var state = request.state;
+    if (state == 'scheduled') {
+      s._removeItem(request.timeStamp, callback);
+    } else if (state == 'draft') {
+      db._removeItem(request.timeStamp, callback);
+    } else {
+      console.error('Invalid request.state');
+      callback(false);
+      return;
+    }
   }
 }
 chrome.extension.onRequest.addListener(onRequest);
