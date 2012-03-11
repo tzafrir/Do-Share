@@ -18,14 +18,15 @@ function parseTimeField() {
       new Date(val('time')).toString();
 }
 
-function post(state) {
+function post(state, writeTimeStamp) {
+  var id = writeTimeStamp || '';
   var post = {
-    'content': val('content'),
-    'share_id': val('share_id'),
-    'timeStamp': new Date(val('time')).getTime() || undefined,
-    'writeTimeStamp': new Date().getTime()
+    'content': val('content' + id),
+    'share_id': val('share_id' + id),
+    'timeStamp': new Date(val('time' + id)).getTime() || undefined,
+    'writeTimeStamp': writeTimeStamp || new Date().getTime()
   }
-  var link = val('link');
+  var link = val('link' + id);
   if (link) {
     post.link = link;
   }
@@ -71,10 +72,41 @@ function publishDraft(writeTimeStamp) {
   });
 }
 
+function addDraftEditBox(parent, post) {
+  var writeTimeStamp = (post && post.writeTimeStamp) || '';
+  var content = (post && post.content) || '';
+  var share_id = (post && post.share_id) || '';
+  var link = '';
+  if (post && post.rawMedia) {
+    var medias = processMediaItems(post.rawMedia);
+    link = medias.link.url || '';
+  }
+  var div = document.createElement('div');
+  div.innerHTML =
+    ("<p><textarea id='content$' cols=70 rows=10>" + content + "</textarea></p>" +
+    "<p><input id='share_id$' placeholder='shared id' value='" + share_id + "'></input></p>" +
+    "<p><input id='link$' placeholder='link' value='" + link + "'></input></p>" +
+    "<p><input id='time$' placeholder='Time' /"+"><button onclick='parseTimeField($)'>Parse</button></p>" +
+    "<p id='timeParsed$'></p>" +
+    "<button onclick='post(\"draft\", %)'>Save Draft</button>" +
+    "<button onclick='post(\"scheduled\", %)'>Schedule</button>" +
+    "<button onclick='post(\"post\", %)'>Post immediately</button>")
+        .replace(/\$/g, writeTimeStamp || '')
+        .replace(/%/g, writeTimeStamp || 'undefined');
+  parent.appendChild(div);
+}
+
+function editDraft(writeTimeStamp) {
+  chrome.extension.sendRequest({'type': 'fetchPost', 'state': 'draft', 'writeTimeStamp': writeTimeStamp},
+      function(post) {
+    var e = document.getElementById('d' + writeTimeStamp);
+    e.innerHTML = '';
+    addDraftEditBox(e, post);
+  });
+}
+
 function renderPost(post) {
   var div = document.createElement('div');
-  div.style.border = "1px solid black";
-  div.style.width = "600px";
   var date = getDateString(post);
   if (post.rawMedia) {
     var medias = processMediaItems(post.rawMedia);
@@ -84,15 +116,18 @@ function renderPost(post) {
   var isDraft = !post.timeStamp;
   div.id = isDraft ? "d" + post.writeTimeStamp : "s" + post.timeStamp;
   div.innerHTML = "<small>" + date + "</small><br>" +
-                  post.content + "<br>\n" +
-                  (link && link.title ? "<h3>" + link.title + "</h3>\n" : "") +
+                  post.content + "<br>" +
+                  (link && link.title ? "<h3>" + link.title + "</h3>" : "") +
                   (image ? "<img src='" + image.url + "' width='" + image.w +
                     "' height='" + image.h + "' /"+">" : "") +
                   (link && link.description ? "<p>" + link.description + "</p>" : "") +
                   "<button onclick='delPost(" +
                   (isDraft ? "\"draft\", " + post.writeTimeStamp : "\"scheduled\", " + post.timeStamp) +
                   ")'>Delete</button>" +
-                  (isDraft ? "<button onclick='publishDraft(" + post.writeTimeStamp + ")'>Publish</button>" : '');
+                  (isDraft ?
+                      "<button onclick='publishDraft(" + post.writeTimeStamp + ")'>Publish</button>" +
+                      "<button onclick='editDraft(" + post.writeTimeStamp + ")'>Edit draft</button>"
+                      : '');
   return div;
 }
 
@@ -105,18 +140,14 @@ function drafts() {
     });
   });
 }
+
+function onLoad() {
+  addDraftEditBox(document.getElementById('editbox'));
+  drafts();
+}
+
   </script>
 </head>
-<body onload="drafts()">
-  <div style="border: 1px solid black; width: 600px;">
-    <p><textarea id='content' cols="70" rows="10">Content</textarea></p>
-    <p id='timeParsed'></p>
-    <p><input id='share_id' placeholder="shared id" /></p>
-    <p><input id='link' placeholder="link" /></p>
-    <p><input id='time' placeholder="Time" /><button onclick='parseTimeField()'>Parse</button></p>
-    <button onclick="post('draft')">Save Draft</button>
-    <button onclick="post('scheduled')">Schedule</button>
-    <button onclick="console.log(this)">Post immediately</button>
-</div>
-<div id="posts">
-</div>
+<body onload="onLoad()">
+  <div id="editbox"></div>
+  <div id="posts"></div>

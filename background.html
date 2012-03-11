@@ -35,11 +35,15 @@ function publish(post, callback) {
 }
 
 function schedule(post, c) {
-  s.schedule(post, post.timeStamp, c);
+  db._removeItem(post.writeTimeStamp, function() {
+    s.schedule(post, post.timeStamp, c);
+  });
 }
 
 function draft(post, c) {
-  db.put(post, c);
+  db._removeItem(post.writeTimeStamp, function() {
+    db.put(post, c);
+  });
 }
 
 function addPost(post, state, callback) {
@@ -143,6 +147,10 @@ function onRequest(request, sender, callback) {
       callback(false);
     } else {
       publishDraft(writeTimeStamp, callback);
+    }
+  } else if (type == "fetchPost") {
+    if (request.state == 'draft') {
+      db.processItem(request.writeTimeStamp, callback);
     }
   }
 }
