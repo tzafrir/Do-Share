@@ -83,6 +83,15 @@ Sched5.prototype.count = function(callback) {
   };
 }
 
+/**
+ * Process a single item in the scheduler.
+ */
+Sched5.prototype.processItem = function(timeStamp, callback) {
+  this._processAllItemsByRange(IDBKeyRange.only(timeStamp), function(container) {
+    callback(container.item);
+  });
+}
+
 Sched5.prototype._initDb = function(callback) {
   // Only Chrome is supported officially. Chrome's indexedDB implementation is a bit different than
   // other browsers', pull requests to handle multi browser are welcome.
