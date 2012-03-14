@@ -4,16 +4,20 @@
  * @constructor
  *
  * @param {string} dbName A name for this instance. Sched5 will use a database by this name.
+ * @param {string} keyPath A unique key path in the stored objects.
  * @param {function(Object)} scheduledCallback A function to run on an object at the scheduled time.
  * @param {function(Object)} missCallback A function to run on an object that was not run on
  *     its scheduled time.
  */
-Sched5 = function(dbName, scheduledCallback, missCallback) {
+Sched5 = function(dbName, keyPath, scheduledCallback, missCallback) {
   this._dbName = dbName;
+  this._keyPath = keyPath;
   this._scheduledCallback = scheduledCallback;
   this._missCallback = missCallback;
   this._expiredTasks = {};
   this.STORE_NAME = "scheduledItems";
+  this.TIMESTAMP_INDEX = "timeStampIndex";
+  this.TIMESTAMP_KEYPATH = "timeStamp";
   this.INTERVAL = 5000;
 };
 
@@ -45,10 +49,9 @@ Sched5.prototype.schedule = function(item, timeStamp, callback) {
   var db = this._db;
   var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_WRITE);
   var store = trans.objectStore(this.STORE_NAME);
-  var request = store.put({
-    "item": item,
-    "timeStamp" : timeStamp
-  });
+  var container = {"item": item};
+  container[this.TIMESTAMP_KEYPATH] = timeStamp;
+  var request = store.put(container);
 
   request.onsuccess = this._onSuccess(callback);
   request.onerror = this._onError(callback);
@@ -86,10 +89,18 @@ Sched5.prototype.count = function(callback) {
 /**
  * Process a single item in the scheduler.
  */
-Sched5.prototype.processItem = function(timeStamp, callback) {
-  this._processAllItemsByRange(IDBKeyRange.only(timeStamp), function(container) {
-    callback(container.item);
-  });
+Sched5.prototype.processItem = function(key, callback) {
+  var store = this._getItemStore();
+  var cursorRequest = store.openCursor(IDBKeyRange.only(key));
+
+  cursorRequest.onsuccess = function(e) {
+    var result = e.target.result;
+    if(!result) {
+      return;
+    }
+    callback(result.value.item);
+    result.continue();
+  };
 }
 
 Sched5.prototype._initDb = function(callback) {
@@ -115,14 +126,17 @@ Sched5.prototype._initDb = function(callback) {
       console.error(event.target.errorCode);
     };
 
-    var v = "1.1";
+    var v = "1.3";
     if (v != db.version) {
       var setVrequest = db.setVersion(v);
 
       setVrequest.onfailure = self._onError(callback);
       setVrequest.onsuccess = function(e) {
         if (!db.objectStoreNames.contains(self.STORE_NAME)) {
-          db.createObjectStore(self.STORE_NAME, {keyPath: "timeStamp"});
+          var store = db.createObjectStore(self.STORE_NAME, {keyPath: "item." + self._keyPath});
+          var index = store.createIndex(self.TIMESTAMP_INDEX, self.TIMESTAMP_KEYPATH,
+          // Things you can only learn by reading the webkit source:
+              {'unique': false});
         }
         callback(true);
       };
@@ -145,8 +159,8 @@ Sched5.prototype._getItemStore = function() {
 }
 
 Sched5.prototype._processAllContainersByRange = function(keyRange, callback) {
-  var store = this._getItemStore();
-  var cursorRequest = store.openCursor(keyRange);
+  var index = this._getItemStore().index(this.TIMESTAMP_INDEX);
+  var cursorRequest = index.openCursor(keyRange);
 
   cursorRequest.onsuccess = function(e) {
     var result = e.target.result;
@@ -199,7 +213,7 @@ Sched5.prototype._startPolling = function() {
     self._runAndRemove(function(value) {
       // Workaround for concurrency issue with IndexedDB transactions. Handles the situation where
       // there are expired tasks with a pending delete request that wasn't run yet.
-      if (!self._expiredTasks[value.key]) {
+      if (!self._expiredTasks[value.timeStamp]) {
         self._scheduledCallback(value.item);
       } else {
         console.log('expired ' + value.timeStamp);
@@ -215,7 +229,16 @@ Sched5.prototype._startPolling = function() {
 Sched5.prototype._runAndRemove = function(func) {
   var self = this;
   this._processAllContainersBefore(new Date().getTime(), function(value) {
-    self._removeItem(value.timeStamp, function(){});
+    self._removeItem(getKey(value, self._keyPath), function(){});
     func(value);
   });
+}
+
+function getKey(value, path) {
+  var paths = path.split('.').reverse();
+  var $ = value.item;
+  while (paths.length > 0) {
+    $ = $[paths.pop()];
+  }
+  return $;
 }

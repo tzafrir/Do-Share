@@ -24,7 +24,7 @@ function c(e){console.log(e)}
 var db = new IDBWrap("nightwatchDb", "writeTimeStamp");
 db.init(c);
 
-var s = new Sched5("nightwatch", publish, c);
+var s = new Sched5("nightwatch", "writeTimeStamp", publish, c);
 s.init(c);
 
 // Set up the API
@@ -34,19 +34,21 @@ function publish(post, callback) {
   plus.newPost(callback || c, post);
 }
 
-function schedule(post, c) {
+function schedule(post, callback) {
   db._removeItem(post.writeTimeStamp, function() {
-    s.schedule(post, post.timeStamp, c);
+    s.schedule(post, post.timeStamp, callback);
   });
 }
 
-function draft(post, c) {
-  db._removeItem(post.writeTimeStamp, function() {
-    db.put(post, c);
-  });
+function draft(post, callback) {
+  delPost(post.writeTimeStamp, function(){});
+  db.put(post, callback);
 }
 
 function addPost(post, state, callback) {
+  // This is where the magic happens:
+  post.state = state;
+
   if (state == "scheduled") {
     schedule(post, callback);
   } else if (state == "draft") {
@@ -102,6 +104,28 @@ function publishDraft(writeTimeStamp, callback) {
   });
 }
 
+function fetchPost(writeTimeStamp, callback) {
+  var race = false;
+  var racer = function(item) {
+    if (race) {
+      // How did this happen? The assumption is that a post is is in only one of db, s.
+      console.error("WTF");
+      return;
+    }
+    race = true;
+    callback(item);
+  };
+  db.processItem(writeTimeStamp, racer);
+  s.processItem(writeTimeStamp, racer);
+}
+
+function delPost(writeTimeStamp, callback) {
+  s._removeItem(writeTimeStamp, c);
+  db._removeItem(writeTimeStamp, c);
+  // If you're not me and here because of a bug, I owe you a beer.
+  callback(true);
+}
+
 function onRequest(request, sender, callback) {
   var type = request.type;
   if (type == "post") {
@@ -130,16 +154,7 @@ function onRequest(request, sender, callback) {
   } else if (type == "fetchAll") {
     fetchAll(callback);
   } else if (type == "delPost") {
-    var state = request.state;
-    if (state == 'scheduled') {
-      s._removeItem(request.timeStamp, callback);
-    } else if (state == 'draft') {
-      db._removeItem(request.timeStamp, callback);
-    } else {
-      console.error('Invalid request.state');
-      callback(false);
-      return;
-    }
+    delPost(request.writeTimeStamp, callback);
   } else if (type == "publishDraft") {
     var writeTimeStamp = request.writeTimeStamp;
     if (!writeTimeStamp) {
@@ -149,9 +164,7 @@ function onRequest(request, sender, callback) {
       publishDraft(writeTimeStamp, callback);
     }
   } else if (type == "fetchPost") {
-    if (request.state == 'draft') {
-      db.processItem(request.writeTimeStamp, callback);
-    }
+    fetchPost(request.writeTimeStamp, callback);
   }
 }
 chrome.extension.onRequest.addListener(onRequest);

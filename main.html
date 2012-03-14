@@ -21,7 +21,8 @@ function parseTimeField() {
 function post(state, writeTimeStamp) {
   var id = writeTimeStamp || '';
   var post = {
-    'content': val('content' + id),
+    'state': state,
+    'content': val('content' + id) || '',
     'share_id': val('share_id' + id),
     'timeStamp': new Date(val('time' + id)).getTime() || undefined,
     'writeTimeStamp': writeTimeStamp || new Date().getTime()
@@ -30,32 +31,36 @@ function post(state, writeTimeStamp) {
   if (link) {
     post.link = link;
   }
-  chrome.extension.sendRequest({'type': 'post', 'post': post, 'state': state || 'draft'}, drafts);
+  chrome.extension.sendRequest({'type': 'post', 'post': post, 'state': state}, drafts);
 }
 
 function processMediaItems(mediaArray) {
-  var result = {'images': [], 'link': {}};
+  var result = {'images': [], 'link': {}, 'video': {}};
   mediaArray.forEach(function(media) {
     var type = media[24][3];
     if (!type) {
       return;
     }
     if (type == 'image/jpeg') {
-      var image = {'url': media[5][1], '2': media[24][12], 'h': media[24][13]};
+      var image = {'url': media[5][1], 'w': media[24][12], 'h': media[24][13]};
       result.images.push(image);
-    } else if (type == "text/html") {
+    }
+    if (type == "text/html" || type == "application/x-shockwave-flash") {
       result.link = {'url': media[24][1], 'title': media[3], 'description': media[21]};
+    }
+    if (type == "application/x-shockwave-flash") {
+      result.video = {'embed': media[5][1].replace(/autoplay=1/, ''), 'w': media[5][3], 'h': media[5][2]};
     }
   });
   return result;
 }
 
-function delPost(state, timeStamp) {
-  chrome.extension.sendRequest({'type': 'delPost', 'state': state, 'timeStamp': timeStamp}, drafts);
+function delPost(writeTimeStamp) {
+  chrome.extension.sendRequest({'type': 'delPost', 'writeTimeStamp': writeTimeStamp}, drafts);
 }
 
 function getDateString(post) {
-  if (post.timeStamp) {
+  if (post.state == 'scheduled') {
     return "Will be posted on " + new Date(post.timeStamp).toString();
   } else {
     return "Written on " + new Date(post.writeTimeStamp).toString();
@@ -97,7 +102,7 @@ function addDraftEditBox(parent, post) {
 }
 
 function editDraft(writeTimeStamp) {
-  chrome.extension.sendRequest({'type': 'fetchPost', 'state': 'draft', 'writeTimeStamp': writeTimeStamp},
+  chrome.extension.sendRequest({type: 'fetchPost', writeTimeStamp: writeTimeStamp},
       function(post) {
     var e = document.getElementById('d' + writeTimeStamp);
     e.innerHTML = '';
@@ -105,29 +110,50 @@ function editDraft(writeTimeStamp) {
   });
 }
 
+function unpublish(writeTimeStamp) {
+  if (confirm("Unpublishing will remove the post from the queue. It will still be available as a draft.")) {
+    chrome.extension.sendRequest({'type': 'fetchPost', 'writeTimeStamp': writeTimeStamp},
+        function(post) {
+      chrome.extension.sendRequest({'type': 'post', 'post': post, 'state': 'draft'}, drafts);
+    });
+  }
+}
+
 function renderPost(post) {
   var div = document.createElement('div');
   var date = getDateString(post);
   if (post.rawMedia) {
     var medias = processMediaItems(post.rawMedia);
+    // TODO: Scroll through images.
     var image = medias.images[0];
+    var video = medias.video;
     var link = medias.link;
   }
-  var isDraft = !post.timeStamp;
-  div.id = isDraft ? "d" + post.writeTimeStamp : "s" + post.timeStamp;
+  var isDraft = (post.state == 'draft');
+  div.id = (isDraft ? "d" : "s" ) + post.writeTimeStamp;
+
+  // Don't look at this :(
   div.innerHTML = "<small>" + date + "</small><br>" +
+
                   post.content + "<br>" +
+
                   (link && link.title ? "<h3>" + link.title + "</h3>" : "") +
+
                   (image ? "<img src='" + image.url + "' width='" + image.w +
                     "' height='" + image.h + "' /"+">" : "") +
+
+                  (video ? "<iframe src='" + video.embed + "' width='" + video.w +
+                      "' height='" + video.h + "' ></iframe>" : '') +
+
                   (link && link.description ? "<p>" + link.description + "</p>" : "") +
-                  "<button onclick='delPost(" +
-                  (isDraft ? "\"draft\", " + post.writeTimeStamp : "\"scheduled\", " + post.timeStamp) +
-                  ")'>Delete</button>" +
+
+                  "<button onclick='delPost(" + post.writeTimeStamp + ")'>Delete</button>" +
+
                   (isDraft ?
                       "<button onclick='publishDraft(" + post.writeTimeStamp + ")'>Publish</button>" +
                       "<button onclick='editDraft(" + post.writeTimeStamp + ")'>Edit draft</button>"
-                      : '');
+                      :
+                      "<button onclick='unpublish(" + post.writeTimeStamp + ")'>Unpublish</button>");
   return div;
 }
 
