@@ -35,7 +35,7 @@ function post(state, writeTimeStamp) {
 }
 
 function processMediaItems(mediaArray) {
-  var result = {'images': [], 'link': {}, 'video': {}};
+  var result = {'images': []};
   mediaArray.forEach(function(media) {
     var type = media[24][3];
     if (!type) {
@@ -137,7 +137,9 @@ function renderPost(post) {
 
                   post.content + "<br>" +
 
-                  (link && link.title ? "<h3>" + link.title + "</h3>" : "") +
+                  (link && link.title ?
+                      "<a href='" + link.url +"'>" +
+                      "<h3>" + link.title + "</h3></a>" : "") +
 
                   (image ? "<img src='" + image.url + "' width='" + image.w +
                     "' height='" + image.h + "' /"+">" : "") +

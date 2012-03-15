@@ -31,7 +31,9 @@ s.init(c);
 var plus = new GooglePlusAPI();
 
 function publish(post, callback) {
-  plus.newPost(callback || c, post);
+  // plus.newPost(callback || c, post);
+  console.log("Posting");
+  console.log(post);
 }
 
 function schedule(post, callback) {
