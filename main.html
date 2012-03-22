@@ -24,12 +24,10 @@ function post(state, writeTimeStamp) {
     'state': state,
     'content': val('content' + id) || '',
     'share_id': val('share_id' + id),
+    'image_id': val('image_id' + id),
     'timeStamp': new Date(val('time' + id)).getTime() || undefined,
+    'link': val('link' + id) || undefined,
     'writeTimeStamp': writeTimeStamp || new Date().getTime()
-  }
-  var link = val('link' + id);
-  if (link) {
-    post.link = link;
   }
   chrome.extension.sendRequest({'type': 'post', 'post': post, 'state': state}, drafts);
 }
@@ -78,11 +76,15 @@ function publishDraft(writeTimeStamp) {
 }
 
 function addDraftEditBox(parent, post) {
-  var writeTimeStamp = (post && post.writeTimeStamp) || '';
-  var content = (post && post.content) || '';
-  var share_id = (post && post.share_id) || '';
+  if (!post) {
+    post = {};
+  }
+  var writeTimeStamp = post.writeTimeStamp || '';
+  var content = post.content || '';
+  var share_id = post.share_id || '';
   var link = '';
-  if (post && post.rawMedia) {
+  var image_id = post.image_id || '';
+  if (post.rawMedia) {
     var medias = processMediaItems(post.rawMedia);
     link = medias.link.url || '';
   }
@@ -92,6 +94,7 @@ function addDraftEditBox(parent, post) {
     "<p><input id='share_id$' placeholder='shared id' value='" + share_id + "'></input></p>" +
     "<p><input id='link$' placeholder='link' value='" + link + "'></input></p>" +
     "<p><input id='time$' placeholder='Time' /"+"><button onclick='parseTimeField($)'>Parse</button></p>" +
+    "<p><input id='image_id$' placeholder='image_id' value='" + image_id + "'></input></p>" +
     "<p id='timeParsed$'></p>" +
     "<button onclick='post(\"draft\", %)'>Save Draft</button>" +
     "<button onclick='post(\"scheduled\", %)'>Schedule</button>" +
