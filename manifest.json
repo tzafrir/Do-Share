@@ -11,9 +11,16 @@
   "icons": {
     "128": "icon128.png"
   },
+   "content_scripts": [ {
+      "all_frames": true,
+      "js": [ "plusone.js" ],
+      "matches": [ "https://plusone.google.com/*" ],
+      "run_at": "document_start"
+   } ],
    "permissions": [ "notifications",
                     "unlimitedStorage",
                     "https://plus.google.com/*",
+                    "https://plusone.google.com/*",
                     "background"
    ]
 }
