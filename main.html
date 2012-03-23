@@ -18,6 +18,10 @@ function parseTimeField() {
       new Date(val('time')).toString();
 }
 
+function sendPost(post) {
+  chrome.extension.sendRequest({'type': 'post', 'post': post}, drafts);
+}
+
 function post(state, writeTimeStamp) {
   var id = writeTimeStamp || '';
   var post = {
@@ -29,7 +33,7 @@ function post(state, writeTimeStamp) {
     'link': val('link' + id) || undefined,
     'writeTimeStamp': writeTimeStamp || new Date().getTime()
   }
-  chrome.extension.sendRequest({'type': 'post', 'post': post}, drafts);
+  sendPost(post);
 }
 
 function processMediaItems(mediaArray) {
@@ -118,7 +122,7 @@ function unpublish(writeTimeStamp) {
     chrome.extension.sendRequest({'type': 'fetchPost', 'writeTimeStamp': writeTimeStamp},
         function(post) {
       post.state = 'draft';
-      chrome.extension.sendRequest({'type': 'post', 'post': post}, drafts);
+      sendPost(post);
     });
   }
 }
