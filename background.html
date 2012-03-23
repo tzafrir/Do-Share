@@ -139,12 +139,15 @@ function post(post, callback) {
       callback(false);
       return;
     }
+    var postThis = function() {
+      addPost(post, callback);
+    }
     if (post.link) {
       plus.fetchLinkMedia(function(response) {
         if (response.items) {
           post.rawMedia = response.items;
         }
-        addPost(post, callback);
+        postThis();
       }, post.link);
     } else if (post.image_id) {
       plus.fetchPhotoMetadata(function(response) {
@@ -153,11 +156,11 @@ function post(post, callback) {
           callback(false);
         } else {
           post.rawMedia = [plus._createPicasaImageItem(response.data)];
-          addPost(post, callback);
+          postThis();
         }
       }, post.image_id);
     } else {
-      addPost(post, callback);
+      postThis();
     }
 }
 
