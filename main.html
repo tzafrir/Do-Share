@@ -39,14 +39,15 @@ function post(state, writeTimeStamp) {
 function processMediaItems(mediaArray) {
   var result = {'images': []};
   mediaArray.forEach(function(media) {
-    var type = media[24][3];
-    if (!type) {
-      return;
-    }
-    if (type == 'image/jpeg') {
-      var image = {'url': media[5][1], 'w': media[24][12], 'h': media[24][13]};
+    if (media[24][4] == "image") {
+      var url = media[41][0][1];
+      if (!url.match(/http/)) {
+        url = 'https:' + url;
+      }
+      var image = {'url': url};
       result.images.push(image);
     }
+    var type = media[24][3];
     if (type == "text/html" || type == "application/x-shockwave-flash") {
       result.link = {'url': media[24][1], 'title': media[3], 'description': media[21]};
     }
@@ -149,8 +150,7 @@ function renderPost(post) {
                       "<a href='" + link.url +"'>" +
                       "<h3>" + link.title + "</h3></a>" : "") +
 
-                  (image ? "<img src='" + image.url + "' width='" + image.w +
-                    "' height='" + image.h + "' /"+">" : "") +
+                  (image ? "<img src='" + image.url + "'><br>" : "") +
 
                   (video ? "<iframe src='" + video.embed + "' width='" + video.w +
                       "' height='" + video.h + "' ></iframe>" : '') +
