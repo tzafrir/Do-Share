@@ -127,10 +127,7 @@ function delPost(writeTimeStamp, callback) {
   callback(true);
 }
 
-function onRequest(request, sender, callback) {
-  var type = request.type;
-  if (type == "post") {
-    var post = request.post;
+function post(post, callback) {
     if (!post) {
       console.error('Missing request.post');
       callback(false);
@@ -152,6 +149,12 @@ function onRequest(request, sender, callback) {
     } else {
       addPost(post, callback);
     }
+}
+
+function onRequest(request, sender, callback) {
+  var type = request.type;
+  if (type == "post") {
+    post(request.post, callback);
   } else if (type == "fetchAll") {
     fetchAll(callback);
   } else if (type == "delPost") {
