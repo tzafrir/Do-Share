@@ -47,9 +47,8 @@ function draft(post, callback) {
   db.put(post, callback);
 }
 
-function addPost(post, state, callback) {
-  // This is where the magic happens:
-  post.state = state;
+function addPost(post, callback) {
+  var state = post.state;
 
   if (state == "scheduled") {
     schedule(post, callback);
@@ -147,10 +146,10 @@ function onRequest(request, sender, callback) {
           if (response.items) {
             post.rawMedia = response.items;
           }
-          addPost(post, state, callback);
+          addPost(post, callback);
         }, post.link);
       } else {
-        addPost(post, state, callback);
+        addPost(post, callback);
       }
     }
   } else if (type == "fetchAll") {
