@@ -136,9 +136,9 @@ function onRequest(request, sender, callback) {
       callback(false);
       return
     }
-    var state = request.state;
+    var state = post.state;
     if (!state) {
-      console.error('Missing request.state');
+      console.error('Missing post.state');
       callback(false);
       return;
     }

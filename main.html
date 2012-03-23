@@ -29,7 +29,7 @@ function post(state, writeTimeStamp) {
     'link': val('link' + id) || undefined,
     'writeTimeStamp': writeTimeStamp || new Date().getTime()
   }
-  chrome.extension.sendRequest({'type': 'post', 'post': post, 'state': state}, drafts);
+  chrome.extension.sendRequest({'type': 'post', 'post': post}, drafts);
 }
 
 function processMediaItems(mediaArray) {
@@ -117,7 +117,8 @@ function unpublish(writeTimeStamp) {
   if (confirm("Unpublishing will remove the post from the queue. It will still be available as a draft.")) {
     chrome.extension.sendRequest({'type': 'fetchPost', 'writeTimeStamp': writeTimeStamp},
         function(post) {
-      chrome.extension.sendRequest({'type': 'post', 'post': post, 'state': 'draft'}, drafts);
+      post.state = 'draft';
+      chrome.extension.sendRequest({'type': 'post', 'post': post}, drafts);
     });
   }
 }
