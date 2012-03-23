@@ -130,27 +130,27 @@ function delPost(writeTimeStamp, callback) {
 function onRequest(request, sender, callback) {
   var type = request.type;
   if (type == "post") {
+    var post = request.post;
+    if (!post) {
+      console.error('Missing request.post');
+      callback(false);
+      return
+    }
     var state = request.state;
     if (!state) {
       console.error('Missing request.state');
       callback(false);
       return;
     }
-    var post = request.post;
-    if (!post) {
-      console.error('Missing request.post');
-      callback(false);
-    } else {
-      if (post.link) {
-        plus.fetchLinkMedia(function(response) {
-          if (response.items) {
-            post.rawMedia = response.items;
-          }
-          addPost(post, callback);
-        }, post.link);
-      } else {
+    if (post.link) {
+      plus.fetchLinkMedia(function(response) {
+        if (response.items) {
+          post.rawMedia = response.items;
+        }
         addPost(post, callback);
-      }
+      }, post.link);
+    } else {
+      addPost(post, callback);
     }
   } else if (type == "fetchAll") {
     fetchAll(callback);
