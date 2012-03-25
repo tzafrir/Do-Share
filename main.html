@@ -87,7 +87,7 @@ function addDraftEditBox(parent, post) {
   var writeTimeStamp = post.writeTimeStamp || '';
   var content = post.content || '';
   var share_id = post.share_id || '';
-  var link = '';
+  var link = post.link || '';
   var image_id = post.image_id || '';
   if (post.rawMedia) {
     var medias = processMediaItems(post.rawMedia);
@@ -178,7 +178,11 @@ function drafts() {
 }
 
 function onLoad() {
-  addDraftEditBox(document.getElementById('editbox'));
+  var savedPost = {content: localStorage['_tmp_content'], link: localStorage['_tmp_link']};
+  localStorage.clear('_tmp_content');
+  localStorage.clear('_tmp_link');
+  console.log(savedPost);
+  addDraftEditBox(document.getElementById('editbox'), savedPost);
   drafts();
 }
 

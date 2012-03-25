@@ -33,7 +33,7 @@ function addButton(parent) {
 }
 
 function getPlusOneUrl() {
-  var fragments = document.location.toString().split('&');
+  var fragments = document.location.toString().split('?')[1].split('&');
   for (var i = 0; i < fragments.length; ++i) {
     if (fragments[i].match(/^url=/)) {
       return decodeURIComponent(fragments[i].split('=')[1]);
@@ -44,7 +44,7 @@ function getPlusOneUrl() {
 function sendToDoShare() {
   var url = getPlusOneUrl();
   var text = _sharebox.innerText;
-  chrome.extension.sendRequest({type: 'plusone', text: text, url: url}, function(){});
+  chrome.extension.sendRequest({type: 'newPost', content: text, link: url}, function(){});
 }
 
 document.addEventListener("DOMContentLoaded", scanSharebox);

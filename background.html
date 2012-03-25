@@ -164,6 +164,16 @@ function post(post, callback) {
     }
 }
 
+function newPost(request) {
+  var content = request.content || '';
+  var link = request.link || '';
+
+  // Set temporary values and open the frontend. Expect frontend to clear these from LS.
+  localStorage['_tmp_content'] = content;
+  localStorage['_tmp_link'] = link;
+  chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
+}
+
 function onRequest(request, sender, callback) {
   var type = request.type;
   if (type == "post") {
@@ -182,6 +192,8 @@ function onRequest(request, sender, callback) {
     }
   } else if (type == "fetchPost") {
     fetchPost(request.writeTimeStamp, callback);
+  } else if (type == "newPost") {
+    newPost(request);
   }
 }
 chrome.extension.onRequest.addListener(onRequest);

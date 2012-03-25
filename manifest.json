@@ -14,7 +14,8 @@
    "content_scripts": [ {
       "all_frames": true,
       "js": [ "plusone.js" ],
-      "matches": [ "https://plusone.google.com/*" ],
+      "matches": [ "https://plusone.google.com/*",
+                   "https://plus.google.com/_/+1/*" ],
       "run_at": "document_start"
    } ],
    "permissions": [ "notifications",
