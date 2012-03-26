@@ -88,6 +88,72 @@ function updateAction(numDrafts, numScheduled) {
   window.setTimeout(refreshAction, ACTION_UPDATE_INTERVAL);
 })();
 
+/**
+ * Thanks Hangout Canopy team!
+ */
+function compileOzData(responseText) {
+  var re = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
+  var matches = [];
+  var match;
+  var AF_initDataQueue = [];
+
+  /*
+   * Take outall the script tags
+   */
+  while (match = re.exec(responseText)) {
+    if(match[1] && match[1].indexOf('AF_initDataQueue') > -1) {
+      eval(match[1]);
+    }
+  }
+
+  /*
+   * Thankyou Google :)
+   */
+  var initDataMap = {};
+  for (var i = 0; i < AF_initDataQueue.length; i++) {
+    var dataPair = AF_initDataQueue[i];
+    if (dataPair.key != '-1') {
+      initDataMap[dataPair.key] = dataPair.data;
+    }
+  }
+  return initDataMap;
+}
+
+function fetchPostData(url, callback) {
+  if (!url > '') {
+    console.error('Url is not a string');
+    return;
+  }
+  $.ajax(url).done(function(responseText) {
+    dataMap = compileOzData(responseText);
+    var postData = dataMap[20];
+    if (!postData) {
+      console.error('Not a singleton post url');
+      return;
+    }
+
+    var reshare_person_data = postData[43];
+
+    var data = {};
+    data.content = postData[4];
+    data.update_id = postData[8];
+    data.url = 'https://plus.google.com/' + postData[21];
+    data.timeStampMicros = postData[5];
+
+    if (!reshare_person_data) {
+      data.author_name = postData[3];
+      data.author_id = postData[16];
+      data.author_photo_url = 'https:' + postData[18];
+    } else {
+      data.author_name = reshare_person_data[0];
+      data.author_id = reshare_person_data[1];
+      data.author_photo_url = reshare_person_data[4];
+    }
+
+    callback(data);
+  });
+}
+
 function publish(post, callback) {
   plus.newPost(callback || c, post);
   console.log("Posting");
