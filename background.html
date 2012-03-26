@@ -36,28 +36,6 @@ function checkInit(ok) {
 }
 checkInit(false);
 
-(function refreshAction() {
-  if (dbInit) {
-    var waiting = 2;
-    var numDrafts = 0;
-    var numScheduled = 0;
-    var waiter = function() {
-      if (--waiting == 0) {
-        updateAction(numDrafts, numScheduled);
-      }
-    }
-    db.count(function(count) {
-      numDrafts = count;
-      waiter();
-    });
-    s.count(function(count) {
-      numScheduled = count;
-      waiter();
-    });
-  }
-  window.setTimeout(refreshAction, ACTION_UPDATE_INTERVAL);
-})();
-
 function c(e){console.log(e)}
 
 var db = new IDBWrap("nightwatchDb", "writeTimeStamp");
@@ -87,6 +65,28 @@ function updateAction(numDrafts, numScheduled) {
   }
   actionController.drawBadgeIcon(total, badgeText, hasScheduled);
 }
+
+(function refreshAction() {
+  if (dbInit) {
+    var waiting = 2;
+    var numDrafts = 0;
+    var numScheduled = 0;
+    var waiter = function() {
+      if (--waiting == 0) {
+        updateAction(numDrafts, numScheduled);
+      }
+    }
+    db.count(function(count) {
+      numDrafts = count;
+      waiter();
+    });
+    s.count(function(count) {
+      numScheduled = count;
+      waiter();
+    });
+  }
+  window.setTimeout(refreshAction, ACTION_UPDATE_INTERVAL);
+})();
 
 function publish(post, callback) {
   plus.newPost(callback || c, post);
