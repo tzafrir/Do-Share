@@ -150,6 +150,8 @@ function fetchPostData(url, callback) {
       data.author_photo_url = reshare_person_data[4];
     }
 
+    data.raw_medias = postData[11];
+
     callback(data);
   });
 }
