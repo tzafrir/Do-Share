@@ -33,7 +33,12 @@ function post(state, writeTimeStamp) {
     'image_id': val('image_id' + id),
     'timeStamp': new Date(val('time' + id)).getTime() || undefined,
     'link': val('link' + id) || undefined,
-    'writeTimeStamp': writeTimeStamp || new Date().getTime()
+  }
+  if (writeTimeStamp) {
+    post.writeTimeStamp = writeTimeStamp;
+    post.reshare = mem[writeTimeStamp];
+  } else {
+    post.writeTimeStamp = new Date().getTime();
   }
   sendPost(post);
 }
