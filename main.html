@@ -131,12 +131,10 @@ function unpublish(writeTimeStamp) {
 function renderPost(post) {
   var div = document.createElement('div');
   var date = getDateString(post);
+  var mediaHTML = '';
   if (post.rawMedia) {
     var medias = processMediaItems(post.rawMedia);
-    // TODO: Scroll through images.
-    var image = medias.images[0];
-    var video = medias.video;
-    var link = medias.link;
+    mediaHTML = renderMediaItems(medias);
   }
   var isDraft = (post.state == 'draft');
   div.id = (isDraft ? "d" : "s" ) + post.writeTimeStamp;
@@ -146,16 +144,7 @@ function renderPost(post) {
 
                   post.content + "<br>" +
 
-                  (link && link.title ?
-                      "<a href='" + link.url +"'>" +
-                      "<h3>" + link.title + "</h3></a>" : "") +
-
-                  (image ? "<img src='" + image.url + "'><br>" : "") +
-
-                  (video ? "<iframe src='" + video.embed + "' width='" + video.w +
-                      "' height='" + video.h + "' ></iframe>" : '') +
-
-                  (link && link.description ? "<p>" + link.description + "</p>" : "") +
+                  mediaHTML +
 
                   "<button onclick='delPost(" + post.writeTimeStamp + ")'>Delete</button>" +
 
@@ -165,6 +154,24 @@ function renderPost(post) {
                       :
                       "<button onclick='unpublish(" + post.writeTimeStamp + ")'>Unpublish</button>");
   return div;
+}
+
+function renderMediaItems(medias) {
+  // TODO: Scroll through images.
+  var image = medias.images[0];
+  var video = medias.video;
+  var link = medias.link;
+
+  return (link && link.title ?
+      "<a href='" + link.url +"'>" +
+      "<h3>" + link.title + "</h3></a>" : "") +
+
+  (image ? "<img src='" + image.url + "'><br>" : "") +
+
+  (video ? "<iframe src='" + video.embed + "' width='" + video.w +
+      "' height='" + video.h + "' ></iframe>" : '') +
+
+  (link && link.description ? "<p>" + link.description + "</p>" : "");
 }
 
 function drafts() {
