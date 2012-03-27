@@ -4,6 +4,8 @@
   <!-- TODO: Need icon -->
   <link rel="icon" href="icon128.png" />
   <script>
+var mem = {};
+
 function val(name) {
   var $ = document.getElementById(name).value;
   return ($ ? $ : undefined);
@@ -201,7 +203,11 @@ function drafts() {
 
 function onLoad() {
   var savedPostJson = localStorage['_tmp_post'];
-  var savedPost = savedPostJson ? JSON.parse(savedPostJson) : undefined;
+  var savedPost;
+  if (savedPostJson) {
+    savedPost = JSON.parse(savedPostJson);
+    mem[savedPost.writeTimeStamp] = savedPost;
+  }
   localStorage.clear('_tmp_post');
   addDraftEditBox(document.getElementById('editbox'), savedPost);
   drafts();
