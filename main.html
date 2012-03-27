@@ -118,6 +118,10 @@ function addDraftEditBox(parent, post) {
     "<button onclick='post(\"post\", %)'>Post immediately</button>")
         .replace(/\$/g, writeTimeStamp || '')
         .replace(/%/g, writeTimeStamp || 'undefined');
+
+  if (parent.children.length > 0) {
+    parent.removeChild(parent.children[0]);
+  }
   parent.appendChild(div);
 }
 
@@ -208,6 +212,7 @@ function refresh() {
       postsDiv.appendChild(renderPost(post));
     });
   });
+  addDraftEditBox(document.getElementById('editbox'));
 }
 
 function onLoad() {
@@ -218,8 +223,8 @@ function onLoad() {
     mem[savedPost.writeTimeStamp] = savedPost;
   }
   localStorage.clear('_tmp_post');
-  addDraftEditBox(document.getElementById('editbox'), savedPost);
   refresh();
+  addDraftEditBox(document.getElementById('editbox'), savedPost);
 }
 
   </script>
