@@ -46,16 +46,24 @@ s.init(dbInitCallback);
 
 var actionController = new BrowserActionController();
 
+var previousLogicBits;
+
 function updateAction(numDrafts, numScheduled) {
   var total = numDrafts + numScheduled;
-  var badgeText = "(Do Share) ";
+  var hasScheduled = (numScheduled > 0);
+  var logicBits = !!total + hasScheduled << 1;
+  if (logicBits == previousLogicBits) {
+    return;
+  }
+  previousLogicBits = logicBits;
+
+  var badgeText = "Do Share - ";
   function s(count) {
     if (count == 1) {
       return '';
     }
     return 's';
   }
-  var hasScheduled = (numScheduled > 0);
   if (total == 0) {
     badgeText += "Ready";
   } else if (hasScheduled) {
