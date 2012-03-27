@@ -99,32 +99,34 @@ function updateAction(numDrafts, numScheduled) {
 /**
  * Thanks Hangout Canopy team!
  */
-function compileOzData(responseText) {
-  var re = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
-  var matches = [];
-  var match;
-  var AF_initDataQueue = [];
+function fetchOzData(url, callback) {
+  $.ajax(url).done(function(responseText) {
+    var re = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
+    var matches = [];
+    var match;
+    var AF_initDataQueue = [];
 
-  /*
-   * Take outall the script tags
-   */
-  while (match = re.exec(responseText)) {
-    if(match[1] && match[1].indexOf('AF_initDataQueue') > -1) {
-      eval(match[1]);
+    /*
+     * Take outall the script tags
+     */
+    while (match = re.exec(responseText)) {
+      if(match[1] && match[1].indexOf('AF_initDataQueue') > -1) {
+        eval(match[1]);
+      }
     }
-  }
 
-  /*
-   * Thankyou Google :)
-   */
-  var initDataMap = {};
-  for (var i = 0; i < AF_initDataQueue.length; i++) {
-    var dataPair = AF_initDataQueue[i];
-    if (dataPair.key != '-1') {
-      initDataMap[dataPair.key] = dataPair.data;
+    /*
+     * Thankyou Google :)
+     */
+    var initDataMap = {};
+    for (var i = 0; i < AF_initDataQueue.length; i++) {
+      var dataPair = AF_initDataQueue[i];
+      if (dataPair.key != '-1') {
+        initDataMap[dataPair.key] = dataPair.data;
+      }
     }
-  }
-  return initDataMap;
+    callback(initDataMap);
+  });
 }
 
 function fetchPostData(url, callback) {
@@ -132,8 +134,8 @@ function fetchPostData(url, callback) {
     console.error('Url is not a string');
     return;
   }
-  $.ajax(url).done(function(responseText) {
-    dataMap = compileOzData(responseText);
+
+  fetchOzData(url, function(dataMap) {
     var postData = dataMap[20];
     if (!postData) {
       console.error('Not a singleton post url');
