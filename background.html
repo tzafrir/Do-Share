@@ -313,7 +313,8 @@ function resharePost(url) {
   fetchPostData(url, function(data) {
     var post = {reshare: data,
                 rawMedia: data.rawMedia,
-                share_id: data.update_id}
+                share_id: data.update_id,
+                writeTimeStamp: new Date().getTime()};
     newPost(post);
   });
 }
