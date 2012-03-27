@@ -278,9 +278,17 @@ function post(post, callback) {
       callback(false);
       return;
     }
-    var postThis = function() {
+
+    function postThis() {
       addPost(post, callback);
     }
+
+    // If reshare, don't waste time on fetching media links.
+    if (post.reshare) {
+      postThis();
+      return;
+    }
+
     if (post.link) {
       plus.fetchLinkMedia(function(response) {
         if (response.items) {
