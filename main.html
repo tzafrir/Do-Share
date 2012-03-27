@@ -178,10 +178,8 @@ function drafts() {
 }
 
 function onLoad() {
-  var savedPost = {content: localStorage['_tmp_content'], link: localStorage['_tmp_link']};
-  localStorage.clear('_tmp_content');
-  localStorage.clear('_tmp_link');
-  console.log(savedPost);
+  var savedPost = JSON.parse(localStorage['_tmp_post']);
+  localStorage.clear('_tmp_post');
   addDraftEditBox(document.getElementById('editbox'), savedPost);
   drafts();
 }

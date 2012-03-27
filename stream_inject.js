@@ -62,7 +62,8 @@ function renderItem(itemDOM) {
 };
 
 function sendToDoShare(itemDOM) {
-  console.log('click');
+  var url = itemDOM.parentElement.querySelector('a[target="_blank"]').href;
+  chrome.extension.sendRequest({'type': 'resharePost', 'url': url}, function(){});
 }
 
 document.addEventListener("DOMContentLoaded", function() {

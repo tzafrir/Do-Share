@@ -141,7 +141,7 @@ function fetchPostData(url, callback) {
     data.content = postData[4];
     data.update_id = postData[8];
     data.url = 'https://plus.google.com/' + postData[21];
-    data.timeStampMicros = postData[5];
+    data.timeStamp = postData[5];
 
     if (!reshare_person_data) {
       data.author_name = name;
@@ -155,7 +155,7 @@ function fetchPostData(url, callback) {
       data.via_id = id;
     }
 
-    data.raw_medias = postData[11];
+    data.rawMedia = postData[11];
 
     callback(data);
   });
@@ -295,11 +295,17 @@ function post(post, callback) {
     }
 }
 
-function newPost(content, link) {
+function newPost(post) {
   // Set temporary values and open the frontend. Expect frontend to clear these from LS.
-  localStorage['_tmp_content'] = content;
-  localStorage['_tmp_link'] = link;
+  localStorage['_tmp_post'] = JSON.stringify(post);
   chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
+}
+
+function resharePost(url) {
+  fetchPostData(url, function(data) {
+    var post = {reshare: data, rawMedia: data.rawMedia, share_id: data.update_id};
+    newPost(post);
+  });
 }
 
 function onRequest(request, sender, callback) {
@@ -321,7 +327,9 @@ function onRequest(request, sender, callback) {
   } else if (type == "fetchPost") {
     fetchPost(request.writeTimeStamp, callback);
   } else if (type == "newPost") {
-    newPost(request.content || '', request.link || '');
+    newPost({content: request.content || '', link: request.link || ''});
+  } else if (type == "resharePost") {
+    resharePost(request.url);
   }
 }
 
