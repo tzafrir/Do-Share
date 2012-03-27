@@ -91,7 +91,7 @@ function addDraftEditBox(parent, post) {
   var image_id = post.image_id || '';
   if (post.rawMedia) {
     var medias = processMediaItems(post.rawMedia);
-    link = medias.link.url || '';
+    link = medias.link && medias.link.url || '';
   }
   var div = document.createElement('div');
   div.innerHTML =
@@ -178,7 +178,8 @@ function drafts() {
 }
 
 function onLoad() {
-  var savedPost = JSON.parse(localStorage['_tmp_post']);
+  var savedPostJson = localStorage['_tmp_post'];
+  var savedPost = savedPostJson ? JSON.parse(savedPostJson) : undefined;
   localStorage.clear('_tmp_post');
   addDraftEditBox(document.getElementById('editbox'), savedPost);
   drafts();
