@@ -101,12 +101,27 @@ function addDraftEditBox(parent, post) {
     "<p><input id='time$' placeholder='Time' /"+"><button onclick='parseTimeField($)'>Parse</button></p>" +
     "<p><input id='image_id$' placeholder='image_id' value='" + image_id + "'></input></p>" +
     "<p id='timeParsed$'></p>" +
+    renderReshare(post) +
+    "<br>" +
     "<button onclick='post(\"draft\", %)'>Save Draft</button>" +
     "<button onclick='post(\"scheduled\", %)'>Schedule</button>" +
     "<button onclick='post(\"post\", %)'>Post immediately</button>")
         .replace(/\$/g, writeTimeStamp || '')
         .replace(/%/g, writeTimeStamp || 'undefined');
   parent.appendChild(div);
+}
+
+function renderReshare(post) {
+  if (!(post && post.reshare)) {
+    return '';
+  }
+  var rs = post.reshare;
+  return '<h2>' + rs.author_name + ' originally shared this ' +
+         '<a href="' + rs.url + '">post</a> ' +
+         (rs.via_name ? ' (via ' + rs.via_name + ')' : '') +
+         ':</h2>' +
+         '<p>' + rs.content + '</p>' +
+         (rs.rawMedia ? renderMediaItems(processMediaItems(rs.rawMedia)) : '');
 }
 
 function editDraft(writeTimeStamp) {
