@@ -21,7 +21,7 @@ function parseTimeField() {
 }
 
 function sendPost(post) {
-  chrome.extension.sendRequest({'type': 'post', 'post': post}, drafts);
+  chrome.extension.sendRequest({'type': 'post', 'post': post}, refresh);
 }
 
 function post(state, writeTimeStamp) {
@@ -69,7 +69,7 @@ function processMediaItems(mediaArray) {
 }
 
 function delPost(writeTimeStamp) {
-  chrome.extension.sendRequest({'type': 'delPost', 'writeTimeStamp': writeTimeStamp}, drafts);
+  chrome.extension.sendRequest({'type': 'delPost', 'writeTimeStamp': writeTimeStamp}, refresh);
 }
 
 function getDateString(post) {
@@ -200,7 +200,7 @@ function renderMediaItems(medias) {
   (link && link.description ? "<p>" + link.description + "</p>" : "");
 }
 
-function drafts() {
+function refresh() {
   chrome.extension.sendRequest({'type': 'fetchAll'}, function(result) {
     var postsDiv = document.getElementById('posts');
     postsDiv.innerHTML = '';
@@ -219,7 +219,7 @@ function onLoad() {
   }
   localStorage.clear('_tmp_post');
   addDraftEditBox(document.getElementById('editbox'), savedPost);
-  drafts();
+  refresh();
 }
 
   </script>
