@@ -135,19 +135,24 @@ function fetchPostData(url, callback) {
     var reshare_person_data = postData[43];
 
     var data = {};
+    var name = postData[3];
+    var id = postData[16];
+
     data.content = postData[4];
     data.update_id = postData[8];
     data.url = 'https://plus.google.com/' + postData[21];
     data.timeStampMicros = postData[5];
 
     if (!reshare_person_data) {
-      data.author_name = postData[3];
-      data.author_id = postData[16];
+      data.author_name = name;
+      data.author_id = id;
       data.author_photo_url = 'https:' + postData[18];
     } else {
       data.author_name = reshare_person_data[0];
       data.author_id = reshare_person_data[1];
       data.author_photo_url = reshare_person_data[4];
+      data.via_name = name;
+      data.via_id = id;
     }
 
     data.raw_medias = postData[11];
