@@ -36,7 +36,7 @@ function post(state, writeTimeStamp) {
   }
   if (writeTimeStamp) {
     post.writeTimeStamp = writeTimeStamp;
-    post.reshare = mem[writeTimeStamp];
+    post.reshare = mem[writeTimeStamp].reshare;
   } else {
     post.writeTimeStamp = new Date().getTime();
   }
