@@ -36,7 +36,10 @@ function post(state, writeTimeStamp) {
   }
   if (writeTimeStamp) {
     post.writeTimeStamp = writeTimeStamp;
-    post.reshare = mem[writeTimeStamp].reshare;
+    var savedPost = mem[writeTimeStamp];
+    if (savedPost) {
+      post.reshare = savedPost.reshare;
+    }
   } else {
     post.writeTimeStamp = new Date().getTime();
   }
