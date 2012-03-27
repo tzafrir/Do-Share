@@ -50,6 +50,7 @@ function renderItem(itemDOM) {
   if (itemDOM && !itemDOM.attributes[ATTRIBUTE]) {
     var shareNode = document.createElement('span');
     shareNode.innerHTML = "Send to Do Share";
+    shareNode.className = itemDOM.children[1].className.split(' ')[0];
     shareNode.onclick = function() {
       sendToDoShare(itemDOM);
     };
