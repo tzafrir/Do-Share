@@ -153,10 +153,11 @@ function unpublish(writeTimeStamp) {
 function renderPost(post) {
   var div = document.createElement('div');
   var date = getDateString(post);
-  var mediaHTML = '';
-  if (post.rawMedia) {
-    var medias = processMediaItems(post.rawMedia);
-    mediaHTML = renderMediaItems(medias);
+  var attachmentHTML = '';
+  if (post.reshare) {
+    attachmentHTML = renderReshare(post);
+  } else if (post.rawMedia) {
+    attachmentHTML = renderMediaItems(processMediaItems(post.rawMedia));
   }
   var isDraft = (post.state == 'draft');
   div.id = (isDraft ? "d" : "s" ) + post.writeTimeStamp;
@@ -166,7 +167,7 @@ function renderPost(post) {
 
                   post.content + "<br>" +
 
-                  mediaHTML +
+                  attachmentHTML +
 
                   "<button onclick='delPost(" + post.writeTimeStamp + ")'>Delete</button>" +
 
