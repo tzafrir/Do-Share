@@ -12,6 +12,12 @@
       "matches": [ "https://plusone.google.com/*",
                    "https://plus.google.com/_/+1/*" ],
       "run_at": "document_start"
+   },
+   {
+    "all_frames": true,
+    "js": [ "stream_inject.js" ],
+    "matches": [ "http://plus.google.com/*", "https://plus.google.com/*" ],
+    "run_at": "document_start"
    } ],
    "browser_action": {
      "default_title": "Do Share"
