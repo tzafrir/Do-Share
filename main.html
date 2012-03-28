@@ -15,9 +15,9 @@ function setVal(name, val) {
   document.getElementById(name).value = val;
 }
 
-function parseTimeField() {
-  document.getElementById("timeParsed").innerHTML =
-      new Date(val('time')).toString();
+function parseTimeField(id) {
+  document.getElementById("timeParsed" + id).innerHTML =
+      new Date(val('time' + id)).toString();
 }
 
 function sendPost(post) {
@@ -105,19 +105,17 @@ function addDraftEditBox(parent, post) {
   }
   var div = document.createElement('div');
   div.innerHTML =
-    ("<p><textarea id='content$' cols=70 rows=10>" + content + "</textarea></p>" +
+    (("<p><textarea id='content$' cols=70 rows=10>" + content + "</textarea></p>" +
     "<p><input id='share_id$' placeholder='shared id' value='" + share_id + "'></input></p>" +
     "<p><input id='link$' placeholder='link' value='" + link + "'></input></p>" +
     "<p><input id='time$' placeholder='Time' /"+"><button onclick='parseTimeField($)'>Parse</button></p>" +
     "<p><input id='image_id$' placeholder='image_id' value='" + image_id + "'></input></p>" +
-    "<p id='timeParsed$'></p>" +
+    "<p id='timeParsed$'></p>").replace(/\$/g, writeTimeStamp || '') +
     renderReshare(post) +
-    "<br>" +
+    ("<br>" +
     "<button onclick='post(\"draft\", %)'>Save Draft</button>" +
     "<button onclick='post(\"scheduled\", %)'>Schedule</button>" +
-    "<button onclick='post(\"post\", %)'>Post immediately</button>")
-        .replace(/\$/g, writeTimeStamp || '')
-        .replace(/%/g, writeTimeStamp || 'undefined');
+    "<button onclick='post(\"post\", %)'>Post immediately</button>").replace(/%/g, writeTimeStamp || 'undefined'));
 
   if (parent.children.length > 0) {
     parent.removeChild(parent.children[0]);
@@ -134,7 +132,7 @@ function renderReshare(post) {
          '<a href="' + rs.url + '">post</a> ' +
          (rs.via_name ? ' (via ' + rs.via_name + ')' : '') +
          ':</h2>' +
-         '<p>' + rs.content + '</p>' +
+         '<p>' + rs.content.replace(/(class=\'ot-hashtag\' href=\')/g, "$1https://plus.google.com/") + '</p>' +
          (rs.rawMedia ? renderMediaItems(processMediaItems(rs.rawMedia)) : '');
 }
 
