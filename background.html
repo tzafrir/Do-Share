@@ -142,7 +142,8 @@ function fetchPostData(url, callback) {
       return;
     }
 
-    var reshare_person_data = postData[43];
+    // TODO: postData[43] has 2nd level via information which could be useful one day.
+    var reshare_person_data = postData[44];
 
     var data = {};
     var name = postData[3];
