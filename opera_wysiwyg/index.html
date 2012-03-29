@@ -1,0 +1,45 @@
+<head>
+<title>HTML editor demo</title>
+<script src="utils.js"></script>
+<script src="editor.js"></script>
+<script src="editlib.js"></script>
+<style>
+#editframe { width:700px; height:400px; }
+.toolbar {  width:702px;  
+	background-color: #e8e8e8; 
+	border: outset 1px; 
+	font-family: sans-serif; 
+	cursor: arrow;
+}
+.toolbar span { padding: 4px; }
+.enabled { color: black; }
+.disabled { color: gray; }
+.active { background-color: cyan; }
+</style>
+</head>
+<body>
+<div class="toolbar">
+<span id="boldButton">Bold</span>
+<span id="italicButton">Italic</span>
+<span id="linkButton">Link</span>
+<span id="helloButton">Hello</span>
+<span id="leftButton">Left</span>
+<span id="rightButton">Right</span>
+<span id="centerButton">Center</span>
+<select id="fontSelector">
+<option value="" style="">Default</option>
+<option value="Courier" style="font-family:courier;">Courier</option>
+<option value="Verdana" style="font-family:verdana;">Verdana</option>
+<option value="Georgia" style="font-family:georgia;">Georgia</option>
+</select>
+<select id="sizeSelector">
+<option value="" style="font-size:small;">Default</option>
+<option value="1" style="font-size:small;">Small</option>
+<option value="3" style="font-size:medium;">Medium</option>
+<option value="5" style="font-size:large;">Large</option>
+<option value="7" style="font-size:x-large;">Mega large</option>
+</select>
+</div>
+<iframe id="editFrame" src="page.html"></iframe>
+
+</body>
