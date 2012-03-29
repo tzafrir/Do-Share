@@ -31,11 +31,23 @@ GPEditor.prototype.normalizeHtml = function(element) {
 GPEditor.prototype.getText = function() {
   var clone = this._doc.body.cloneNode(true);
   this.normalizeHtml(clone);
-  return this.normalizedHtmlToPlusFormat(clone).replace(/\s*$/, '');
+  return this.normalizedHtmlToPlusFormat(clone)
+      .replace(/^\s*/, '')
+      .replace(/\s*$/, '');
 }
 
 GPEditor.prototype.setText = function(text) {
-  this._doc.body.innerHTML = '<p>' + (text || '<br>') + '</p>';
+  var html = this.plusFormatToHtml(text);
+  this._doc.body.innerHTML = '<p>' + (html || '<br>') + '</p>';
+}
+
+GPEditor.prototype.plusFormatToHtml = function(text) {
+  return text
+    .replace(/\n/g, '\n ')
+    .replace(/(([\s()\.,!?]|^)((<[^>]*>)|[-_])*)\*([^\n]*?[^\s])\*(((<[^>]*>)|[-_])*([()\.,!?]|$|\s))/g, '$1<b>$5</b>$6')
+    .replace(/(([\s()\.,!?]|^)((<[^>]*>)|[-\*])*)_([^\n]*?[^\s])_(((<[^>]*>)|[-\*])*([()\.,!?]|$|\s))/g, '$1<i>$5</i>$6')
+    .replace(/(([\s()\.,!?]|^)((<[^>]*>)|[\*_])*)-([^\n]*?[^\s])-(((<[^>]*>)|[\*_])*([()\.,!?]|$|\s))/g, '$1<s>$5</s>$6')
+    .replace(/\n /g, '<br>');
 }
 
 /**

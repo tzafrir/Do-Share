@@ -197,7 +197,7 @@ function renderPost(post) {
   // Don't look at this :(
   div.innerHTML = "<small>" + date + "</small><br>" +
 
-                  post.content + "<br>" +
+                  GPEditor.prototype.plusFormatToHtml(post.content) + "<br>" +
 
                   attachmentHTML +
 
