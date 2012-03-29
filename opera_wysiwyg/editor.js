@@ -1,4 +1,4 @@
-function createEditor() {
+function Editor(iframe) {
 
 /*
 	Commands
@@ -78,6 +78,7 @@ function TogglCommandController(command, elem) {
 		updateToolbar();
 	});
 }
+
 function ValueSelectorController(command, elem) {
 	this.updateUI = function() {
 		var value = command.queryValue();
@@ -92,8 +93,7 @@ function ValueSelectorController(command, elem) {
 	});	
 }
 	
-
-	var editFrame = document.getElementById("editFrame");
+	var editFrame = iframe;
 	editFrame.contentWindow.document.designMode="on";
 	var editWindow = editFrame.contentWindow;
 	var editDoc = editWindow.document;
@@ -114,13 +114,12 @@ function ValueSelectorController(command, elem) {
 		updateListeners.push(controller);
 	});
 	
-	function updateToolbar() { 
+	function updateToolbar() {
 		updateListeners.map(function(controller){
 			controller.updateUI();
 		});
-	};	
-	
+	};
+
 	bindEvent(editDoc, "keyup", updateToolbar);
-	bindEvent(editDoc, "mouseup", updateToolbar); 
+	bindEvent(editDoc, "mouseup", updateToolbar);
 }
-bindEvent(window, "load", createEditor);
