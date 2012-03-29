@@ -3,8 +3,27 @@
   <title>Night Watch</title>
   <!-- TODO: Need icon -->
   <link rel="icon" href="icon128.png" />
+  <style>
+  #editbox iframe { width:400px; height:200px; }
+  .toolbar {  width:402px;  
+	  background-color: #e8e8e8; 
+	  border: outset 1px; 
+	  font-family: sans-serif; 
+	  cursor: arrow;
+  }
+  .toolbar span { padding: 4px; }
+  .enabled { color: black; }
+  .disabled { color: gray; }
+  .active { background-color: cyan; }
+  </style>
+<script src="opera_wysiwyg/utils.js"></script>
+<script src="opera_wysiwyg/editor.js"></script>
+<script src="opera_wysiwyg/editlib.js"></script>
+<script src="gp_editor.js"></script>
+
   <script>
 var mem = {};
+var gpe = {};
 
 function val(name) {
   var $ = document.getElementById(name).value;
@@ -28,7 +47,7 @@ function post(state, writeTimeStamp) {
   var id = writeTimeStamp || '';
   var post = {
     'state': state,
-    'content': val('content' + id) || '',
+    'content': getContent(id),
     'share_id': val('share_id' + id),
     'image_id': val('image_id' + id),
     'timeStamp': new Date(val('time' + id)).getTime() || undefined,
@@ -90,6 +109,13 @@ function publishDraft(writeTimeStamp) {
   });
 }
 
+function getContent(writeTimeStamp) {
+  var g = gpe[writeTimeStamp];
+  if (g) {
+    return g.getText();
+  }
+}
+
 function addDraftEditBox(parent, post) {
   if (!post) {
     post = {};
@@ -105,12 +131,12 @@ function addDraftEditBox(parent, post) {
   }
   var div = document.createElement('div');
   div.innerHTML =
-    (("<p><textarea id='content$' cols=70 rows=10>" + content + "</textarea></p>" +
+    (("<p><div id='content$' class='editbox'>" + content + "</div></p>" +
     "<p><input id='share_id$' placeholder='shared id' value='" + share_id + "'></input></p>" +
     "<p><input id='link$' placeholder='link' value='" + link + "'></input></p>" +
     "<p><input id='time$' placeholder='Time' /"+"><button onclick='parseTimeField($)'>Parse</button></p>" +
     "<p><input id='image_id$' placeholder='image_id' value='" + image_id + "'></input></p>" +
-    "<p id='timeParsed$'></p>").replace(/\$/g, writeTimeStamp || '') +
+    "<p id='timeParsed$'></p>").replace(/\$/g, writeTimeStamp) +
     renderReshare(post) +
     ("<br>" +
     "<button onclick='post(\"draft\", %)'>Save Draft</button>" +
@@ -121,6 +147,7 @@ function addDraftEditBox(parent, post) {
     parent.removeChild(parent.children[0]);
   }
   parent.appendChild(div);
+  gpe[writeTimeStamp] = new GPEditor(document.getElementById('content' + writeTimeStamp), writeTimeStamp);
 }
 
 function renderReshare(post) {

@@ -1,10 +1,20 @@
-function GPEditor(div) {
+function GPEditor(div, id) {
+  var toolbar = document.createElement('div');
+  toolbar.innerHTML = 
+      ('<div class="toolbar">' +
+        '<span id="boldButton$"><strong>B</strong></span>' +
+        '<span id="italicButton$"><em>I</em></span>' +
+        '<span id="overStrike$"><strike>S</strike></span>' +
+      '</div>').replace(/\$/g, id);
+
   var iframe = document.createElement('iframe');
   iframe.src = 'opera_wysiwyg/page.html';
+
+  div.appendChild(toolbar);
   div.appendChild(iframe);
   this._doc = null;
   iframe.onload = function(){
-    Editor(iframe);
+    Editor(iframe, id);
     this._doc = iframe.contentDocument;
   }.bind(this);
 }

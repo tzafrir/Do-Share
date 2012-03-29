@@ -1,4 +1,4 @@
-function Editor(iframe) {
+function Editor(iframe, id) {
 
 /*
 	Commands
@@ -109,7 +109,7 @@ function ValueSelectorController(command, elem) {
 	//	var binding = toolbarCommands[ix];
 	toolbarCommands.map(function(binding) {
 		var elemId = binding[0], ControllerConstructor = binding[1], command=binding[2];
-		var elem = document.getElementById(elemId);	
+		var elem = document.getElementById(elemId + id);	
 		var controller = new ControllerConstructor(command, elem);		
 		updateListeners.push(controller);
 	});
