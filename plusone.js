@@ -9,7 +9,7 @@ function scanSharebox() {
     _sharebox = sharebox;
     sharebox.setAttribute(ATTRIBUTE, 1);
     var p = sharebox.parentElement.parentElement.parentElement
-                    .parentElement.parentElement.parentElement;
+                    .parentElement.parentElement;
     addButton(p);
   }
   window.setTimeout(scanSharebox, INTERVAL);
