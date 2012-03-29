@@ -1,4 +1,4 @@
-function GPEditor(div, id) {
+function GPEditor(div, text, id) {
   var toolbar = document.createElement('div');
   toolbar.innerHTML = 
       ('<div class="toolbar">' +
@@ -16,6 +16,7 @@ function GPEditor(div, id) {
   iframe.onload = function(){
     Editor(iframe, id);
     this._doc = iframe.contentDocument;
+    this.setText(text);
   }.bind(this);
 }
 
@@ -30,6 +31,10 @@ GPEditor.prototype.getText = function() {
   var clone = this._doc.body.children[0].cloneNode(true);
   this.normalizeHtml(clone);
   return this.normalizedHtmlToPlusFormat(clone);
+}
+
+GPEditor.prototype.setText = function(text) {
+  this._doc.body.children[0].innerHTML = text;
 }
 
 /**
