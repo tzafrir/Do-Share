@@ -29,9 +29,9 @@ GPEditor.prototype.normalizeHtml = function(element) {
 }
 
 GPEditor.prototype.getText = function() {
-  var clone = this._doc.body.children[0].cloneNode(true);
+  var clone = this._doc.body.cloneNode(true);
   this.normalizeHtml(clone);
-  return this.normalizedHtmlToPlusFormat(clone);
+  return this.normalizedHtmlToPlusFormat(clone).replace(/\s*$/, '');
 }
 
 GPEditor.prototype.setText = function(text) {
