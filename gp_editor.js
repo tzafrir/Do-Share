@@ -13,11 +13,12 @@ function GPEditor(div, text, id) {
   div.appendChild(toolbar);
   div.appendChild(iframe);
   this._doc = null;
+  var self = this;
   iframe.onload = function(){
     Editor(iframe, id);
-    this._doc = iframe.contentDocument;
-    this.setText(text);
-  }.bind(this);
+    self._doc = iframe.contentDocument;
+    self.setText(text);
+  };
 }
 
 GPEditor.prototype.normalizeHtml = function(element) {
@@ -34,7 +35,7 @@ GPEditor.prototype.getText = function() {
 }
 
 GPEditor.prototype.setText = function(text) {
-  this._doc.body.children[0].innerHTML = text;
+  this._doc.body.innerHTML = '<p>' + (text || '<br>') + '</p>';
 }
 
 /**

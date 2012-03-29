@@ -147,7 +147,7 @@ function addDraftEditBox(parent, post) {
     parent.removeChild(parent.children[0]);
   }
   parent.appendChild(div);
-  g = gpe[writeTimeStamp] = new GPEditor(document.getElementById('content' + writeTimeStamp), content, writeTimeStamp);
+  gpe[writeTimeStamp] = new GPEditor(document.getElementById('content' + writeTimeStamp), content, writeTimeStamp);
 }
 
 function renderReshare(post) {
