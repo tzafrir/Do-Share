@@ -102,13 +102,7 @@ function ValueSelectorController(command, elem) {
 	var toolbarCommands = [
 		["boldButton", TogglCommandController, new Command("Bold", editDoc)], 
 		["italicButton", TogglCommandController, new Command("Italic", editDoc)],
-		["leftButton", TogglCommandController, new Command("JustifyLeft", editDoc)],
-		["rightButton", TogglCommandController, new Command("JustifyRight", editDoc)],
-		["centerButton", TogglCommandController, new Command("JustifyCenter", editDoc)],
-		["linkButton", TogglCommandController, new LinkCommand(editDoc)],
-		["helloButton", TogglCommandController, new InsertHelloWorldCommand(editDoc)],
-		["fontSelector", ValueSelectorController, new ValueCommand("FontName", editDoc)],
-		["sizeSelector", ValueSelectorController, new ValueCommand("FontSize", editDoc)]
+		["overStrike", TogglCommandController, new Command("Strikethrough", editDoc)],
 	];
 		
 	//for (var ix=0; ix<toolbarCommands.length;ix++) {
