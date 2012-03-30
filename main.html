@@ -233,7 +233,7 @@ function refresh() {
   chrome.extension.sendRequest({'type': 'fetchAll'}, function(result) {
     var postsDiv = document.getElementById('posts');
     postsDiv.innerHTML = '';
-    result.posts && result.posts.forEach(function(post) {
+    result.posts && result.posts.reverse().forEach(function(post) {
       postsDiv.appendChild(renderPost(post));
     });
   });
