@@ -1,3 +1,4 @@
+(function() {
 var INTERVAL = 500;
 var ATTRIBUTE = 'doshare';
 
@@ -48,3 +49,4 @@ function sendToDoShare() {
 }
 
 document.addEventListener("DOMContentLoaded", scanSharebox);
+})();

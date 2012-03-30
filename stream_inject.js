@@ -1,3 +1,4 @@
+(function(){
 /**
  * Injection code inspired by https://github.com/mohamedmansour/extended-share-extension
  */
@@ -75,3 +76,4 @@ document.addEventListener("DOMContentLoaded", function() {
     renderAllItems(googlePlusContentPane);
   }
 });
+})();
