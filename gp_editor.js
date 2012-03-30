@@ -19,6 +19,31 @@ function GPEditor(div, text, id) {
     self._doc = iframe.contentDocument;
     self.setText(text);
   };
+
+  this.tagStack = new function() {
+    this.stack = [];
+
+    this.wrap = function(text) {
+      var s = '';
+      for (var i = 0; i < this.stack.length; ++i) {
+        s += this.stack.reverse()[i];
+      }
+      s += text;
+      for (var i = 0; i < this.stack.length; ++i) {
+        s += this.stack[i];
+      }
+
+      return s;
+    }
+
+    this.push = function(tag) {
+      this.stack.push(tag);
+    }
+
+    this.pop = function() {
+      this.stack.pop();
+    }
+  }
 }
 
 GPEditor.prototype.normalizeHtml = function(element) {
@@ -57,24 +82,35 @@ GPEditor.prototype.plusFormatToHtml = function(text) {
  * Assumption: Source HTML only has design tags in the beginning or end of a word.
  */
 GPEditor.prototype.normalizedHtmlToPlusFormat = function(element) {
+  var clone = element.cloneNode(true);
+  clone.innerHTML = clone.innerHTML
+      .replace(/<.*?>\s*<.*?>/g, '')
+      .replace(/( +)(<\/.*?>)/g, "$2$1");
+  return this.visitNormalizedHtmlNode(element);
+}
+
+GPEditor.prototype.visitNormalizedHtmlNode = function(element) {
   var debug = false;
   var tagName = element.tagName;
   debug &= !!tagName;
-  var s = (debug ? '{' + tagName + '}' : '');
-  var data = element.data;
+  var s = '';
+
+  var data = element.data || '';
+  var plusStyleTag = '';
   var prefix = '';
   var postfix = '';
   var dontCrawlChildren = false;
-  switch (element.tagName) {
+  var tag = element.tagName;
+  switch (tag) {
     case "B":
-      prefix = postfix = '*';
+      prefix = postfix = plusStyleTag = '*';
       break;
     case "I":
-      prefix = postfix = "_";
+      prefix = postfix = plusStyleTag = "_";
       break;
     case "S":
     case "STRIKE":
-      prefix = postfix = "-";
+      prefix = postfix = plusStyleTag = "-";
       break;
     case "A":
       if (element.className == 'proflink') {
@@ -86,7 +122,7 @@ GPEditor.prototype.normalizedHtmlToPlusFormat = function(element) {
       postfix = "\n\n";
       break;
     case "BR":
-      postfix = "\n";
+      data = this.tagStack.wrap('\n');
       break;
     case "SPAN":
       if (element.className == 'proflinkPrefix') {
@@ -94,6 +130,13 @@ GPEditor.prototype.normalizedHtmlToPlusFormat = function(element) {
       }
       break;
   }
+
+  s += (debug ? '{' + tagName + '}' : '');
+
+  if (plusStyleTag) {
+    this.tagStack.push(plusStyleTag);
+  }
+
   s += prefix;
   if (data) {
     s += data;
@@ -101,10 +144,15 @@ GPEditor.prototype.normalizedHtmlToPlusFormat = function(element) {
   var c = element.childNodes;
   if (!dontCrawlChildren) {
     for (var i = 0; i < c.length; ++i) {
-      s += this.normalizedHtmlToPlusFormat(c[i]);
+      s += this.visitNormalizedHtmlNode(c[i]);
     }
   }
   s += postfix;
+
+  if (plusStyleTag) {
+    this.tagStack.pop();
+  }
+
   s += (debug ? '{/' + tagName + '}' : '')
   return s;
 }
