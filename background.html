@@ -179,19 +179,17 @@ function publish(post, callback) {
 }
 
 function schedule(post, callback) {
-  db._removeItem(post.writeTimeStamp, function() {
-    s.schedule(post, post.timeStamp, callback);
-  });
+  s.schedule(post, post.timeStamp, callback);
 }
 
 function draft(post, callback) {
-  delPost(post.writeTimeStamp, function(){});
   db.put(post, callback);
 }
 
 function addPost(post, callback) {
   var state = post.state;
 
+  delPost(post.writeTimeStamp, function(){});
   if (state == "scheduled") {
     schedule(post, callback);
   } else if (state == "draft") {
