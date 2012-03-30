@@ -43,11 +43,14 @@ GPEditor.prototype.setText = function(text) {
 
 GPEditor.prototype.plusFormatToHtml = function(text) {
   return text
+    .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
     .replace(/\n/g, '\n ')
     .replace(/(([\s()\.,!?]|^)((<[^>]*>)|[-_])*)\*([^\n]*?[^\s])\*(((<[^>]*>)|[-_])*([()\.,!?]|$|\s))/g, '$1<b>$5</b>$6')
     .replace(/(([\s()\.,!?]|^)((<[^>]*>)|[-\*])*)_([^\n]*?[^\s])_(((<[^>]*>)|[-\*])*([()\.,!?]|$|\s))/g, '$1<i>$5</i>$6')
     .replace(/(([\s()\.,!?]|^)((<[^>]*>)|[\*_])*)-([^\n]*?[^\s])-(((<[^>]*>)|[\*_])*([()\.,!?]|$|\s))/g, '$1<s>$5</s>$6')
     .replace(/\n /g, '<br>');
+  return $;
 }
 
 /**
