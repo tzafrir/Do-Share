@@ -88,6 +88,11 @@ GPEditor.prototype.normalizedHtmlToPlusFormat = function(element) {
     case "BR":
       postfix = "\n";
       break;
+    case "SPAN":
+      if (element.className == 'proflinkPrefix') {
+        return s + ' ';
+      }
+      break;
   }
   s += prefix;
   if (data) {
