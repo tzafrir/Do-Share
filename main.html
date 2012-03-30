@@ -239,6 +239,9 @@ var stopRefreshing;
 function refreshPosts() {
   stopRefreshing = false;
   chrome.extension.sendRequest({'type': 'fetchAll'}, function(result) {
+    if (stopRefreshing) {
+      return;
+    }
     var postsDiv = document.getElementById('posts');
     postsDiv.innerHTML = '';
     result.posts && result.posts.reverse().forEach(function(post) {
