@@ -166,6 +166,7 @@ function renderReshare(post) {
 function editDraft(writeTimeStamp) {
   chrome.extension.sendRequest({type: 'fetchPost', writeTimeStamp: writeTimeStamp},
       function(post) {
+    stopRefreshing = true;
     var e = document.getElementById('d' + writeTimeStamp);
     e.innerHTML = '';
     addDraftEditBox(e, post);
@@ -230,6 +231,13 @@ function renderMediaItems(medias) {
 }
 
 function refresh() {
+  addDraftEditBox(document.getElementById('editbox'));
+  refreshPosts();
+}
+
+var stopRefreshing;
+function refreshPosts() {
+  stopRefreshing = false;
   chrome.extension.sendRequest({'type': 'fetchAll'}, function(result) {
     var postsDiv = document.getElementById('posts');
     postsDiv.innerHTML = '';
@@ -237,7 +245,13 @@ function refresh() {
       postsDiv.appendChild(renderPost(post));
     });
   });
-  addDraftEditBox(document.getElementById('editbox'));
+}
+
+function refreshIfNeeded() {
+  if (!stopRefreshing) {
+    refreshPosts();
+  }
+  window.setTimeout(refreshIfNeeded, 300);
 }
 
 function onLoad() {
@@ -250,6 +264,7 @@ function onLoad() {
   localStorage.clear('_tmp_post');
   refresh();
   addDraftEditBox(document.getElementById('editbox'), savedPost);
+  refreshIfNeeded();
 }
 
   </script>
