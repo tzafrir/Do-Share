@@ -4,7 +4,13 @@
   <!-- TODO: Need icon -->
   <link rel="icon" href="icon128.png" />
   <style>
-  .editbox iframe { width:400px; height:200px; }
+  .editbox .gp-e-container {
+    width: 400px;
+    height: 200px;
+    border: 2px solid #999;
+    border-top-color: #CCC;
+    font: normal 13px/1.4 Arial, sans-serif;
+  }
   .toolbar {  width:402px;  
 	  background-color: #e8e8e8; 
 	  border: outset 1px; 
@@ -20,6 +26,11 @@
 <script src="opera_wysiwyg/editor.js"></script>
 <script src="opera_wysiwyg/editlib.js"></script>
 <script src="gp_editor.js"></script>
+
+<link rel="stylesheet" href="libs/jquery.aceditable.css" />
+<script src="libs/jquery-1.7.1.min.js"></script>
+<script src="libs/jquery.aceditable.js"></script>
+
 
   <script>
 var mem = {};

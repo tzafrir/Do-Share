@@ -7,7 +7,8 @@ function GPEditor(div, text, id) {
         '<span id="overStrike$"><strike>S</strike></span>' +
       '</div>').replace(/\$/g, id);
 
-  this._container = container = document.createElement('div');
+  var container = this._container = document.createElement('div');
+  container.className = 'gp-e-container';
   this.setText(text);
 
   div.appendChild(toolbar);
