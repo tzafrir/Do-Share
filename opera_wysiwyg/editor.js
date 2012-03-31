@@ -1,4 +1,4 @@
-function Editor(iframe, id) {
+function Editor(container, id) {
 
 /*
 	Commands
@@ -93,9 +93,8 @@ function ValueSelectorController(command, elem) {
 	});	
 }
 	
-	var editFrame = iframe;
-	editFrame.contentWindow.document.designMode="on";
-	var editWindow = editFrame.contentWindow;
+	container.contentEditable = true;
+	var editWindow = window;
 	var editDoc = editWindow.document;
 	var updateListeners = [];
 	

@@ -7,18 +7,13 @@ function GPEditor(div, text, id) {
         '<span id="overStrike$"><strike>S</strike></span>' +
       '</div>').replace(/\$/g, id);
 
-  var iframe = document.createElement('iframe');
-  iframe.src = 'opera_wysiwyg/page.html';
+  this._container = container = document.createElement('div');
+  this.setText(text);
 
   div.appendChild(toolbar);
-  div.appendChild(iframe);
-  this._doc = null;
-  var self = this;
-  iframe.onload = function(){
-    Editor(iframe, id);
-    self._doc = iframe.contentDocument;
-    self.setText(text);
-  };
+  div.appendChild(container);
+
+  Editor(container, id);
 
   this.tagStack = new function() {
     this.stack = [];
@@ -54,7 +49,7 @@ GPEditor.prototype.normalizeHtml = function(element) {
 }
 
 GPEditor.prototype.getText = function() {
-  var clone = this._doc.body.cloneNode(true);
+  var clone = this._container.cloneNode(true);
   this.normalizeHtml(clone);
   return this.normalizedHtmlToPlusFormat(clone)
       .replace(/^\s*/, '')
@@ -63,7 +58,7 @@ GPEditor.prototype.getText = function() {
 
 GPEditor.prototype.setText = function(text) {
   var html = this.plusFormatToHtml(text);
-  this._doc.body.innerHTML = '<p>' + (html || '<br>') + '</p>';
+  this._container.innerHTML = '<p>' + (html || '<br>') + '</p>';
 }
 
 GPEditor.prototype.plusFormatToHtml = function(text) {
