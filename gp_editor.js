@@ -111,8 +111,8 @@ GPEditor.prototype.visitNormalizedHtmlNode = function(element) {
     case "A":
       if (element.className == 'proflink') {
         data = '@' + element.getAttribute('oid') + ' ' || '';
+        dontCrawlChildren = true;
       }
-      dontCrawlChildren = true;
       break;
     case "P":
       postfix = "\n\n";
