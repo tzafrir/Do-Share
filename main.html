@@ -281,7 +281,6 @@ function onLoad() {
     mem[savedPost.writeTimeStamp] = savedPost;
   }
   localStorage.clear('_tmp_post');
-  refresh();
   addDraftEditBox(document.getElementById('editbox'), savedPost);
   refreshIfNeeded();
 }
