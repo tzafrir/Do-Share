@@ -93,6 +93,7 @@ GooglePlusAPI.prototype._parseURL = function(urlTemplate) {
  * @param {function(Object.<string, Object>)} callback
  * @param {string} urlTemplate The URL template to request.
  * @param {string} postData If specified, it will do a POST with the data.
+ * @return {XMLHttpRequest} The created XMLHttpRequest object.
  */
 GooglePlusAPI.prototype._requestService = function(callback, urlTemplate, postData) {
   var self = this;
@@ -133,6 +134,8 @@ GooglePlusAPI.prototype._requestService = function(callback, urlTemplate, postDa
     async: true,
     complete: success
   });
+
+  return xhr;
 };
 
 /**
@@ -1358,13 +1361,25 @@ GooglePlusAPI.prototype.newPost = function(callback, postObj) {
     }
   }
 
+  var scope = {
+    scopeType: 'anyone',
+    name: 'Anyone',
+    id: 'anyone',
+    me: true,
+    requiresKey: false};
+
+  var acl = {aclEntries: [
+    {scope: scope, role: 20},
+    {scope: scope, role: 60}
+  ]}
+
   var data = JSAPIHelper.nullArray(37);
 
   data[0] = content || '';
   data[1] = 'oz:' + this.getInfo().id + '.' + new Date().getTime().toString(16) + '.0';
   data[2] = sharedPostId;
   data[6] = JSON.stringify(postObj.rawMedia || sMedia);
-  data[8] = JSON.parse(this.getInfo().acl);
+  data[8] = JSON.stringify(acl);
   data[9] = true;
   data[10] = [];
   data[11] = false;
@@ -1420,8 +1435,8 @@ GooglePlusAPI.prototype.fetchPhotoMetadata = function(callback, photoId) {
   }
   var self = this;
   var params = "?uname=" + this.getInfo().id + "&photoid=" + photoId +
-      "&returnmeta=true&view=PPQ&photoid=5717682832206256210&returnexif=true&returntts=true" +
-      "&aname=InstantUpload&returnshapes=true&returnsuggestions=true&returncomments=true" +
+      "&returnmeta=true&view=PPQ&returnexif=true&returntts=true" +
+      "&returnshapes=true&returnsuggestions=true&returncomments=true" +
       "&filter=true&returnalbum=true";
   this._requestService(function(response) {
     self._fireCallback(callback, {status: !response.error, data: response});
