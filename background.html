@@ -36,12 +36,17 @@ function checkInit(ok) {
 }
 checkInit(false);
 
+var lastUpdate = 0;
+function update() {
+  lastUpdate = new Date().getTime();
+}
+
 function c(e){console.log(e)}
 
 var db = new IDBWrap("nightwatchDb", "writeTimeStamp");
 db.init(dbInitCallback);
 
-var s = new Sched5("nightwatch", "writeTimeStamp", publish, c);
+var s = new Sched5("nightwatch", "writeTimeStamp", publishScheduled, c);
 s.init(dbInitCallback);
 
 var actionController = new BrowserActionController();
@@ -174,6 +179,11 @@ function fetchPostData(url, callback) {
   });
 }
 
+function publishScheduled(post) {
+  update();
+  publish(post);
+}
+
 function publish(post, callback) {
   plus.newPost(callback || c, post);
   console.log("Posting");
@@ -190,6 +200,7 @@ function draft(post, callback) {
 
 function addPost(post, callback) {
   var state = post.state;
+  update();
 
   delPost(post.writeTimeStamp, function(){});
   if (state == "scheduled") {
@@ -205,7 +216,7 @@ function addPost(post, callback) {
 }
 
 function fetchAll(callback) {
-  var result = {'posts': []};
+  var result = {posts: [], lastUpdate: lastUpdate};
   var wrapCallback = function() {
     s.count(function(count) {
       if (count == 0) {
@@ -263,6 +274,7 @@ function fetchPost(writeTimeStamp, callback) {
 }
 
 function delPost(writeTimeStamp, callback) {
+  update();
   s._removeItem(writeTimeStamp, c);
   db._removeItem(writeTimeStamp, c);
   // If you're not me and here because of a bug, I owe you a beer.
