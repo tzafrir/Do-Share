@@ -118,6 +118,7 @@ GPEditor.prototype.visitNormalizedHtmlNode = function(element) {
       postfix = "\n\n";
       break;
     case "BR":
+      // The browser handles <b>line<br>line</b> but Google+ needs *line*\n*line*, use tagStack.
       data = this.tagStack.wrap('\n');
       break;
     case "SPAN":
