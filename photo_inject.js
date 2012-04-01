@@ -4,6 +4,24 @@ var PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR = '.WH1rbd.c-wa-Da';
 
 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
+var oid;
+(function getOid() {
+  node = document.querySelector('a[oid]');
+  if (!node) {
+    window.setTimeout(getOid, 10);
+  } else {
+    oid = node.getAttribute('oid');
+  };
+})();
+
+function getPhotoId() {
+  var url = window.location.toString();
+  var property = url.split('photos/')[1].split('/')[0];
+  if (property == 'fromphone' || property == oid) {
+    return url.split('/').reverse()[0];
+  }
+}
+
 function addButton() {
   var container = document.querySelector(".photo-container");
   if (!container) {
@@ -11,13 +29,21 @@ function addButton() {
     window.setTimeout(addButton, 100);
     return
   }
-//  container.parentNode.parentNode.style.backgroundColor = "#0A0A0A";
+
+  var photoId = getPhotoId();
+  console.log(photoId);
+  if (!photoId) {
+    return;
+  }
+
   var buttonArea = document.querySelector(PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR);
   var button1 = buttonArea.childNodes[0];
   var newButton = button1.cloneNode(true);
   newButton.id = "ds-send-photo";
   newButton.querySelector("span").innerText = "Send to Do Share";
-  newButton.onclick = function(){console.log(document.location.toString())};
+  newButton.onclick = function() {
+    chrome.extension.sendRequest({type: 'newPost', image_id: photoId});
+  };
   buttonArea.insertBefore(newButton, button1);
 }
 

@@ -361,7 +361,10 @@ function onRequest(request, sender, callback) {
   } else if (type == "fetchPost") {
     fetchPost(request.writeTimeStamp, callback);
   } else if (type == "newPost") {
-    newPost({content: request.content || '', link: request.link || ''});
+    newPost({content: request.content || '',
+             link: request.link || '',
+             image_id: request.image_id || '',
+             writeTimeStamp: new Date().getTime()});
   } else if (type == "resharePost") {
     resharePost(request.url);
   }
