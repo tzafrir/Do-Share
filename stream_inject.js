@@ -12,6 +12,8 @@ var STREAM_ACTION_BAR_SELECTOR = STREAM_UPDATE_SELECTOR + ' > div > div:nth-of-t
 var STREAM_AUTHOR_SELECTOR = 'div > div > h3 > span';
 var STREAM_IMAGE_SELECTOR = STREAM_UPDATE_SELECTOR + ' > div div[data-content-type] > img';
 
+var RESCAN_PERIOD = 200;
+
 var originalTextNode = document.createTextNode(' \u00a0-\u00a0 ');
 
 // Send a heartbeat to the background page, just in case this is the first user interaction with
@@ -72,12 +74,26 @@ function sendToDoShare(itemDOM) {
   chrome.extension.sendRequest({'type': 'resharePost', 'url': url}, function(){});
 }
 
+function processNotifications() {
+  var bars = document.body ? document.body.querySelectorAll(STREAM_ACTION_BAR_SELECTOR + ":not([tz_ds])") : [];
+
+  for (var i = 0; i < bars.length; ++i) {
+    var bar = bars[i];
+    bar.setAttribute('tz_ds', true);
+    renderItem(bar);
+  }
+
+  window.setTimeout(processNotifications, RESCAN_PERIOD);
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   // Listen when the subtree is modified for new posts.
   var googlePlusContentPane = document.querySelector(CONTENT_PANE_ID);
   if (googlePlusContentPane) {
     googlePlusContentPane.addEventListener('DOMNodeInserted', onContentModified);
     renderAllItems(googlePlusContentPane);
+  } else if (document.location.toString().match('_/notifications')) {
+    processNotifications();
   }
 });
 })();
