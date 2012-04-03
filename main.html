@@ -1,5 +1,6 @@
 <!doctype html>
 <head>
+  <meta charset="utf-8">
   <title>Night Watch</title>
   <!-- TODO: Need icon -->
   <link rel="icon" href="icon128.png" />
@@ -30,10 +31,9 @@
 <script src="opera_wysiwyg/editlib.js"></script>
 <script src="gp_editor.js"></script>
 
-<link rel="stylesheet" href="libs/jquery.aceditable.css" />
 <script src="libs/jquery-1.7.1.min.js"></script>
-<script src="libs/jquery.aceditable.js"></script>
-
+<script src="libs/jquery-ui-1.8.18.custom.min.js"></script>
+<link rel="stylesheet" type="text/css" href="jqueryui_css/ui-lightness/jquery-ui-1.8.18.custom.css"> 
 
   <script>
 var mem = {};
@@ -289,4 +289,7 @@ function onLoad() {
 </head>
 <body onload="onLoad()">
   <div id="editbox"></div>
+  <div id="ac" class="ui-helper-clearfix">
+    <input id="tmp" />
+  </div>
   <div id="posts"></div>

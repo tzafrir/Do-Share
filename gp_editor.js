@@ -39,7 +39,9 @@ function GPEditor(div, text, id) {
     this.pop = function() {
       this.stack.pop();
     }
-  }
+  }();
+
+  container.onkeydown = this.onKeyDown;
 }
 
 GPEditor.prototype.normalizeHtml = function(element) {
@@ -154,3 +156,46 @@ GPEditor.prototype.visitNormalizedHtmlNode = function(element) {
   return s;
 }
 
+GPEditor.prototype.onKeyDown = function(event) {
+  var KEY = {
+    PLUS: 187,
+    AT: 50
+  };
+  var range = window.getSelection().getRangeAt(0);
+  var k = event.keyCode;
+  if ((k == KEY.AT || k == KEY.PLUS) && event.shiftKey) {
+    event.preventDefault();
+    tmp.focus();
+  }
+
+	$("#tmp").autocomplete({
+		minLength: 0,
+		source: function(request, callback) {
+		  // TODO: use Google+
+		  callback(request.term && [{
+			  name: "צפריר " + request.term,
+			  photoUrl: 'https://lh5.googleusercontent.com/-prSv4WTob5c/AAAAAAAAAAI/AAAAAAAAAAA/Ct8skkiZrCE/s27-c/photo.jpg',
+			  id: 3
+			}] || undefined);
+		},
+		focus: function() {return false;},
+		select: function(event, ui) {
+		  var item = ui.item;
+			var wrapper = $('<span class="proflinkWrapper"></span>'),
+			    plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(wrapper),
+			    a = $('<a></a>').addClass('proflink').attr({
+			      oid: item.id,
+			      href: 'https://plus.google.com'
+			    }).text(item.name).appendTo(wrapper);
+			range.insertNode(wrapper[0]);
+			return false;
+		},
+		
+	})
+	.data('autocomplete')._renderItem = function(ul, item) {
+		return $('<li></li>')
+			.data('item.autocomplete', item)
+			.append('<a><img src="' + item.photoUrl + '" />' + item.name + '</a>' )
+			.appendTo(ul);
+	};
+}
