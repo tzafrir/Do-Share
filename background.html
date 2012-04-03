@@ -24,17 +24,11 @@ function dbInitCallback(ok) {
 
 // Set up the API
 var plus = new GooglePlusAPI();
+var INIT_REPEAT_INTERVAL = 5000;
 
-function checkInit(ok) {
-  if (!ok) {
-    window.setTimeout(function() {
-      plus.init(checkInit);
-    }, 1000);
-  } else {
-    plus.refreshInfo();
-  }
-}
-checkInit(false);
+window.setInterval(function() {
+  plus.init(function(){});
+}, INIT_REPEAT_INTERVAL);
 
 var lastUpdate = 0;
 function update() {
