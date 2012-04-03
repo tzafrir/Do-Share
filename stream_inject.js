@@ -14,6 +14,10 @@ var STREAM_IMAGE_SELECTOR = STREAM_UPDATE_SELECTOR + ' > div div[data-content-ty
 
 var originalTextNode = document.createTextNode(' \u00a0-\u00a0 ');
 
+// Send a heartbeat to the background page, just in case this is the first user interaction with
+// do share since logging in.
+chrome.extension.sendRequest({type: 'getId'}, function(){});
+
 /**
  * Render the "Send to Do Share" Link on each post.
  */

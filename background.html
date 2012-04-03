@@ -11,6 +11,7 @@
 <script>
 
 var ACTION_UPDATE_INTERVAL = 333;
+var INIT_REPEAT_INTERVAL = 3 * 60000;
 
 var dbInit = false;
 var dbInitCounter = 2;
@@ -24,7 +25,9 @@ function dbInitCallback(ok) {
 
 // Set up the API
 var plus = new GooglePlusAPI();
-var INIT_REPEAT_INTERVAL = 5000;
+window.setTimeout(function(){
+  plus.init(c), 1;
+});
 
 window.setInterval(function() {
   plus.init(function(){});
@@ -361,6 +364,16 @@ function onRequest(request, sender, callback) {
              writeTimeStamp: new Date().getTime()});
   } else if (type == "resharePost") {
     resharePost(request.url);
+  } else if (type == 'getId') {
+    if (!plus.isAuthenticated()) {
+      plus.init(c);
+    }
+    var info = plus.getInfo();
+    if (plus.isAuthenticated() && info) {
+      callback({'id': plus.getInfo().id});
+    } else {
+      callback({})
+    }
   }
 }
 

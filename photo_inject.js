@@ -4,20 +4,17 @@ var PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR = '.WH1rbd.c-wa-Da';
 
 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
-var oid;
-(function getOid() {
-  node = document.querySelector('a[oid]');
-  if (!node) {
-    window.setTimeout(getOid, 10);
-  } else {
-    oid = node.getAttribute('oid');
-  };
+var plusId;
+(function() {
+  chrome.extension.sendRequest({type: 'getId'}, function(response) {
+    plusId = response.id;
+  });
 })();
 
 function getPhotoId() {
   var url = window.location.toString();
   var property = url.split('photos/')[1].split('/')[0];
-  if (property == 'fromphone' || property == oid) {
+  if (property == 'fromphone' || property == plusId) {
     return url.split('/').reverse()[0];
   }
 }
