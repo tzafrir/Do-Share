@@ -51,6 +51,7 @@ GooglePlusAPI = function(opt) {
 
   this._session = null;
   this._info = null;
+  this._suggestToken = null;
 
   this.BURST_INTERVAL = 2000; // time between requesting 'more/burst' search results
 
@@ -336,6 +337,9 @@ GooglePlusAPI.prototype._getSession = function(opt_reset) {
           this._session = foundSession;
           isLogged = true;
         }
+
+        // TODO: Start earlier and do something less hacky.
+        this._suggestToken = responseText.substring(startIndex - 30, startIndex - 8);
       }
     }
     if (!isLogged) {
@@ -1461,7 +1465,7 @@ GooglePlusAPI.prototype.fetchPhotoMetadata = function(callback, photoId) {
 
 GooglePlusAPI.prototype.profileAutocomplete = function(callback, prefix) {
   var params = "?ds=es_profiles&client=es-sharebox&partnerid=es-profiles" +
-               "&q=" + prefix;
+               '&tok=' + this._suggestToken + '&authuser=0&q=' + prefix;
   var self = this;
   this._requestService(function(response) {
     self._fireCallback(callback, response);

@@ -1,4 +1,13 @@
-function GPEditor(div, text, id) {
+/**
+ * person: {
+ *   name,
+ *   id,
+ *   photoUrl
+ * }
+ *
+ * @param{function(string, function(person<Array>))} profileAutocompleter.
+ */
+function GPEditor(div, text, id, profileAutocompleter) {
   var toolbar = document.createElement('div');
   toolbar.innerHTML = 
       ('<div class="toolbar">' +
@@ -8,6 +17,7 @@ function GPEditor(div, text, id) {
       '</div>').replace(/\$/g, id);
 
   this.CONTAINER_CLASSNAME = 'gp-e-container';
+  this._profileAutocompleter = profileAutocompleter;
 
   var container = this._container = document.createElement('div');
   container.className = this.CONTAINER_CLASSNAME;
@@ -43,7 +53,10 @@ function GPEditor(div, text, id) {
     }
   }();
 
-  container.onkeydown = this.onKeyDown;
+  var self = this;
+  container.onkeydown = function(event) {
+    self.onKeyDown(event, this);
+  }
 }
 
 GPEditor.prototype.normalizeHtml = function(element) {
@@ -158,7 +171,7 @@ GPEditor.prototype.visitNormalizedHtmlNode = function(element) {
   return s;
 }
 
-GPEditor.prototype.onKeyDown = function(event) {
+GPEditor.prototype.onKeyDown = function(event, element) {
   var KEY = {
     PLUS: 187,
     AT: 50
@@ -187,12 +200,7 @@ GPEditor.prototype.onKeyDown = function(event) {
 	    .autocomplete({
 		minLength: 0,
 		source: function(request, callback) {
-		  // TODO: use Google+
-		  callback(request.term && [{
-			  name: request.term,
-			  photoUrl: 'https://lh5.googleusercontent.com/-prSv4WTob5c/AAAAAAAAAAI/AAAAAAAAAAA/Ct8skkiZrCE/s27-c/photo.jpg',
-			  id: 3
-			}] || undefined);
+		  self._profileAutocompleter(request.term, callback);
 		},
 		focus: function() {return false;},
 		select: function(event, ui) {
@@ -204,7 +212,7 @@ GPEditor.prototype.onKeyDown = function(event) {
 			    }).text(item.name).appendTo(wrapper);
 			range.insertNode(wrapper[0]);
 			input.remove();
-			$(self).focus();
+			$(element).focus();
 			range = document.createRange();
 			range.setStartAfter(wrapper[0]);
 			window.getSelection().removeAllRanges();

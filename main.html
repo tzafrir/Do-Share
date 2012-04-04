@@ -131,6 +131,10 @@ function getContent(writeTimeStamp) {
   }
 }
 
+function profileAutocompleter(prefix, callback) {
+  chrome.extension.sendRequest({type: 'profileAutocomplete', prefix: prefix}, callback);
+}
+
 function addDraftEditBox(parent, post) {
   if (!post) {
     post = {};
@@ -162,7 +166,8 @@ function addDraftEditBox(parent, post) {
     parent.removeChild(parent.children[0]);
   }
   parent.appendChild(div);
-  gpe[writeTimeStamp] = new GPEditor(document.getElementById('content' + writeTimeStamp), content, writeTimeStamp);
+  gpe[writeTimeStamp] = new GPEditor(document.getElementById('content' + writeTimeStamp),
+      content, writeTimeStamp, profileAutocompleter);
 }
 
 function renderReshare(post) {
