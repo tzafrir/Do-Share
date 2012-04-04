@@ -7,8 +7,10 @@ function GPEditor(div, text, id) {
         '<span id="overStrike$"><strike>S</strike></span>' +
       '</div>').replace(/\$/g, id);
 
+  this.CONTAINER_CLASSNAME = 'gp-e-container';
+
   var container = this._container = document.createElement('div');
-  container.className = 'gp-e-container';
+  container.className = this.CONTAINER_CLASSNAME;
   this.setText(text);
 
   div.appendChild(toolbar);
@@ -161,19 +163,33 @@ GPEditor.prototype.onKeyDown = function(event) {
     PLUS: 187,
     AT: 50
   };
-  var range = window.getSelection().getRangeAt(0);
   var k = event.keyCode;
-  if ((k == KEY.AT || k == KEY.PLUS) && event.shiftKey) {
-    event.preventDefault();
-    tmp.focus();
+  if (!((k == KEY.AT || k == KEY.PLUS) && event.shiftKey)) {
+    return;
   }
 
-	$("#tmp").autocomplete({
+  var self = this;
+
+  var range = window.getSelection().getRangeAt(0);
+  range.deleteContents();
+
+  event.preventDefault();
+	var wrapper = $('<span class="proflinkWrapper"></span>');
+	range.insertNode(wrapper[0]);
+
+  var acDiv = $('<div>').addClass("ui-helper-clearfix").appendTo($(document.body)),
+      input = $('<input>').appendTo(acDiv);
+
+	input.position({
+	        of: wrapper,
+	        my: 'left top'
+	        })
+	    .autocomplete({
 		minLength: 0,
 		source: function(request, callback) {
 		  // TODO: use Google+
 		  callback(request.term && [{
-			  name: "צפריר " + request.term,
+			  name: request.term,
 			  photoUrl: 'https://lh5.googleusercontent.com/-prSv4WTob5c/AAAAAAAAAAI/AAAAAAAAAAA/Ct8skkiZrCE/s27-c/photo.jpg',
 			  id: 3
 			}] || undefined);
@@ -181,21 +197,27 @@ GPEditor.prototype.onKeyDown = function(event) {
 		focus: function() {return false;},
 		select: function(event, ui) {
 		  var item = ui.item;
-			var wrapper = $('<span class="proflinkWrapper"></span>'),
-			    plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(wrapper),
+      var plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(wrapper),
 			    a = $('<a></a>').addClass('proflink').attr({
 			      oid: item.id,
 			      href: 'https://plus.google.com'
 			    }).text(item.name).appendTo(wrapper);
 			range.insertNode(wrapper[0]);
+			input.remove();
+			$(self).focus();
+			range = document.createRange();
+			range.setStartAfter(wrapper[0]);
+			window.getSelection().removeAllRanges();
+			window.getSelection().addRange(range);
 			return false;
 		},
 		
 	})
+	.focus()
 	.data('autocomplete')._renderItem = function(ul, item) {
 		return $('<li></li>')
 			.data('item.autocomplete', item)
 			.append('<a><img src="' + item.photoUrl + '" />' + item.name + '</a>' )
 			.appendTo(ul);
-	};
+	}
 }
