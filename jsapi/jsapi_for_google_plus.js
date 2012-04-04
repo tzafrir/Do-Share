@@ -31,6 +31,7 @@ GooglePlusAPI = function(opt) {
   this.LINK_DETAILS_API        = 'https://plus.google.com/${pagetoken}/_/sharebox/linkpreview/';
   this.PAGES_API               = 'https://plus.google.com/${pagetoken}/_/pages/get/';
   this.PHOTOS_LIGHTBOX_API     = 'https://plus.google.com/${pagetoken}/_/photos/lightbox/';
+  this.COMPLETE_API            = 'https://plus.google.com/complete/search';
 
   // Not Yet Implemented API
   this.CIRCLE_ACTIVITIES_API   = 'https://plus.google.com/u/0/_/stream/getactivities/'; // ?sp=[1,2,null,"7f2150328d791ede",null,null,null,"social.google.com",[]]
@@ -65,6 +66,9 @@ GooglePlusAPI = function(opt) {
  * @param {string} input The irregular JSON string to parse.
  */
 GooglePlusAPI.prototype._parseJSON = function(input) {
+  if (input.match(/^[a-z\.]+\(/)) {
+    return this._parseJSONp(input);
+  }
   var jsonString = input.replace(/\[,/g, '[null,');
   jsonString = jsonString.replace(/,\]/g, ',null]');
   jsonString = jsonString.replace(/,,/g, ',null,');
@@ -72,6 +76,18 @@ GooglePlusAPI.prototype._parseJSON = function(input) {
   jsonString = jsonString.replace(/([{,][\s]*)([0-9]+)([\s]*:)/g, "$1\"$2\"$3")
   return JSON.parse(jsonString);
 };
+
+/**
+ * Handle a JSONp response.
+ */
+GooglePlusAPI.prototype._parseJSONp = function(input) {
+  var result;
+  function handleJsonp(object) {
+    result = object;
+  }
+  eval(input.replace(/^[a-z\.]+\(/, 'handleJsonp('));
+  return [result];
+}
 
 /**
  * Cleansup the URL by replacing the template variables.
@@ -1441,6 +1457,15 @@ GooglePlusAPI.prototype.fetchPhotoMetadata = function(callback, photoId) {
   this._requestService(function(response) {
     self._fireCallback(callback, {status: !response.error, data: response});
   }, this.PHOTOS_LIGHTBOX_API + params);
+}
+
+GooglePlusAPI.prototype.profileAutocomplete = function(callback, prefix) {
+  var params = "?ds=es_profiles&client=es-sharebox&partnerid=es-profiles" +
+               "&q=" + prefix;
+  var self = this;
+  this._requestService(function(response) {
+    self._fireCallback(callback, response);
+  }, this.COMPLETE_API + params);
 }
 
 /**
