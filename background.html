@@ -180,6 +180,10 @@ function fetchPostData(url, callback) {
  * callback = function(person<Array>) (see gp_editor)
  */
 function profileAutocomplete(prefix, callback) {
+  if (!prefix) {
+    callback([]);
+    return;
+  }
   plus.profileAutocomplete(function(response) {
     var results = response[1];
     if (!results) {
