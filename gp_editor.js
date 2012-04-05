@@ -215,7 +215,7 @@ GPEditor.prototype.onKeyDown = function(event, element) {
 			      href: 'https://plus.google.com'
 			    }).text(item.name);
 			range.insertNode(wrapper[0]);
-			input.remove();
+			acDiv.remove();
 			$(element).focus();
 			range = document.createRange();
 			range.setStartAfter(wrapper[0]);
