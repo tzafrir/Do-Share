@@ -190,6 +190,7 @@ GPEditor.prototype.onKeyDown = function(event, element) {
 	var wrapper = $('<span class="proflinkWrapper"></span>'),
 	    plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(wrapper),
       a = $('<a></a>').addClass('proflink').appendTo(wrapper);
+      wrapper[0].appendChild(document.createTextNode(' '));
 	range.insertNode(wrapper[0]);
 
   var acDiv = $('<div>').addClass("ui-helper-clearfix").appendTo($(document.body)),
