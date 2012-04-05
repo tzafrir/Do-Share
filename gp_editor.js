@@ -187,14 +187,16 @@ GPEditor.prototype.onKeyDown = function(event, element) {
   range.deleteContents();
 
   event.preventDefault();
-	var wrapper = $('<span class="proflinkWrapper"></span>');
+	var wrapper = $('<span class="proflinkWrapper"></span>'),
+	    plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(wrapper),
+      a = $('<a></a>').addClass('proflink').appendTo(wrapper);
 	range.insertNode(wrapper[0]);
 
   var acDiv = $('<div>').addClass("ui-helper-clearfix").appendTo($(document.body)),
       input = $('<input>').appendTo(acDiv);
 
 	input.position({
-	        of: wrapper,
+	        of: a,
 	        my: 'left top'
 	        })
 	    .autocomplete({
@@ -205,11 +207,10 @@ GPEditor.prototype.onKeyDown = function(event, element) {
 		focus: function() {return false;},
 		select: function(event, ui) {
 		  var item = ui.item;
-      var plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(wrapper),
-			    a = $('<a></a>').addClass('proflink').attr({
+      a.attr({
 			      oid: item.id,
 			      href: 'https://plus.google.com'
-			    }).text(item.name).appendTo(wrapper);
+			    }).text(item.name);
 			range.insertNode(wrapper[0]);
 			input.remove();
 			$(element).focus();
