@@ -194,11 +194,13 @@ GPEditor.prototype.onKeyDown = function(event, element) {
 	range.insertNode(wrapper[0]);
 
   var acDiv = $('<div>').addClass("ui-helper-clearfix").appendTo($(document.body)),
-      input = $('<input>').appendTo(acDiv);
+      input = $('<input>').addClass('gp-ac-input').appendTo(acDiv);
 
 	input.position({
+	        my: 'left top',
+	        at: 'left bottom',
 	        of: a,
-	        my: 'left top'
+	        offset: '0 -1'
 	        })
 	    .autocomplete({
 		minLength: 0,
