@@ -186,6 +186,13 @@ GPEditor.prototype.onKeyDown = function(event, element) {
   var range = window.getSelection().getRangeAt(0);
   range.deleteContents();
 
+  function setCaretAfter(element) {
+		var range = document.createRange();
+		range.setStartAfter(element);
+		window.getSelection().removeAllRanges();
+		window.getSelection().addRange(range);
+  }
+
   event.preventDefault();
 	var wrapper = $('<span class="proflinkWrapper"></span>').css({'white-space': 'nowrap'}),
 	    plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(wrapper),
@@ -224,19 +231,28 @@ GPEditor.prototype.onKeyDown = function(event, element) {
 			      oid: item.id,
 			      href: 'https://plus.google.com'
 			    }).text(item.name);
-			range.insertNode(wrapper[0]);
-			acDiv.remove();
-			dummy.remove();
+      range.insertNode(wrapper[0]);
+      range.insertNode(document.createTextNode(' '));
+      acDiv.remove();
+      dummy.remove();
 			$(element).focus();
-			range = document.createRange();
-			range.setStartAfter(wrapper[0]);
-			window.getSelection().removeAllRanges();
-			window.getSelection().addRange(range);
-			return false;
+			setCaretAfter(wrapper[0]);
 		},
 		
 	})
 	.focus()
+	.keydown(function(event) {
+    var KEY = {
+      ESC: 27,
+      BACKSPACE: 8
+    };
+    var k = event.keyCode;
+    if (k == KEY.ESC || k == KEY.BACKSPACE && !input.val()) {
+      setCaretAfter(wrapper[0]);
+      acDiv.remove();
+      wrapper.remove();
+    }
+	})
 	.data('autocomplete')._renderItem = function(ul, item) {
 		return $('<li></li>')
 			.data('item.autocomplete', item)
