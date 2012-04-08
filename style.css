@@ -175,6 +175,7 @@ body {
 
 #posts .savedPost {
   border-radius: 6px;
+  margin-top: 10px;
   margin-bottom: 10px;
   padding: 20px;
   -webkit-transition: all 0.2s ease-in-out;

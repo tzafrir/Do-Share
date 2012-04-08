@@ -194,7 +194,10 @@ function bMinusA(a, b, key) {
 }
 
 function removeRemovedPosts(removedPosts) {
-
+  removedPosts.forEach(function(post) {
+    var p = $('#post' + post.writeTimeStamp);
+    p.hide('blind', {}, 1000);
+  });
 }
 
 function renderAllPosts(posts) {
