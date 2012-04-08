@@ -98,7 +98,7 @@ function publishDraft(writeTimeStamp) {
   chrome.extension.sendRequest({'type': 'publishDraft', 'writeTimeStamp': writeTimeStamp},
       function(ok) {
     if (ok) {
-      var draftDiv = document.getElementById("d" + writeTimeStamp);
+      var draftDiv = document.getElementById('post' + writeTimeStamp);
       draftDiv.parentElement.removeChild(draftDiv);
     }
   });
@@ -167,7 +167,7 @@ function editDraft(writeTimeStamp) {
   chrome.extension.sendRequest({type: 'fetchPost', writeTimeStamp: writeTimeStamp},
       function(post) {
     stopRefreshing = true;
-    var e = document.getElementById('d' + writeTimeStamp);
+    var e = document.getElementById('post' + writeTimeStamp);
     e.innerHTML = '';
     addDraftEditBox(e, post);
   });
@@ -193,7 +193,7 @@ function renderPost(post) {
     attachmentHTML = renderMediaItems(processMediaItems(post.rawMedia));
   }
   var isDraft = (post.state == 'draft');
-  div.id = (isDraft ? "d" : "s" ) + post.writeTimeStamp;
+  div.id = 'post' + post.writeTimeStamp;
 
   // Don't look at this :(
   div.innerHTML = "<small>" + date + "</small><br>" +
