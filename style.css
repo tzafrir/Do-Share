@@ -70,6 +70,13 @@ body {
   border: 1px solid #aec693;
 }
 
+.gp-e-titlebar input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  width: 100%;
+}
+
 .editbox .gp-e-container {
   height: 150px;
   font: normal 13px/1.4 Arial, sans-serif;
