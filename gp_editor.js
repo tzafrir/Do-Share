@@ -231,12 +231,11 @@ GPEditor.prototype.onKeyDown = function(event, element) {
             oid: item.id,
             href: 'https://plus.google.com'
           }).text(item.name);
-      range.insertNode(wrapper[0]);
-      range.insertNode(document.createTextNode(' '));
+      wrapper[0].appendChild(document.createTextNode(' '));
+      setCaretAfter(wrapper[0]);
       acDiv.remove();
       dummy.remove();
       $(element).focus();
-      setCaretAfter(wrapper[0]);
     },
 
   })
