@@ -131,10 +131,10 @@ function addDraftEditBox(parent, post) {
   var div = document.createElement('div');
   div.innerHTML =
     (("<p><div id='content{$}' class='editbox'></div></p>" +
-    "<p><input id='share_id{$}' placeholder='shared id' value='" + share_id + "'></input></p>" +
+    "<p><input type='hidden' id='share_id{$}' placeholder='shared id' value='" + share_id + "'></input></p>" +
     "<p><input id='link{$}' placeholder='link' value='" + link + "'></input></p>" +
     "<p><input id='time{$}' placeholder='Time' /"+"><button onclick='parseTimeField({%})'>Parse</button></p>" +
-    "<p><input id='image_id{$}' placeholder='image_id' value='" + image_id + "'></input></p>" +
+    "<p><input type='hidden' id='image_id{$}' placeholder='image_id' value='" + image_id + "'></input></p>" +
     "<p id='timeParsed{$}'></p>").replace(/{\$}/g, writeTimeStamp).replace(/{%}/g, writeTimeStamp || '""') +
     renderReshare(post) +
     ("<br>" +
