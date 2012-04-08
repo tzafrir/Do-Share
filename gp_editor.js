@@ -187,15 +187,15 @@ GPEditor.prototype.onKeyDown = function(event, element) {
   range.deleteContents();
 
   function setCaretAfter(element) {
-		var range = document.createRange();
-		range.setStartAfter(element);
-		window.getSelection().removeAllRanges();
-		window.getSelection().addRange(range);
+    var range = document.createRange();
+    range.setStartAfter(element);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
   }
 
   event.preventDefault();
-	var wrapper = $('<span class="proflinkWrapper"></span>').css({'white-space': 'nowrap'}),
-	    plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(wrapper),
+  var wrapper = $('<span class="proflinkWrapper"></span>').css({'white-space': 'nowrap'}),
+      plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(wrapper),
       a = $('<a></a>').addClass('proflink').appendTo(wrapper),
       dummy = $('<pre>').css({
         display: 'inline-block',
@@ -205,43 +205,43 @@ GPEditor.prototype.onKeyDown = function(event, element) {
         font: 'normal 13px/1.4 Arial, sans-serif'
       }).appendTo(wrapper);
       wrapper[0].appendChild(document.createTextNode(' '));
-	range.insertNode(wrapper[0]);
+  range.insertNode(wrapper[0]);
 
   var acDiv = $('<div>').addClass("ui-helper-clearfix").appendTo($(document.body)),
       input = $('<input>').addClass('gp-ac-input').appendTo(acDiv);
 
-	input.position({
-	        my: 'left top',
-	        at: 'left bottom',
-	        of: a,
-	        offset: '0 -1'
-	        })
-	    .keydown(function() {
-	      window.setTimeout(function(){dummy.text(input.val());}, 1);
-	    })
-	    .autocomplete({
-		minLength: 0,
-		source: function(request, callback) {
-		  self._profileAutocompleter(request.term, callback);
-		},
-		focus: function() {return false;},
-		select: function(event, ui) {
-		  var item = ui.item;
+  input.position({
+          my: 'left top',
+          at: 'left bottom',
+          of: a,
+          offset: '0 -1'
+          })
+      .keydown(function() {
+        window.setTimeout(function(){dummy.text(input.val());}, 1);
+      })
+      .autocomplete({
+    minLength: 0,
+    source: function(request, callback) {
+      self._profileAutocompleter(request.term, callback);
+    },
+    focus: function() {return false;},
+    select: function(event, ui) {
+      var item = ui.item;
       a.attr({
-			      oid: item.id,
-			      href: 'https://plus.google.com'
-			    }).text(item.name);
+            oid: item.id,
+            href: 'https://plus.google.com'
+          }).text(item.name);
       range.insertNode(wrapper[0]);
       range.insertNode(document.createTextNode(' '));
       acDiv.remove();
       dummy.remove();
-			$(element).focus();
-			setCaretAfter(wrapper[0]);
-		},
-		
-	})
-	.focus()
-	.keydown(function(event) {
+      $(element).focus();
+      setCaretAfter(wrapper[0]);
+    },
+
+  })
+  .focus()
+  .keydown(function(event) {
     var KEY = {
       ESC: 27,
       BACKSPACE: 8
@@ -252,11 +252,11 @@ GPEditor.prototype.onKeyDown = function(event, element) {
       acDiv.remove();
       wrapper.remove();
     }
-	})
-	.data('autocomplete')._renderItem = function(ul, item) {
-		return $('<li></li>')
-			.data('item.autocomplete', item)
-			.append('<a><img src="' + item.photoUrl + '" />' + item.name + '</a>' )
-			.appendTo(ul);
-	}
+  })
+  .data('autocomplete')._renderItem = function(ul, item) {
+    return $('<li></li>')
+      .data('item.autocomplete', item)
+      .append('<a><img src="' + item.photoUrl + '" />' + item.name + '</a>' )
+      .appendTo(ul);
+  }
 }
