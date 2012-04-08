@@ -93,7 +93,7 @@ function getDateString(post) {
   if (post.state == 'scheduled') {
     return "Will be posted on " + new Date(post.timeStamp).toString();
   } else {
-    return "Written on " + new Date(post.writeTimeStamp).toString();
+    return '';
   }
 }
 
@@ -222,19 +222,10 @@ function renderPost(post) {
   div.id = 'post' + post.writeTimeStamp;
 
   // Don't look at this :(
-  div.innerHTML = "<small>" + date + "</small><br>" +
+  div.innerHTML = (date && "<p class='postDate'>" + date + "</p>") +
 
-                  GPEditor.prototype.plusFormatToHtml(post.content) + "<br>" +
+                  GPEditor.prototype.plusFormatToHtml(post.content);
 
-                  attachmentHTML +
-
-                  "<button onclick='delPost(" + post.writeTimeStamp + ")'>Delete</button>" +
-
-                  (isDraft ?
-                      "<button onclick='publishDraft(" + post.writeTimeStamp + ")'>Publish</button>" +
-                      "<button onclick='editDraft(" + post.writeTimeStamp + ")'>Edit draft</button>"
-                      :
-                      "<button onclick='unpublish(" + post.writeTimeStamp + ")'>Unpublish</button>");
   var column = document.querySelector('#posts ' +  (isDraft ? '.drafts' : '.scheduled'));
   column.appendChild(div);
 }
@@ -302,7 +293,7 @@ function onLoad() {
     </div>
     <div id="editbox"></div>
     <div id="posts">
-      <div class="drafts"></div>
-      <div class="scheduled"></div>
+      <div class="column drafts"></div>
+      <div class="column scheduled"></div>
     </div>
   </div>

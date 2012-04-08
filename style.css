@@ -137,3 +137,17 @@ body {
   background-color: #92ac75;
   color: #fff;
 }
+
+#posts .column {
+  width: 300px;
+}
+
+#posts .column.drafts {
+  float: left;
+  margin-right: 10px;
+}
+
+#posts .column.scheduled {
+  float: right;
+  margin-left: 10px;
+}
