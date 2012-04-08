@@ -18,6 +18,9 @@
   <script>
 var mem = {};
 var gpe = {};
+
+var postsCurrentlyDisplayed = [];
+
 var lastUpdate;
 
 function val(name) {
@@ -183,6 +186,29 @@ function unpublish(writeTimeStamp) {
   }
 }
 
+function bMinusA(a, b, key) {
+  var aKeys = a.map(function(item){return item[key]});
+  return b.filter(function(item) {
+    return aKeys.indexOf(item[key]) == -1;
+  });
+}
+
+function removeRemovedPosts(removedPosts) {
+
+}
+
+function renderAllPosts(posts) {
+  if (!posts instanceof Array) {
+    return;
+  }
+  var removedPosts = bMinusA(posts, postsCurrentlyDisplayed, 'writeTimeStamp');
+  postsCurrentlyDisplayed = posts;
+  removeRemovedPosts(removedPosts);
+  posts.forEach(function(post) {
+    renderPost(post);
+  });
+}
+
 function renderPost(post) {
   var div = document.createElement('div');
   var date = getDateString(post);
@@ -209,7 +235,8 @@ function renderPost(post) {
                       "<button onclick='editDraft(" + post.writeTimeStamp + ")'>Edit draft</button>"
                       :
                       "<button onclick='unpublish(" + post.writeTimeStamp + ")'>Unpublish</button>");
-  return div;
+  var column = document.querySelector('#posts ' +  (isDraft ? '.drafts' : '.scheduled'));
+  column.appendChild(div);
 }
 
 function renderMediaItems(medias) {
@@ -243,11 +270,7 @@ function refreshPosts() {
       return;
     }
     lastUpdate = result.lastUpdate;
-    var postsDiv = document.getElementById('posts');
-    postsDiv.innerHTML = '';
-    result.posts && result.posts.reverse().forEach(function(post) {
-      postsDiv.appendChild(renderPost(post));
-    });
+    result.posts && renderAllPosts(result.posts);
   });
 }
 
@@ -278,5 +301,8 @@ function onLoad() {
       <header><h1>Do Share</h1></header>
     </div>
     <div id="editbox"></div>
-    <div id="posts"></div>
+    <div id="posts">
+      <div class="drafts"></div>
+      <div class="scheduled"></div>
+    </div>
   </div>
