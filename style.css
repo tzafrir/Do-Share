@@ -23,7 +23,6 @@ time, mark, audio, video {
 	padding: 0;
 	border: 0;
 	font-size: 100%;
-	font: inherit;
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -51,6 +50,8 @@ table {
 }
 
 /* /reset */
+
+
 
 body {
   background-color: #f3f3f3;
@@ -99,11 +100,21 @@ body {
   border-top: 1px solid #cadbb7;
   border-bottom: 1px solid #cadbb7;
   font-family: sans-serif;
-  cursor: arrow;
+  cursor: pointer;
+  height: 35px;
 }
 
 .toolbar span {
-  padding: 4px;
+  width: 24px;
+  display: inline-block;
+  text-align: center;
+  height: 20px;
+  padding: 2px;
+  margin-top: 5px;
+  font-family: serif;
+  border-radius: 6px;
+  margin-left: 8px;
+  font-size: 125%;
 }
 
 .enabled {
@@ -115,5 +126,6 @@ body {
 }
 
 .active {
-  background-color: green;
+  background-color: #92ac75;
+  color: #fff;
 }
