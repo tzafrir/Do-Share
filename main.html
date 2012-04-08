@@ -220,6 +220,7 @@ function renderPost(post) {
   }
   var isDraft = (post.state == 'draft');
   div.id = 'post' + post.writeTimeStamp;
+  div.className = 'savedPost';
 
   // Don't look at this :(
   div.innerHTML = (date && "<p class='postDate'>" + date + "</p>") +
@@ -293,7 +294,11 @@ function onLoad() {
     </div>
     <div id="editbox"></div>
     <div id="posts">
-      <div class="column drafts"></div>
-      <div class="column scheduled"></div>
+      <div class="column drafts">
+        <div class="columnHead">drafts</div>
+      </div>
+      <div class="column scheduled">
+        <div class="columnHead">scheduled</div>
+      </div>
     </div>
   </div>

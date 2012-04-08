@@ -55,6 +55,7 @@ table {
 
 body {
   background-color: #f3f3f3;
+  font-family: 'sans serif';
 }
 
 #appWrap {
@@ -65,6 +66,11 @@ body {
 #top {
   text-align: center;
   height: 100px;
+}
+
+#top header {
+  font-size: 200%;
+  padding: 30px;
 }
 
 #editbox {
@@ -142,6 +148,20 @@ body {
   width: 300px;
 }
 
+#posts .columnHead {
+  font-size: 150%;
+  text-align: center;
+  padding: 30px;
+}
+
+.drafts .columnHead {
+  color: #e69e13;
+}
+
+.scheduled .columnHead {
+  color: #f07d3f;
+}
+
 #posts .column.drafts {
   float: left;
   margin-right: 10px;
@@ -150,4 +170,18 @@ body {
 #posts .column.scheduled {
   float: right;
   margin-left: 10px;
+}
+
+#posts .savedPost {
+  border-radius: 6px;
+  margin-bottom: 10px;
+  padding: 20px;
+}
+
+.drafts .savedPost {
+  background-color: #f1ebe0;
+}
+
+.scheduled .savedPost {
+  background-color: #f3e8e2;
 }
