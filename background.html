@@ -242,6 +242,9 @@ function addPost(post, callback) {
 }
 
 function fetchAll(callback) {
+  if (!dbInit) {
+    return;
+  }
   var result = {posts: [], lastUpdate: lastUpdate};
   var wrapCallback = function() {
     s.count(function(count) {
