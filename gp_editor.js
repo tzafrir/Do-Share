@@ -187,9 +187,16 @@ GPEditor.prototype.onKeyDown = function(event, element) {
   range.deleteContents();
 
   event.preventDefault();
-	var wrapper = $('<span class="proflinkWrapper"></span>'),
+	var wrapper = $('<span class="proflinkWrapper"></span>').css({'white-space': 'nowrap'}),
 	    plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(wrapper),
-      a = $('<a></a>').addClass('proflink').appendTo(wrapper);
+      a = $('<a></a>').addClass('proflink').appendTo(wrapper),
+      dummy = $('<pre>').css({
+        display: 'inline-block',
+        visibility: 'hidden',
+        color: 'white',
+        margin: 0,
+        font: 'normal 13px/1.4 Arial, sans-serif'
+      }).appendTo(wrapper);
       wrapper[0].appendChild(document.createTextNode(' '));
 	range.insertNode(wrapper[0]);
 
@@ -202,6 +209,9 @@ GPEditor.prototype.onKeyDown = function(event, element) {
 	        of: a,
 	        offset: '0 -1'
 	        })
+	    .keydown(function() {
+	      window.setTimeout(function(){dummy.text(input.val());}, 1);
+	    })
 	    .autocomplete({
 		minLength: 0,
 		source: function(request, callback) {
@@ -216,6 +226,7 @@ GPEditor.prototype.onKeyDown = function(event, element) {
 			    }).text(item.name);
 			range.insertNode(wrapper[0]);
 			acDiv.remove();
+			dummy.remove();
 			$(element).focus();
 			range = document.createRange();
 			range.setStartAfter(wrapper[0]);
