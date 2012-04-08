@@ -225,8 +225,10 @@ function renderPost(post) {
   } else if (post.rawMedia) {
     attachmentHTML = renderMediaItems(processMediaItems(post.rawMedia));
   }
-  var isDraft = (post.state == 'draft');
   div.id = 'post' + post.writeTimeStamp;
+  var isDraft = (post.state == 'draft');
+  var wasDraft = !!document.querySelector('.drafts #' + div.id);
+  var stateChange = !!(isDraft ^ wasDraft);
   div.className = 'savedPost';
 
   // Don't look at this :(
@@ -234,8 +236,18 @@ function renderPost(post) {
 
                   GPEditor.prototype.plusFormatToHtml(post.content);
 
-  var column = document.querySelector('#posts ' +  (isDraft ? '.drafts' : '.scheduled'));
-  column.appendChild(div);
+  var existing = document.getElementById(div.id);
+  var column = $('#posts ' + (isDraft ? '.drafts' : '.scheduled') + ' .postsList');
+  if (existing) {
+    if (stateChange) {
+      removeRemovedPosts([post]);
+      column.prepend(div);
+    } else {
+      existing.innerHTML = div.innerHTML;
+    }
+  } else {
+    column.prepend(div);
+  }
 }
 
 function renderMediaItems(medias) {
@@ -303,9 +315,11 @@ function onLoad() {
     <div id="posts">
       <div class="column drafts">
         <div class="columnHead">drafts</div>
+        <div class="postsList"></div>
       </div>
       <div class="column scheduled">
         <div class="columnHead">scheduled</div>
+        <div class="postsList"></div>
       </div>
     </div>
   </div>
