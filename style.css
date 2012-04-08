@@ -1,14 +1,26 @@
+body {
+  background-color: #f3f3f3;
+}
+
 #appWrap {
   width: 620px;
   margin: 0 auto;
 }
 
+#top {
+  text-align: center;
+}
+
+#editbox {
+  background-color: #f6f9f3;
+  border: 1px solid #aec693;
+}
+
 .editbox .gp-e-container {
   height: 150px;
-  overflow: auto;
-  border: 2px solid #999;
-  border-top-color: #CCC;
   font: normal 13px/1.4 Arial, sans-serif;
+  background-color: #fff;
+  outline: 0;
 }
 
 .gp-e-container p {
@@ -22,8 +34,9 @@
 }
 
 .toolbar {
-  background-color: #e8e8e8;
-  border: 1px solid #aaa;
+  background-color: #e5f2d6;
+  border-top: 1px solid #cadbb7;
+  border-bottom: 1px solid #cadbb7;
   font-family: sans-serif;
   cursor: arrow;
 }
@@ -41,5 +54,5 @@
 }
 
 .active {
-  border: 2px solid black;
+  background-color: green;
 }
