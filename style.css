@@ -1,0 +1,45 @@
+#appWrap {
+  width: 620px;
+  margin: 0 auto;
+}
+
+.editbox .gp-e-container {
+  height: 150px;
+  overflow: auto;
+  border: 2px solid #999;
+  border-top-color: #CCC;
+  font: normal 13px/1.4 Arial, sans-serif;
+}
+
+.gp-e-container p {
+  margin-top: 0;
+}
+
+.gp-ac-input, .gp-ac-input:focus {
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+
+.toolbar {
+  background-color: #e8e8e8;
+  border: 1px solid #aaa;
+  font-family: sans-serif;
+  cursor: arrow;
+}
+
+.toolbar span {
+  padding: 4px;
+}
+
+.enabled {
+  color: black;
+}
+
+.disabled {
+  color: gray;
+}
+
+.active {
+  border: 2px solid black;
+}

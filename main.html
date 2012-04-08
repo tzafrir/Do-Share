@@ -4,33 +4,8 @@
   <title>Night Watch</title>
   <!-- TODO: Need icon -->
   <link rel="icon" href="icon128.png" />
-  <style>
-  .editbox .gp-e-container {
-    width: 400px;
-    height: 200px;
-    border: 2px solid #999;
-    border-top-color: #CCC;
-    font: normal 13px/1.4 Arial, sans-serif;
-  }
-  .gp-e-container p {
-    margin-top: 0;
-  }
-  .gp-ac-input, .gp-ac-input:focus {
-    border: 0;
-    outline: 0;
-    background: transparent;
-  }
-  .toolbar {  width:402px;  
-	  background-color: #e8e8e8; 
-	  border: outset 1px; 
-	  font-family: sans-serif; 
-	  cursor: arrow;
-  }
-  .toolbar span { padding: 4px; }
-  .enabled { color: black; }
-  .disabled { color: gray; }
-  .active { background-color: cyan; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
+
 <script src="opera_wysiwyg/utils.js"></script>
 <script src="opera_wysiwyg/editor.js"></script>
 <script src="opera_wysiwyg/editlib.js"></script>
@@ -298,5 +273,7 @@ function onLoad() {
   </script>
 </head>
 <body onload="onLoad()">
-  <div id="editbox"></div>
-  <div id="posts"></div>
+  <div id="appWrap">
+    <div id="editbox"></div>
+    <div id="posts"></div>
+  </div>
