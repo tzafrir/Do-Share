@@ -176,12 +176,21 @@ body {
   border-radius: 6px;
   margin-bottom: 10px;
   padding: 20px;
+  -webkit-transition: all 0.2s ease-in-out;
 }
 
 .drafts .savedPost {
   background-color: #f1ebe0;
 }
 
+.drafts .savedPost:hover {
+  background-color: #f0a81d;
+}
+
 .scheduled .savedPost {
   background-color: #f3e8e2;
+}
+
+.scheduled .savedPost:hover {
+  background-color: #f07d3f;
 }
