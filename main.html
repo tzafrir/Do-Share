@@ -28,10 +28,6 @@ function val(name) {
   return ($ ? $ : undefined);
 }
 
-function setVal(name, val) {
-  document.getElementById(name).value = val;
-}
-
 function parseTimeField(id) {
   document.getElementById("timeParsed" + id).innerHTML =
       new Date(val('time' + id)).toString();
