@@ -48,6 +48,7 @@ function post(state, writeTimeStamp) {
     'content': getContent(id),
     'share_id': val('share_id' + id),
     'image_id': val('image_id' + id),
+    'title': val('title' + id),
     'timeStamp': new Date(val('time' + id)).getTime() || undefined,
     'link': val('link' + id) || undefined,
   }
@@ -127,13 +128,14 @@ function addDraftEditBox(parent, post) {
   var share_id = post.share_id || '';
   var link = post.link || '';
   var image_id = post.image_id || '';
+  var title = post.title || '';
   if (post.rawMedia) {
     var medias = processMediaItems(post.rawMedia);
     link = medias.link && medias.link.url || '';
   }
   var div = document.createElement('div');
   div.innerHTML =
-    (("<div class='titleBar'><input id='title{$}' placeholder='Title (optional)'></div>" +
+    (("<div class='titleBar'><input id='title{$}' placeholder='Title (optional)' value='" + title + "'></div>" +
     "<div id='content{$}' class='editbox'></div>" +
     "<p><input type='hidden' id='share_id{$}' placeholder='shared id' value='" + share_id + "'></input></p>" +
     "<p><input id='link{$}' placeholder='link' value='" + link + "'></input></p>" +
