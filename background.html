@@ -211,6 +211,9 @@ function publishScheduled(post) {
 }
 
 function publish(post, callback) {
+  if (post.title) {
+    post.content = '*' + post.title + '*\n\n' + post.content;
+  }
   plus.newPost(callback || c, post);
   console.log("Posting");
   console.log(post);
