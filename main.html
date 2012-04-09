@@ -28,9 +28,8 @@ function val(name) {
   return ($ ? $ : undefined);
 }
 
-function parseTimeField(id) {
-  document.getElementById("timeParsed" + id).innerHTML =
-      new Date(val('time' + id)).toString();
+function parseTimeField() {
+  $('#timeParsed').text(new Date(val('time')).toString());
 }
 
 function sendPost(post) {
