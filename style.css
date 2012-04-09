@@ -182,6 +182,12 @@ body {
   -webkit-transition: all 0.2s ease-in-out;
 }
 
+.postTitle, .postDate {
+  display: block;
+  -webkit-margin-after: 0.5em;
+  font-weight: 800;
+}
+
 #posts .savedPost.invisible {
   padding: 0;
   height: 0;

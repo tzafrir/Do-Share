@@ -222,12 +222,15 @@ function renderAllPosts(posts) {
 function renderPost(post) {
   var div = document.createElement('div');
   var date = getDateString(post);
+  var title = post.title || '';
+
   var attachmentHTML = '';
   if (post.reshare) {
     attachmentHTML = renderReshare(post);
   } else if (post.rawMedia) {
     attachmentHTML = renderMediaItems(processMediaItems(post.rawMedia));
   }
+
   div.id = 'post' + post.writeTimeStamp;
   var isDraft = (post.state == 'draft');
   var wasDraft = !!document.querySelector('.drafts #' + div.id);
@@ -238,6 +241,7 @@ function renderPost(post) {
 
   // Don't look at this :(
   div.innerHTML = (date && "<p class='postDate'>" + date + "</p>") +
+                  (title && "<span class='postTitle'>" + title + "</span>") +
 
                   GPEditor.prototype.plusFormatToHtml(content);
 
