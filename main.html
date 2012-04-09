@@ -216,6 +216,10 @@ function renderPost(post) {
   }
 
   div.id = 'post' + post.writeTimeStamp;
+  div.onclick = function() {
+    editDraft(post.writeTimeStamp);
+  };
+
   var isDraft = (post.state == 'draft');
   var wasDraft = !!document.querySelector('.drafts #' + div.id);
   var stateChange = !!(isDraft ^ wasDraft);
