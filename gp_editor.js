@@ -8,8 +8,6 @@
  * @param{function(string, function(person<Array>))} profileAutocompleter.
  */
 function GPEditor(div, text, id, profileAutocompleter) {
-  var titlebar = $('<div>').addClass('gp-e-titlebar'),
-      titleInput = $('<input placeholder="Title (optional)">').appendTo(titlebar);
   var toolbar = document.createElement('div');
   toolbar.innerHTML = 
       ('<div class="toolbar">' +
@@ -25,7 +23,6 @@ function GPEditor(div, text, id, profileAutocompleter) {
   container.className = this.CONTAINER_CLASSNAME;
   this.setText(text);
 
-  titlebar.appendTo($(div));
   div.appendChild(toolbar);
   div.appendChild(container);
 

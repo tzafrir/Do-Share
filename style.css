@@ -78,11 +78,11 @@ body {
   border: 1px solid #aec693;
 }
 
-.gp-e-titlebar {
+.titleBar {
   height: 50px;
 }
 
-.gp-e-titlebar input {
+.titleBar input {
   border: 0;
   outline: 0;
   background: transparent;

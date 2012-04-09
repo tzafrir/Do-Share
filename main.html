@@ -133,7 +133,8 @@ function addDraftEditBox(parent, post) {
   }
   var div = document.createElement('div');
   div.innerHTML =
-    (("<div id='content{$}' class='editbox'></div>" +
+    (("<div class='titleBar'><input id='title{$}' placeholder='Title (optional)'></div>" +
+    "<div id='content{$}' class='editbox'></div>" +
     "<p><input type='hidden' id='share_id{$}' placeholder='shared id' value='" + share_id + "'></input></p>" +
     "<p><input id='link{$}' placeholder='link' value='" + link + "'></input></p>" +
     "<p><input id='time{$}' placeholder='Time' /"+"><button onclick='parseTimeField({%})'>Parse</button></p>" +
