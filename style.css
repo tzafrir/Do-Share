@@ -101,6 +101,7 @@ body {
 
 .gp-e-container p {
   margin-top: 0;
+  -webkit-margin-after: 1em;
 }
 
 .gp-ac-input, .gp-ac-input:focus {
