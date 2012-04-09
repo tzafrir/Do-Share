@@ -17,7 +17,7 @@
 
   <script>
 var mem = {};
-var gpe = {};
+var gpe;
 
 var postsCurrentlyDisplayed = [];
 
@@ -37,16 +37,16 @@ function sendPost(post) {
   chrome.extension.sendRequest({'type': 'post', 'post': post}, refresh);
 }
 
-function post(state, writeTimeStamp) {
-  var id = writeTimeStamp || '';
+function post(state) {
+  var writeTimeStamp = Number(val('write_time_stamp') || 0);
   var post = {
     'state': state,
-    'content': getContent(id),
-    'share_id': val('share_id' + id),
-    'image_id': val('image_id' + id),
-    'title': val('title' + id),
-    'timeStamp': new Date(val('time' + id)).getTime() || undefined,
-    'link': val('link' + id) || undefined,
+    'content': getContent() || '',
+    'share_id': val('share_id'),
+    'image_id': val('image_id'),
+    'title': val('title'),
+    'timeStamp': new Date(val('time')).getTime() || undefined,
+    'link': val('link') || undefined,
   }
   if (writeTimeStamp) {
     post.writeTimeStamp = writeTimeStamp;
@@ -104,18 +104,15 @@ function publishDraft(writeTimeStamp) {
   });
 }
 
-function getContent(writeTimeStamp) {
-  var g = gpe[writeTimeStamp];
-  if (g) {
-    return g.getText();
-  }
+function getContent() {
+  return gpe && gpe.getText();
 }
 
 function profileAutocompleter(prefix, callback) {
   chrome.extension.sendRequest({type: 'profileAutocomplete', prefix: prefix}, callback);
 }
 
-function addDraftEditBox(parent, post) {
+function addDraftEditBox(post) {
   if (!post) {
     post = {};
   }
@@ -125,30 +122,22 @@ function addDraftEditBox(parent, post) {
   var link = post.link || '';
   var image_id = post.image_id || '';
   var title = post.title || '';
+  var medias;
   if (post.rawMedia) {
-    var medias = processMediaItems(post.rawMedia);
+    medias = processMediaItems(post.rawMedia);
     link = medias.link && medias.link.url || '';
   }
-  var div = document.createElement('div');
-  div.innerHTML =
-    (("<div class='titleBar'><input id='title{$}' placeholder='Title (optional)' value='" + title + "'></div>" +
-    "<div id='content{$}' class='editbox'></div>" +
-    "<p><input type='hidden' id='share_id{$}' placeholder='shared id' value='" + share_id + "'></input></p>" +
-    "<p><input id='link{$}' placeholder='link' value='" + link + "'></input></p>" +
-    "<p><input id='time{$}' placeholder='Time' /"+"><button onclick='parseTimeField({%})'>Parse</button></p>" +
-    "<p><input type='hidden' id='image_id{$}' placeholder='image_id' value='" + image_id + "'></input></p>" +
-    "<p id='timeParsed{$}'></p>").replace(/{\$}/g, writeTimeStamp).replace(/{%}/g, writeTimeStamp || '""') +
-    renderReshare(post) +
-    ("<br>" +
-    "<button onclick='post(\"draft\", %)'>Save Draft</button>" +
-    "<button onclick='post(\"scheduled\", %)'>Schedule</button>" +
-    "<button onclick='post(\"post\", %)'>Post immediately</button>").replace(/%/g, writeTimeStamp || 'undefined'));
 
-  if (parent.children.length > 0) {
-    parent.removeChild(parent.children[0]);
+  $('#title').val(title);
+  $('#share_id').val(share_id);
+  $('#link').val(link);
+  $('#image_id').val(image_id);
+  $('#write_time_stamp').val(writeTimeStamp);
+
+  if (gpe) {
+    gpe.destroy();
   }
-  parent.appendChild(div);
-  gpe[writeTimeStamp] = new GPEditor(document.getElementById('content' + writeTimeStamp),
+  gpe = new GPEditor(document.getElementById('content'),
       content, writeTimeStamp, profileAutocompleter);
 }
 
@@ -168,10 +157,9 @@ function renderReshare(post) {
 function editDraft(writeTimeStamp) {
   chrome.extension.sendRequest({type: 'fetchPost', writeTimeStamp: writeTimeStamp},
       function(post) {
+    // TODO: Save previous post as draft.
     stopRefreshing = true;
-    var e = document.getElementById('post' + writeTimeStamp);
-    e.innerHTML = '';
-    addDraftEditBox(e, post);
+    addDraftEditBox(post);
   });
 }
 
@@ -300,7 +288,7 @@ function renderMediaItems(medias) {
 }
 
 function refresh() {
-  addDraftEditBox(document.getElementById('editbox'));
+  addDraftEditBox();
   refreshPosts();
 }
 
@@ -331,7 +319,7 @@ function onLoad() {
     mem[savedPost.writeTimeStamp] = savedPost;
   }
   localStorage.clear('_tmp_post');
-  addDraftEditBox(document.getElementById('editbox'), savedPost);
+  addDraftEditBox(savedPost);
   refreshIfNeeded();
 }
 
@@ -342,7 +330,19 @@ function onLoad() {
     <div id="top">
       <header><h1>Do Share</h1></header>
     </div>
-    <div id="editbox"></div>
+    <div id="editbox">
+      <div class="titleBar"><input id="title" placeholder="Title (optional)" /></div>
+      <div id="content" class="editbox"></div>
+      <p><input id="link" placeholder="link" /></p>
+      <p><input id="time" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
+      <input type="hidden" id="image_id" />
+      <input type="hidden" id="share_id" />
+      <input type="hidden" id="write_time_stamp" />
+      <p id="timeParsed"></p>
+      <button onclick="post('draft')">Save Draft</button>
+      <button onclick="post('scheduled')">Schedule</button>
+      <button onclick="post('post')">Post immediately</button>
+    </div>
     <div id="posts">
       <div class="column drafts">
         <div class="columnHead">drafts</div>
