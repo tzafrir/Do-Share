@@ -158,6 +158,14 @@ function renderReshare(post) {
          (rs.rawMedia ? renderMediaItems(processMediaItems(rs.rawMedia)) : '') + "</div>";
 }
 
+function renderReshareMeta(post) {
+  if (!(post && post.reshare)) {
+    return '';
+  }
+  var rs = post.reshare;
+  return '<span class="reshareMeta">Reshared post by ' + rs.author_name + '</span>';
+}
+
 function editDraft(writeTimeStamp) {
   chrome.extension.sendRequest({type: 'fetchPost', writeTimeStamp: writeTimeStamp},
       function(post) {
@@ -196,6 +204,25 @@ function removeRemovedPosts(removedPosts) {
   });
 }
 
+function getImgHtml(post) {
+  function getMediaHtml(rawMedia) {
+    var items = processMediaItems(rawMedia)
+    var image = items.images[0];
+    var video = items.video;
+    if (video) {
+      return "<iframe src='" + video.embed + "' width='260' ></iframe>";
+    }
+    if (image) {
+      return "<img width='260' src='" + image.url + "' /" + ">";
+    }
+  };
+  if (post.reshare && post.reshare.rawMedia) {
+    return getMediaHtml(post.reshare.rawMedia);
+  } else if (post.rawMedia) {
+    return getMediaHtml(post.rawMedia);
+  }
+}
+
 function renderAllPosts(posts) {
   if (!posts instanceof Array) {
     return;
@@ -214,11 +241,7 @@ function renderPost(post) {
   var title = post.title || '';
 
   var attachmentHTML = '';
-  if (post.reshare) {
-    attachmentHTML = renderReshare(post);
-  } else if (post.rawMedia) {
-    attachmentHTML = renderMediaItems(processMediaItems(post.rawMedia));
-  }
+  var postImage = getImgHtml(post) || '';
 
   div.id = 'post' + post.writeTimeStamp;
   div.onclick = function() {
@@ -236,7 +259,9 @@ function renderPost(post) {
   div.innerHTML = (date && "<p class='postDate'>" + date + "</p>") +
                   (title && "<span class='postTitle'>" + title + "</span>") +
 
-                  GPEditor.prototype.plusFormatToHtml(content);
+                  GPEditor.prototype.plusFormatToHtml(content) +
+                  renderReshareMeta(post) +
+                  "<br>" + postImage;
 
   var existing = document.getElementById(div.id);
   var column = $('#posts ' + (isDraft ? '.drafts' : '.scheduled') + ' .postsList');

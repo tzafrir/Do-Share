@@ -156,6 +156,12 @@ body {
   -webkit-margin-after: 0.4em;
 }
 
+.reshareMeta {
+  font-weight: 800;
+  -webkit-margin-before: 1em;
+  display: block;
+}
+
 #posts .column {
   width: 300px;
 }
