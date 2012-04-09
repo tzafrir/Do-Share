@@ -21,7 +21,7 @@ var gpe = {};
 
 var postsCurrentlyDisplayed = [];
 
-var lastUpdate;
+var lastUpdate = 0;
 
 function val(name) {
   var $ = document.getElementById(name).value;
@@ -241,12 +241,21 @@ function renderPost(post) {
   if (existing) {
     if (stateChange) {
       removeRemovedPosts([post]);
-      column.prepend(div);
+      addPostToColumn(div, column[0]);
     } else {
       existing.innerHTML = div.innerHTML;
     }
   } else {
-    column.prepend(div);
+    addPostToColumn(div, column[0]);
+  }
+}
+
+function addPostToColumn(div, column) {
+  if (lastUpdate == 0) {
+    $(column).prepend(div);
+  } else {
+    $(div).addClass('invisible').prependTo($(column));
+    window.setTimeout(function(){$(div).removeClass('invisible');}, 1);
   }
 }
 
@@ -280,8 +289,8 @@ function refreshPosts() {
     if (stopRefreshing || result.lastUpdate == lastUpdate) {
       return;
     }
-    lastUpdate = result.lastUpdate;
     result.posts && renderAllPosts(result.posts);
+    lastUpdate = result.lastUpdate;
   });
 }
 

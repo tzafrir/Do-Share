@@ -181,11 +181,17 @@ body {
   -webkit-transition: all 0.2s ease-in-out;
 }
 
+#posts .savedPost.invisible {
+  padding: 0;
+  height: 0;
+  opacity: 0;
+}
+
 .drafts .savedPost {
   background-color: #f1ebe0;
 }
 
-.drafts .savedPost:hover {
+.drafts .savedPost:hover, .drafts .savedPost.invisible {
   background-color: #f0a81d;
 }
 
@@ -193,6 +199,6 @@ body {
   background-color: #f3e8e2;
 }
 
-.scheduled .savedPost:hover {
+.scheduled .savedPost:hover, .scheduled .savedPost.invisible {
   background-color: #f07d3f;
 }
