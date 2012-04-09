@@ -26,6 +26,10 @@ function GPEditor(div, text, id, profileAutocompleter) {
   div.appendChild(toolbar);
   div.appendChild(container);
 
+  this._div = div;
+  this._toolbar = toolbar;
+  this._container = container;
+
   Editor(container, id);
 
   this.tagStack = new function() {
@@ -57,6 +61,11 @@ function GPEditor(div, text, id, profileAutocompleter) {
   container.onkeydown = function(event) {
     self.onKeyDown(event, this);
   }
+}
+
+GPEditor.prototype.destroy = function() {
+  this._div.removeChild(this._toolbar);
+  this._div.removeChild(this._container);
 }
 
 GPEditor.prototype.normalizeHtml = function(element) {
