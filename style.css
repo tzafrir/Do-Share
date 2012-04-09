@@ -148,6 +148,14 @@ body {
   color: #fff;
 }
 
+.reshare {
+  padding: 10px;
+}
+
+.reshare h2, .reshare p, .reshare a, .reshare h3 {
+  -webkit-margin-after: 0.4em;
+}
+
 #posts .column {
   width: 300px;
 }

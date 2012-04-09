@@ -136,6 +136,8 @@ function addDraftEditBox(post) {
   $('#time').val(time);
   $('#write_time_stamp').val(writeTimeStamp);
 
+  $('#reshare').html(renderReshare(post));
+
   if (gpe) {
     gpe.destroy();
   }
@@ -148,12 +150,12 @@ function renderReshare(post) {
     return '';
   }
   var rs = post.reshare;
-  return '<h2>' + rs.author_name + ' originally shared this ' +
+  return '<div class="reshare"><h2>' + rs.author_name + ' originally shared this ' +
          '<a href="' + rs.url + '">post</a> ' +
          (rs.via_name ? ' (via ' + rs.via_name + ')' : '') +
          ':</h2>' +
          '<p>' + rs.content.replace(/(class=\'ot-hashtag\' href=\')/g, "$1https://plus.google.com/") + '</p>' +
-         (rs.rawMedia ? renderMediaItems(processMediaItems(rs.rawMedia)) : '');
+         (rs.rawMedia ? renderMediaItems(processMediaItems(rs.rawMedia)) : '') + "</div>";
 }
 
 function editDraft(writeTimeStamp) {
@@ -288,8 +290,8 @@ function renderMediaItems(medias) {
 
   (image ? "<img src='" + image.url + "'><br>" : "") +
 
-  (video ? "<iframe src='" + video.embed + "' width='" + video.w +
-      "' height='" + video.h + "' ></iframe>" : '') +
+  (video ? "<iframe src='" + video.embed + "' width='" + video.w / 2 +
+      "' height='" + video.h / 2 + "' ></iframe>" : '') +
 
   (link && link.description ? "<p>" + link.description + "</p>" : "");
 }
@@ -340,6 +342,7 @@ function onLoad() {
     <div id="editbox">
       <div class="titleBar"><input id="title" placeholder="Title (optional)" /></div>
       <div id="content" class="editbox"></div>
+      <div id="reshare"></div>
       <p><input id="link" placeholder="link" /></p>
       <p><input id="time" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
       <input type="hidden" id="image_id" />
