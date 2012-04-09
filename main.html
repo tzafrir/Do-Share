@@ -81,7 +81,8 @@ function processMediaItems(mediaArray) {
   return result;
 }
 
-function delPost(writeTimeStamp) {
+function delPost() {
+  var writeTimeStamp = Number(val('write_time_stamp'));
   chrome.extension.sendRequest({'type': 'delPost', 'writeTimeStamp': writeTimeStamp}, refresh);
 }
 
@@ -344,6 +345,7 @@ function onLoad() {
       <input type="hidden" id="share_id" />
       <input type="hidden" id="write_time_stamp" />
       <p id="timeParsed"></p>
+      <button onclick="delPost()">Delete post :(</button>
       <button onclick="post('draft')">Save Draft</button>
       <button onclick="post('scheduled')">Schedule</button>
       <button onclick="post('post')">Post immediately</button>
