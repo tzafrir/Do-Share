@@ -231,10 +231,12 @@ function renderPost(post) {
   var stateChange = !!(isDraft ^ wasDraft);
   div.className = 'savedPost';
 
+  var content = trimContent(post.content);
+
   // Don't look at this :(
   div.innerHTML = (date && "<p class='postDate'>" + date + "</p>") +
 
-                  GPEditor.prototype.plusFormatToHtml(post.content);
+                  GPEditor.prototype.plusFormatToHtml(content);
 
   var existing = document.getElementById(div.id);
   var column = $('#posts ' + (isDraft ? '.drafts' : '.scheduled') + ' .postsList');
@@ -256,6 +258,23 @@ function addPostToColumn(div, column) {
   } else {
     $(div).addClass('invisible').prependTo($(column));
     window.setTimeout(function(){$(div).removeClass('invisible');}, 1);
+  }
+}
+
+function trimContent(string) {
+  if (!string || !(string > '')) {
+    return string;
+  }
+  var maxChars = 350;
+  var trimmed = string.match(/(^[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n)/);
+  if (trimmed && trimmed[0]) {
+    // Content has line breaks.
+    return trimmed[0].replace(/[\n]+$/, '\n&hellip;');
+  } else {
+    if (string.length > maxChars + 40) {
+      string = string.substring(0, maxChars).replace(/\s+$/, '') + '&hellip;';
+    }
+    return string;
   }
 }
 
