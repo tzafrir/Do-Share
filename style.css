@@ -93,10 +93,13 @@ body {
 }
 
 .editbox .gp-e-container {
-  height: 150px;
+  min-height: 70px;
+  max-height: 1000px;
+  padding-bottom: 30px;
   font: normal 13px/1.4 Arial, sans-serif;
   background-color: #fff;
   outline: 0;
+  overflow-y: auto;
 }
 
 .gp-e-container p {
