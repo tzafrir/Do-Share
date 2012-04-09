@@ -121,6 +121,7 @@ function addDraftEditBox(post) {
   var link = post.link || '';
   var image_id = post.image_id || '';
   var title = post.title || '';
+  var time = post.timeStamp ? new Date(post.timeStamp).toString() : '';
   var medias;
   if (post.rawMedia) {
     medias = processMediaItems(post.rawMedia);
@@ -131,6 +132,7 @@ function addDraftEditBox(post) {
   $('#share_id').val(share_id);
   $('#link').val(link);
   $('#image_id').val(image_id);
+  $('#time').val(time);
   $('#write_time_stamp').val(writeTimeStamp);
 
   if (gpe) {
