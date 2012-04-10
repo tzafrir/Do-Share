@@ -119,6 +119,6 @@ function ValueSelectorController(command, elem) {
 		});
 	};
 
-	bindEvent(editDoc, "keyup", updateToolbar);
-	bindEvent(editDoc, "mouseup", updateToolbar);
+	bindEvent(container, "keyup", updateToolbar);
+	bindEvent(container, "mouseup", updateToolbar);
 }
