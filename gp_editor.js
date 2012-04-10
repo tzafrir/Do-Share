@@ -203,11 +203,13 @@ GPEditor.prototype.onKeyDown = function(event, element) {
   }
 
   event.preventDefault();
-  var wrapper = $('<span class="proflinkWrapper"></span>')
+  var wrapper = $('<span>'),
+      proflinkWrapper = $('<span class="proflinkWrapper"></span>')
         .css({'white-space': 'nowrap'})
-        .attr({contenteditable: false}),
-      plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(wrapper),
-      a = $('<a></a>').addClass('proflink').appendTo(wrapper),
+        .attr({contenteditable: false})
+        .appendTo(wrapper),
+      plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(proflinkWrapper),
+      a = $('<a></a>').addClass('proflink').appendTo(proflinkWrapper),
       dummy = $('<pre>').css({
         display: 'inline-block',
         visibility: 'hidden',
