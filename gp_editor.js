@@ -240,7 +240,7 @@ GPEditor.prototype.onKeyDown = function(event, element) {
       var item = ui.item;
       a.attr({
             oid: item.id,
-            href: 'https://plus.google.com'
+            href: 'https://plus.google.com/' + item.id
           }).text(item.name);
       wrapper[0].appendChild(document.createTextNode(' '));
       setCaretAfter(wrapper[0]);
