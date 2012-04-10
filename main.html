@@ -17,6 +17,7 @@
 
   <script>
 var mem = {};
+var touch = {};
 var gpe;
 
 var postsCurrentlyDisplayed = [];
@@ -46,6 +47,7 @@ function post(state) {
     'title': val('title'),
     'timeStamp': new Date(val('time')).getTime() || undefined,
     'link': val('link') || undefined,
+    'touch': new Date().getTime()
   }
   if (writeTimeStamp) {
     post.writeTimeStamp = writeTimeStamp;
@@ -236,6 +238,10 @@ function renderAllPosts(posts) {
 }
 
 function renderPost(post) {
+  if (post.touch && post.touch == touch[post.writeTimeStamp]) {
+    return;
+  }
+  touch[post.writeTimeStamp] = post.touch;
   var div = document.createElement('div');
   var date = getDateString(post);
   var title = post.title || '';
