@@ -375,17 +375,19 @@ function onLoad() {
       <div id="content" class="editbox"></div>
       <div id="reshare"></div>
       <p><input id="link" placeholder="link" /></p>
-      <p><input id="time" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
       <input type="hidden" id="image_id" />
       <input type="hidden" id="share_id" />
       <input type="hidden" id="write_time_stamp" />
-      <p id="timeParsed"></p>
     </div>
     <div id="buttonBar">
       <button onclick="delPost()" id="buttonDelete">delete post :(</button>
-      <button onclick="post('draft')" id="buttonDraft">save Draft</button>
+      <button onclick="post('draft')" id="buttonDraft">save draft</button>
       <button onclick="post('scheduled')" id="buttonSchedule">schedule</button>
       <button onclick="post('post')" id="buttonPost">share now</button>
+    </div>
+    <div id="scheduleBar">
+      <p><input id="time" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
+      <p id="timeParsed"></p>
     </div>
     <div id="posts">
       <div class="column drafts">
