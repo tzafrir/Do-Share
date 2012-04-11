@@ -166,7 +166,7 @@ body {
   margin-top: 18px;
 }
 
-#buttonBar button {
+#buttonBar button, #buttonScheduleStepTwo {
   width: -webkit-calc(25% - 15px);
   margin-left: 15px;
   height: 34px;
@@ -176,9 +176,10 @@ body {
   font-size: 16px;
   font-weight: 800;
   text-shadow: 0px -1px 1px #888;
+  cursor: pointer;
 }
 
-#buttonBar button:first-child {
+#buttonBar button:first-child, #buttonScheduleStepTwo {
   margin-left: 0;
 }
 
@@ -194,7 +195,7 @@ body {
   box-shadow: 0px 2px 2px #dadada;
 }
 
-#buttonBar #buttonSchedule {
+#buttonBar #buttonSchedule, #buttonScheduleStepTwo {
   background-color: #f1813f;
   border-color: #f07d3f;
   box-shadow: 0px 2px 2px #dadada;
@@ -207,12 +208,13 @@ body {
 }
 
 #scheduleBar {
-  height: 40px;
+  height: 80px;
   text-align: center;
   border: 2px solid black;
   margin-top: 20px;
   padding: 10px;
   box-shadow: 0px 2px 2px #888;
+  display: none;
 }
 
 #posts .column {

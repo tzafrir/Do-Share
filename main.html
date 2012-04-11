@@ -332,6 +332,10 @@ function refresh() {
   refreshPosts();
 }
 
+function showScheduleBar() {
+  $('#scheduleBar').show();
+}
+
 var stopRefreshing;
 function refreshPosts() {
   stopRefreshing = false;
@@ -382,12 +386,13 @@ function onLoad() {
     <div id="buttonBar">
       <button onclick="delPost()" id="buttonDelete">delete post :(</button>
       <button onclick="post('draft')" id="buttonDraft">save draft</button>
-      <button onclick="post('scheduled')" id="buttonSchedule">schedule</button>
+      <button onclick="showScheduleBar()" id="buttonSchedule">schedule</button>
       <button onclick="post('post')" id="buttonPost">share now</button>
     </div>
     <div id="scheduleBar">
       <p><input id="time" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
       <p id="timeParsed"></p>
+      <button onclick="post('scheduled')" id="buttonScheduleStepTwo">schedule</button>
     </div>
     <div id="posts">
       <div class="column drafts">
