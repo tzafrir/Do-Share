@@ -53,13 +53,18 @@ GooglePlusAPI = function(opt) {
   this._info = null;
   this._suggestToken = null;
 
-  this.BURST_INTERVAL = 2000; // time between requesting 'more/burst' search results
+  // Time between requesting more pages in search resutls.
+  this.PRECACHE_INTERVAL = 1000;
+
+  // Time between requesting 'more/burst' search results.
+  this.BURST_INTERVAL = 5000;
 
 
   this._db.open();
 };
 
 //------------------------ Private Functions --------------------------
+
 /**
  * Parse JSON string in a clean way by removing a bunch of commas and brackets. These should only
  * be used in Google post requests.
@@ -70,12 +75,16 @@ GooglePlusAPI.prototype._parseJSON = function(input) {
   if (input.match(/^[a-z\.]+\(/)) {
     return this._parseJSONp(input);
   }
+  // We could use eval, but what if Google is untrustworthy?
+  //return eval('(' + input + ')');
+
   var jsonString = input.replace(/\[,/g, '[null,');
   jsonString = jsonString.replace(/,\]/g, ',null]');
   jsonString = jsonString.replace(/,,/g, ',null,');
   jsonString = jsonString.replace(/,,/g, ',null,');
-  jsonString = jsonString.replace(/([{,][\s]*)([0-9]+)([\s]*:)/g, "$1\"$2\"$3")
+  jsonString = jsonString.replace(/{(\d+):/g, '{"$1":');
   return JSON.parse(jsonString);
+
 };
 
 /**
@@ -213,7 +222,7 @@ GooglePlusAPI.prototype._parsePost = function(element) {
       item.data.active = isActive;
       item.data.id = hangoutID;
       item.data.participants = [];
-      item.data.extra_data = hangoutData[13];
+      item.data.extra_data = hangoutData[15];
       
       var cachedOnlineUsers = {};
       var onlineParticipants = hangoutData[3];
@@ -504,6 +513,78 @@ GooglePlusAPI.prototype._createMediaItem = function(item) {
   return null;
 };
 
+/**
+ * Create a wire format ACL string.
+ *
+ * @param {AclItem<Array>} aclItems
+ * @return {Object}
+ *
+ * (AclItem: {GooglePlusAPI.ACL type, String id}, where id is a circle id for ACL.SPECIFIED_CIRCLE,
+ *     or a user's id for ACL.SPECIFIED_PERSON)
+ */
+GooglePlusAPI.prototype._parseAclItems = function(aclItems) {
+  var resultAclEntries = [];
+  aclItems.forEach(function(aclItem) {
+    var scope;
+    var selfId = this.getInfo().id;
+    if (aclItem.type == GooglePlusAPI.AclType.PUBLIC) {
+      scope = {
+        scopeType: 'anyone',
+        name: 'Anyone',
+        id: 'anyone',
+        me: true,
+        requiresKey: false
+      };
+    } else if (aclItem.type == GooglePlusAPI.AclType.EXTENDED_CIRCLES) {
+      scope = {
+        scopeType: 'focusGroup',
+        groupType: 'e',
+        name: 'Extended Circles',
+        id: selfId + '.1f',
+        me: false,
+        requiresKey: false
+      };
+    } else if (aclItem.type == GooglePlusAPI.AclType.YOUR_CIRCLES) {
+      scope = {
+        scopeType: 'focusGroup',
+        groupType: 'a',
+        name: 'Your Circles',
+        id: selfId + '.1c',
+        me: false,
+        requiresKey: false
+      };
+    } else if (aclItem.type == GooglePlusAPI.AclType.SPECIFIED_CIRCLE) {
+      scope = {
+        scopeType: 'focusGroup',
+        groupType: 'p',
+        // Against all common sense, Google+ also sends:
+        //   name: Circle's name
+        //   membershipCount: Number of circle members
+        id: selfId + '.' + aclItem.id,
+        me: false,
+        requiresKey: false
+      };
+    } else if (aclItem.type == GooglePlusAPI.AclType.SPECIFIED_PERSON) {
+      scope = {
+        scopeType: 'user',
+        // Against all common sense, Google+ also sends:
+        //   iconUrl: Url to the avatar of the user.
+        // Even weirder than that - A post will fail with error 500 if the name string isn't set.
+        name: '',
+        id: aclItem.id,
+        me: false,
+        isMe: false,
+        requiresKey: false
+      };
+    }
+
+    // No idea why, but each scope has to be sent twice: Once with role 20, once with role 60.
+    resultAclEntries.push({scope: scope, role: 20});
+    resultAclEntries.push({scope: scope, role: 60});
+  }.bind(this));
+  return {aclEntries: resultAclEntries};
+};
+
 GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
   var albumData = imageMetadata.proto[1][0][2];
   var imageData = imageMetadata.proto[1][0][3][0];
@@ -532,14 +613,6 @@ GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
   return mediaItem;
 };
 
-GooglePlusAPI.prototype._isPhotoJson = function(text) {
-  return !!text.match("&&&START&&&");
-};
-
-GooglePlusAPI.prototype._parsePhotosJSON = function(text) {
-  return this._parseJSON(text.split('&&&')[2]);
-};
-
 //----------------------- Public Functions ------------------------.
 /**
  * @return True if session is valid to Google+.
@@ -563,10 +636,10 @@ GooglePlusAPI.prototype.init = function(callback) {
   var self = this;
   if(this.isAuthenticated()) {
     this.refreshInfo(function() {
-        self._fireCallback(callback, true);
+        self._fireCallback(callback, {status: true});
     });
   } else {
-    this._fireCallback(callback, false);
+    this._fireCallback(callback, {status: false});
   }
 };
 
@@ -586,7 +659,7 @@ GooglePlusAPI.prototype.refreshCircles = function(callback, opt_onlyCircles) {
     var dirtyCircles = response[1];
     self._db.getCircleEntity().clear(function(res) {
       if (!res.status) {
-        self._fireCallback(callback, false);
+        self._fireCallback(callback, {status: false});
       }
       else {
         var dirtyUsers = response[2];
@@ -606,7 +679,7 @@ GooglePlusAPI.prototype.refreshCircles = function(callback, opt_onlyCircles) {
         var remaining = onlyCircles ? batchRemaining[0] : batchRemaining[0] + batchRemaining[1];
         var onComplete = function(result) {
           if (--remaining == 0) {
-            self._fireCallback(callback, true);
+            self._fireCallback(callback, {status: true});
           }
         };
 
@@ -679,7 +752,7 @@ GooglePlusAPI.prototype.refreshFollowers = function(callback) {
     var remaining = dirtyFollowers.length;
     var onComplete = function(result) {
       if (--remaining == 0) {
-        self._fireCallback(callback, true);
+        self._fireCallback(callback, {status: true});
       }
     };
 
@@ -717,7 +790,7 @@ GooglePlusAPI.prototype.refreshFindPeople = function(callback) {
     var remaining = dirtyUsers.length;
     var onComplete = function(result) {
       if (--remaining == 0) {
-        self._fireCallback(callback, true);
+        self._fireCallback(callback, {status: true});
       }
     };
 
@@ -765,16 +838,14 @@ GooglePlusAPI.prototype.refreshInfo = function(callback) {
       self._info.name = emailParse[1];
       self._info.email = emailParse[2];
       self._info.id = detail[0];
-      self._info.acl = '"' + (detail[1][14][0][0]).replace(/"/g, '\\"') + '"';
+      // TODO: ACL was removes from this request.
+      //self._info.acl = '"' + (detail[1][14][0][0]).replace(/"/g, '\\"') + '"';
       self._info.circles = detail[10][1].map(function(element) {
         return {id: element[0], name: element[1]}
       });
       break;
     }
-    self._fireCallback(callback, {
-      status: true,
-      data: self._info
-    });
+    self._fireCallback(callback, { status: true, data: self._info });
   }, this.INITIAL_DATA_API);
 };
 
@@ -802,7 +873,7 @@ GooglePlusAPI.prototype.addPeople = function(callback, circle, users) {
     var remaining = dirtyPeople.length;
     var onComplete = function(result) {
       if (--remaining == 0) {
-        self._fireCallback(callback, true);
+        self._fireCallback(callback, {status: true});
       }
     };
     dirtyPeople.forEach(function(element, index) {
@@ -840,7 +911,7 @@ GooglePlusAPI.prototype.removePeople = function(callback, circle, users) {
     var remaining = users.length;
     var onComplete = function(result) {
       if (--remaining == 0) {
-        self._fireCallback(callback, true);
+        self._fireCallback(callback, {status: true});
       }
     };
     users.forEach(function(element, index) {
@@ -941,7 +1012,7 @@ GooglePlusAPI.prototype.sortCircle = function(callback, circle_id, index) {
   var requestParams = '?c=["' + circle_id + '"]&i=' + parseInt(index);
   var data = 'at=' + this._getSession();
   this._requestService(function(response) {
-    self._fireCallback(callback, true);
+    self._fireCallback(callback, {status: true});
   }, this.SORT_MUTATE_API + requestParams, data);
 };
 
@@ -980,11 +1051,11 @@ GooglePlusAPI.prototype.deleteComment = function(callback, commentId) {
   }
   var self = this;
   if (!commentId) {
-    self._fireCallback(callback, false);
+    self._fireCallback(callback, {status: false, data: 'Missing parameter: commentId'});
   }
   var data = 'commentId=' + commentId + '&at=' + this._getSession();
   this._requestService(function(response) {
-    self._fireCallback(callback, (!response.error));
+    self._fireCallback(callback, {status: !response.error});
   }, this.DELETE_COMMENT_API, data);
 };
 
@@ -1000,13 +1071,14 @@ GooglePlusAPI.prototype.getProfile = function(callback, id) {
   }
   var self = this;
   if (isNaN(id)) {
-    return {};
+    self._fireCallback(callback, {status: false, data: 'Invalid ID: Not a number'});
+    return;
   }
   this._requestService(function(response) {
     var obj = {
       introduction: response[1][2][14][1]
     };
-    self._fireCallback(callback, obj);
+    self._fireCallback(callback, {status: true, data: obj});
   }, this.PROFILE_GET_API + id);
 };
 
@@ -1151,7 +1223,7 @@ GooglePlusAPI.prototype.lookupPost = function(callback, userID, postID) {
   if (!userID || !postID) {
     this._fireCallback(callback, {
       status: false,
-      data: 'You must specifify a userID and postID parameters.'
+      data: 'Missing parameters: userID and postID'
     });
     return;
   }
@@ -1179,12 +1251,12 @@ GooglePlusAPI.prototype.modifyMute = function(callback, itemId, muteStatus) {
   }
   var self = this;
   if (!itemId) {
-    self._fireCallback(callback, false);
+    self._fireCallback(callback, {status: false, data: 'Missing parameter: itemId'});
   }
   var mute = muteStatus || false;
   var data = 'itemId=' + itemId + '&mute=' + mute + '&at=' + this._getSession();
   this._requestService(function(response) {
-    self._fireCallback(callback, (!response.error));
+    self._fireCallback(callback, {status: !response.error});
   }, this.DELETE_COMMENT_API, data);
 };
 
@@ -1202,19 +1274,17 @@ GooglePlusAPI.prototype.saveProfile = function(callback, introduction) {
     return;
   }
   var self = this;
-  if (introduction) {
-    introduction = introduction.replace(/"/g, '\\"');
-  }
-  else {
-    introduction = 'null';
-  }
+  introduction = introduction ? introduction.replace(/"/g, '\\"') : 'null';
 
-  var acl = this.getInfo().acl;
+  var acl = JSON.stringify({aclEntries: [
+    {scope: scope, role: 20},
+    {scope: scope, role: 60}
+  ]});
   var data = 'profile=' + encodeURIComponent('[null,null,null,null,null,null,null,null,null,null,null,null,null,null,[[' +
       acl + ',null,null,null,[],1],"' + introduction + '"]]') + '&at=' + this._getSession();
 
   this._requestService(function(response) {
-    self._fireCallback(callback, response.error ? true : false);
+    self._fireCallback(callback, {status: !response.error});
   }, this.PROFILE_SAVE_API, data);
 };
 
@@ -1230,14 +1300,14 @@ GooglePlusAPI.prototype.reportProfile = function(callback, userId, opt_abuseReas
   }
   var self = this;
   if (!userId) {
-    self._fireCallback(callback, false);
+    self._fireCallback(callback, {status: false, data: 'Missing parameter: userId'});
   }
 
   var reason = opt_abuseReason || GooglePlusAPI.AbuseReason.SPAM;
   var data = 'itemId=' + userId + '&userInfo=[1]&abuseReport=[' + reason +
       ']&at=' + this._getSession();
   this._requestService(function(response) {
-    self._fireCallback(callback, (!response.error));
+    self._fireCallback(callback, {status: !response.error});
   }, this.PROFILE_REPORT_API, data);
 };
 
@@ -1266,6 +1336,14 @@ GooglePlusAPI.SearchPrivacy.YOU = 5;
 GooglePlusAPI.SearchCategory = {};
 GooglePlusAPI.SearchCategory.BEST = 1;
 GooglePlusAPI.SearchCategory.RECENT = 2;
+
+// ACL type ENUM
+GooglePlusAPI.AclType = {};
+GooglePlusAPI.AclType.PUBLIC = 1;
+GooglePlusAPI.AclType.EXTENDED_CIRCLES = 2;
+GooglePlusAPI.AclType.YOUR_CIRCLES = 3;
+GooglePlusAPI.AclType.SPECIFIED_CIRCLE = 4;
+GooglePlusAPI.AclType.SPECIFIED_PERSON = 5;
 
 /**
  * Searches Google+ for everything.
@@ -1301,42 +1379,65 @@ GooglePlusAPI.prototype.search = function(callback, query, opt_extra) {
   
   var doRequest = function(searchResults) {
     self._requestService(function(response) {
-      var errorExists = !response[1] || !response[1][1];
-      if (errorExists) {
-        self._fireCallback(callback, {
+      // Invalid response exists, it might mean we are doing a lot of searches
+      // or it might mean we have finished exhausting the realtime searching.
+      var invalidResponse = !response[1] || !response[1][1];
+      if (invalidResponse) {
+        // This might be an error, prepare the response so the consumer can
+        // deal with it.
+        var lastResponseObj = {
+          data: searchResults,
           status: false,
-          data: searchResults
-        });
-      } else {
-        var streamID = response[1][1][2]; // Not Used.
-        var trends = response[1][3]; // Not Used.
-        var dirtySearchResults = response[1][1][0][0];
-        processedData = data.replace('$SESSION_ID', ',null,["' + streamID + '"]');
-        for (var i = 0; i < dirtySearchResults.length; i++) {
-          var item = self._parsePost(dirtySearchResults[i]);
-          searchResults.push(item);
+          mode: mode
         };
-        
-        // Page the results.
-        if (precache > 1) {
-          precache--;
-          doRequest(searchResults); // Recurse till we are done paging.
+        // If it is a real time update, it just means it has completed
+        // successfully, no more realtime queries needed.
+        // TODO: Perhaps we need to wake it up, not important at this time.
+        if (mode === 'rt') {
+          lastResponseObj.status = true;
+          console.warn('precache:' + precache + ':' + extra.precache,
+              'burst_size:' + burst_size + ':' + extra.burst_size, searchResults.length);
         }
         else {
-          self._fireCallback(callback, {
-            status: true,
-            data: searchResults,
-            mode: mode
-          });
-          // Decide whether to do bursts or not.
-          if (burst && 
-               (mode === 'rt' || searchResults.length>0)){  // Bursts cannot start if there are initially no results
-            mode = 'rt';
-            if (--burst_size > 0) {
-                setTimeout(function() {
-                doRequest([]);
-              }.bind(this), self.BURST_INTERVAL);
-            }
+          lastResponseObj.status = false;
+          console.warn('precache:' + precache + ':' + extra.precache,
+              'burst_size:' + burst_size + ':' + extra.burst_size, searchResults.length);
+        }
+        self._fireCallback(callback, lastResponseObj);
+        return;
+      }
+
+      var streamID = response[1][1][2]; // Not Used.
+      var trends = response[1][3]; // Not Used.
+      var dirtySearchResults = response[1][1][0][0];
+      processedData = data.replace('$SESSION_ID', ',null,["' + streamID + '"]');
+      for (var i = 0; i < dirtySearchResults.length; i++) {
+        var item = self._parsePost(dirtySearchResults[i]);
+        searchResults.push(item);
+      };
+      
+      // Page the results.
+      if (precache > 1) {
+        precache--;
+        // Recurse till we are done paging.
+        setTimeout(function() {
+          doRequest(searchResults);
+        }.bind(this), self.PRECACHE_INTERVAL);
+      }
+      else {
+        self._fireCallback(callback, {
+          status: true,
+          data: searchResults,
+          mode: mode
+        });
+        // Decide whether to do bursts or not.
+        if (burst && 
+             (mode === 'rt' || searchResults.length>0)){  // Bursts cannot start if there are initially no results
+          mode = 'rt';
+          if (--burst_size > 0) {
+            setTimeout(function() {
+              doRequest([]);
+            }.bind(this), self.BURST_INTERVAL);
           }
         }
       }
@@ -1358,6 +1459,10 @@ GooglePlusAPI.prototype.search = function(callback, query, opt_extra) {
  *                            RawMedia[]:rawMedia - An array of raw media items in wire format.
  *                                                  This is the output format of fetchLinkMedia.
  *                                                  Overrides the media parameter when present.
+ *                            AclItem<Array>:aclItems - An array of acl items describing the
+ *                                                      audience of the post. See _parseAclItems
+ *                                                      for description.
+ *                                                      Defaults to [{type: PUBLIC}] if not present.
  */
 GooglePlusAPI.prototype.newPost = function(callback, postObj) {
   if (!this._verifySession('newPost', arguments)) {
@@ -1370,7 +1475,10 @@ GooglePlusAPI.prototype.newPost = function(callback, postObj) {
 
   var self = this;
   if (!content && !sharedPostId) {
-    self._fireCallback(callback, false);
+    self._fireCallback(callback, {
+      status: false,
+      data: 'Incomplete parameters: Must pass in content and sharedPostId'
+    });
   }
 
   var sMedia = [];
@@ -1381,17 +1489,7 @@ GooglePlusAPI.prototype.newPost = function(callback, postObj) {
     }
   }
 
-  var scope = {
-    scopeType: 'anyone',
-    name: 'Anyone',
-    id: 'anyone',
-    me: true,
-    requiresKey: false};
-
-  var acl = {aclEntries: [
-    {scope: scope, role: 20},
-    {scope: scope, role: 60}
-  ]}
+  var acl = this._parseAclItems(postObj.aclItems || [{type: GooglePlusAPI.AclType.PUBLIC}]);
 
   var data = JSAPIHelper.nullArray(37);
 
@@ -1416,7 +1514,7 @@ GooglePlusAPI.prototype.newPost = function(callback, postObj) {
       '&at=' + encodeURIComponent(this._getSession());
 
   this._requestService(function(response) {
-    self._fireCallback(callback, (!response.error));
+    self._fireCallback(callback, {status: !response.error});
   }, this.POST_API, params);
 };
 
@@ -1434,14 +1532,13 @@ GooglePlusAPI.prototype.fetchLinkMedia = function(callback, url) {
   var params = "?c=" + encodeURIComponent(url) + "&t=1&slpf=0&ml=1";
   var data = 'susp=false&at=' + this._getSession();
   this._requestService(function(response) {
-    if (response.error) {
-      self._fireCallback(callback, response);
+    if (!response.error) {
+      self._fireCallback(callback, {status: false, data: response});
     } else {
       // Response contains either a image/video single element at index 3, or an array of elements
       // describing a link at index 2. In any case, both of those indices are arrays of length >= 0.
       var items = response[2].concat(response[3]);
-      var result = {'items': items};
-      self._fireCallback(callback, result);
+      self._fireCallback(callback, {status: true, data: items});
     }
   }, this.LINK_DETAILS_API + params, data);
 };
