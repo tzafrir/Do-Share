@@ -380,10 +380,12 @@ function onLoad() {
       <input type="hidden" id="share_id" />
       <input type="hidden" id="write_time_stamp" />
       <p id="timeParsed"></p>
-      <button onclick="delPost()">Delete post :(</button>
-      <button onclick="post('draft')">Save Draft</button>
-      <button onclick="post('scheduled')">Schedule</button>
-      <button onclick="post('post')">Post immediately</button>
+    </div>
+    <div id="buttonBar">
+      <button onclick="delPost()" id="buttonDelete">delete post :(</button>
+      <button onclick="post('draft')" id="buttonDraft">save Draft</button>
+      <button onclick="post('scheduled')" id="buttonSchedule">schedule</button>
+      <button onclick="post('post')" id="buttonPost">share now</button>
     </div>
     <div id="posts">
       <div class="column drafts">
