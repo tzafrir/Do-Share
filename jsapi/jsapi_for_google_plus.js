@@ -585,15 +585,6 @@ GooglePlusAPI.prototype._parseAclItems = function(aclItems) {
   return {aclEntries: resultAclEntries};
 };
 
-GooglePlusAPI.prototype._isPhotoJson = function(text) {
-  return !!text.match("&&&START&&&");
-};
-
-GooglePlusAPI.prototype._parsePhotosJSON = function(text) {
-  return this._parseJSON(text.split('&&&')[2]);
-};
-
-
 GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
   var albumData = imageMetadata.proto[1][0][2];
   var imageData = imageMetadata.proto[1][0][3][0];
@@ -621,6 +612,15 @@ GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
                     128]]
   return mediaItem;
 };
+
+GooglePlusAPI.prototype._isPhotoJson = function(text) {
+  return !!text.match("&&&START&&&");
+};
+
+GooglePlusAPI.prototype._parsePhotosJSON = function(text) {
+  return this._parseJSON(text.split('&&&')[2]);
+};
+
 
 //----------------------- Public Functions ------------------------.
 /**
@@ -1541,7 +1541,7 @@ GooglePlusAPI.prototype.fetchLinkMedia = function(callback, url) {
   var params = "?c=" + encodeURIComponent(url) + "&t=1&slpf=0&ml=1";
   var data = 'susp=false&at=' + this._getSession();
   this._requestService(function(response) {
-    if (!response.error) {
+    if (response.error) {
       self._fireCallback(callback, {status: false, data: response});
     } else {
       // Response contains either a image/video single element at index 3, or an array of elements
