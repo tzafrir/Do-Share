@@ -197,6 +197,10 @@ body {
   cursor: pointer;
 }
 
+#postMedia {
+  display: none;
+}
+
 #buttonBar {
   margin-top: 18px;
 }

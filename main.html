@@ -85,7 +85,11 @@ function processMediaItems(mediaArray) {
 
 function delPost() {
   var writeTimeStamp = Number(val('write_time_stamp'));
-  chrome.extension.sendRequest({'type': 'delPost', 'writeTimeStamp': writeTimeStamp}, refresh);
+  if (document.getElementById('post' + writeTimeStamp)) {
+    chrome.extension.sendRequest({'type': 'delPost', 'writeTimeStamp': writeTimeStamp}, refresh);
+  } else {
+    refresh();
+  }
 }
 
 function getDateString(post) {
@@ -139,6 +143,7 @@ function addDraftEditBox(post) {
   $('#write_time_stamp').val(writeTimeStamp);
 
   $('#reshare').html(renderReshare(post));
+  populateLinkMediaArea(post.rawMedia);
 
   if (gpe) {
     gpe.destroy();
@@ -355,6 +360,20 @@ function refreshIfNeeded() {
   window.setTimeout(refreshIfNeeded, 300);
 }
 
+function populateLinkMediaArea() {
+  var link = $('#link').val();
+  if (!link) {
+    $('#postMedia').hide('blind', 500, function(){$(this).html('')});
+    return;
+  }
+  chrome.extension.sendRequest({type: 'getLinkMedia', link: link}, function(rawMedia) {
+    if (rawMedia) {
+      $('#postMedia').html(renderMediaItems(processMediaItems(rawMedia)))
+          .show('blind', 500);
+    }
+  });
+}
+
 function setListeners() {
   $('#addLink').delegate('.enabled', 'click', function() {
     $('#linkBar').show('blind', 200);
@@ -372,6 +391,12 @@ function setListeners() {
   $('#submitLink').click(function() {
     $('#link').val($('#linkInput').val());
     $('#addLink').children().click();
+    populateLinkMediaArea();
+  });
+  $('#linkInput').keydown(function(e) {
+    if (e.keyCode == 13) {
+      $('#submitLink').click();
+    }
   });
   $('#buttonSchedule').click(function() {
     var jself = $(this);
@@ -425,6 +450,7 @@ function onLoad() {
           <button id="submitLink">Add</button>
           <div id="closeLinkBar" class="xButton">x</div>
         </div>
+        <div id="postMedia"></div>
       </div>
       <input type="hidden" id="link" />
       <input type="hidden" id="image_id" />
