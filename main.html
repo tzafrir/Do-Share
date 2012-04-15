@@ -366,8 +366,11 @@ function setListeners() {
     $(this).removeClass('disabled');
     $(this).addClass('enabled');
   });
-  $('#closeLinkBar').click(function(){
+  $('#closeLinkBar').click(function() {
     $('#addLink').children().click();
+  });
+  $('#submitLink').click(function() {
+    // TODO
   });
 }
 
@@ -401,6 +404,7 @@ function onLoad() {
         <div id="reshare"></div>
         <div id="linkBar">
           <input id="link" placeholder="link" />
+          <button id="submitLink">Add</button>
           <div id="closeLinkBar">x</div>
         </div>
       </div>
