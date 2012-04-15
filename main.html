@@ -183,16 +183,6 @@ function editDraft(writeTimeStamp) {
   });
 }
 
-function unpublish(writeTimeStamp) {
-  if (confirm("Unpublishing will remove the post from the queue. It will still be available as a draft.")) {
-    chrome.extension.sendRequest({'type': 'fetchPost', 'writeTimeStamp': writeTimeStamp},
-        function(post) {
-      post.state = 'draft';
-      sendPost(post);
-    });
-  }
-}
-
 function bMinusA(a, b, key) {
   var aKeys = a.map(function(item){return item[key]});
   return b.filter(function(item) {
