@@ -337,12 +337,12 @@ function post(post, callback) {
     }
 
     if (post.link) {
-      plus.fetchLinkMedia(function(response) {
-        if (response.data) {
-          post.rawMedia = response.data;
+      getLinkMedia(post.link, function(data) {
+        if (data) {
+          post.rawMedia = data;
         }
         postThis();
-      }, post.link);
+      });
     } else if (post.image_id) {
       plus.fetchPhotoMetadata(function(response) {
         if (response.error || !response.data) {
@@ -356,6 +356,21 @@ function post(post, callback) {
     } else {
       postThis();
     }
+}
+
+function getLinkMedia(link, callback) {
+  if (!link) {
+    console.error('invalid link');
+    return;
+  }
+  plus.fetchLinkMedia(function(response) {
+    if (!response.status) {
+      console.error('Error fetching media for ' + link);
+    }
+    if (response.data) {
+      callback(response.data);
+    }
+  }, link);
 }
 
 function newPost(post) {
@@ -411,6 +426,8 @@ function onRequest(request, sender, callback) {
     }
   } else if (type == 'profileAutocomplete') {
     profileAutocomplete(request.prefix, callback);
+  } else if (type == 'getLinkMedia') {
+    getLinkMedia(request.link, callback);
   }
 }
 
