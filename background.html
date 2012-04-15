@@ -253,6 +253,7 @@ function fetchAll(callback) {
     s.count(function(count) {
       if (count == 0) {
         callback(result);
+        return;
       }
       s.processAllItems(function(item) {
         result.posts.push(item);
@@ -265,6 +266,7 @@ function fetchAll(callback) {
   db.count(function(count) {
     if (count == 0) {
       wrapCallback();
+      return;
     }
     db._processAllItemsByRange(undefined, function(post) {
       post.timeStamp = undefined;
