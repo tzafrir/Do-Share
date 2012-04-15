@@ -135,12 +135,8 @@ body {
   font-size: 125%;
 }
 
-.enabled {
-  color: black;
-}
-
-.disabled {
-  color: gray;
+#postActions .disabled {
+  opacity: 0.4;
 }
 
 .active {

@@ -355,6 +355,19 @@ function refreshIfNeeded() {
   window.setTimeout(refreshIfNeeded, 300);
 }
 
+function setListeners() {
+  $('#addLink').delegate('.enabled', 'click', function() {
+    $('#linkBar').show();
+    $(this).removeClass('enabled');
+    $(this).addClass('disabled');
+  });
+  $('#addLink').delegate('.disabled', 'click', function() {
+    $('#linkBar').hide();
+    $(this).removeClass('disabled');
+    $(this).addClass('enabled');
+  });
+}
+
 function onLoad() {
   var savedPostJson = localStorage['_tmp_post'];
   var savedPost;
@@ -364,6 +377,7 @@ function onLoad() {
   }
   localStorage.clear('_tmp_post');
   addDraftEditBox(savedPost);
+  setListeners();
   refreshIfNeeded();
 }
 
@@ -378,7 +392,7 @@ function onLoad() {
       <div class="titleBar"><input id="title" placeholder="Title (optional)" /></div>
       <div id="content" class="editbox"></div>
       <div id="postActions">
-        <div class="postAction">U</div>
+        <div class="postAction" id="addLink"><span class="enabled">U</span></div>
       </div>
       <div id="attachments">
         <div id="reshare"></div>
