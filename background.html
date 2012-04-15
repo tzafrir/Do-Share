@@ -338,8 +338,8 @@ function post(post, callback) {
 
     if (post.link) {
       plus.fetchLinkMedia(function(response) {
-        if (response.items) {
-          post.rawMedia = response.items;
+        if (response.data) {
+          post.rawMedia = response.data;
         }
         postThis();
       }, post.link);
