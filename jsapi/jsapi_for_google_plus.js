@@ -585,6 +585,15 @@ GooglePlusAPI.prototype._parseAclItems = function(aclItems) {
   return {aclEntries: resultAclEntries};
 };
 
+GooglePlusAPI.prototype._isPhotoJson = function(text) {
+  return !!text.match("&&&START&&&");
+};
+
+GooglePlusAPI.prototype._parsePhotosJSON = function(text) {
+  return this._parseJSON(text.split('&&&')[2]);
+};
+
+
 GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
   var albumData = imageMetadata.proto[1][0][2];
   var imageData = imageMetadata.proto[1][0][3][0];

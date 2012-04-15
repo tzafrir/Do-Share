@@ -158,6 +158,10 @@ body {
   float: right;
 }
 
+#attachments {
+  border-top: 1px solid #aec693
+}
+
 .reshare {
   padding: 10px;
 }
@@ -170,6 +174,10 @@ body {
   font-weight: 800;
   -webkit-margin-before: 1em;
   display: block;
+}
+
+#linkBar {
+  display: none;
 }
 
 #buttonBar {
