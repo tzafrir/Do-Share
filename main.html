@@ -370,7 +370,8 @@ function setListeners() {
     $('#addLink').children().click();
   });
   $('#submitLink').click(function() {
-    // TODO
+    $('#link').val($('#linkInput').val());
+    $('#addLink').children().click();
   });
 }
 
@@ -403,11 +404,12 @@ function onLoad() {
       <div id="attachments">
         <div id="reshare"></div>
         <div id="linkBar">
-          <input id="link" placeholder="link" />
+          <input id="linkInput" placeholder="link" />
           <button id="submitLink">Add</button>
           <div id="closeLinkBar">x</div>
         </div>
       </div>
+      <input type="hidden" id="link" />
       <input type="hidden" id="image_id" />
       <input type="hidden" id="share_id" />
       <input type="hidden" id="write_time_stamp" />

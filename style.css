@@ -182,7 +182,7 @@ body {
   height: auto;
 }
 
-#linkBar #link {
+#linkBar #linkInput {
   height: 2em;
   width: 80%;
   background: transparent;
