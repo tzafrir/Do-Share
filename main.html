@@ -34,7 +34,12 @@ function parseTimeField() {
 }
 
 function sendPost(post) {
-  chrome.extension.sendRequest({'type': 'post', 'post': post}, refresh);
+  if (post.state == 'autosave') {
+    localStorage['autosave'] = JSON.stringify(post);
+  } else {
+    localStorage.removeItem('autosave');
+    chrome.extension.sendRequest({'type': 'post', 'post': post}, refresh);
+  }
 }
 
 function post(state) {
@@ -120,7 +125,12 @@ function profileAutocompleter(prefix, callback) {
 
 function addDraftEditBox(post) {
   if (!post) {
-    post = {};
+    if (localStorage['autosave']) {
+      post = JSON.parse(localStorage['autosave']);
+      localStorage.removeItem('autosave');
+    } else {
+      post = {};
+    }
   }
   var writeTimeStamp = post.writeTimeStamp || '';
   var content = post.content || '';
@@ -414,10 +424,13 @@ function onLoad() {
     savedPost = JSON.parse(savedPostJson);
     mem[savedPost.writeTimeStamp] = savedPost;
   }
-  localStorage.clear('_tmp_post');
+  localStorage.removeItem('_tmp_post');
   addDraftEditBox(savedPost);
   setListeners();
   refreshIfNeeded();
+  window.setInterval(function() {
+    post('autosave');
+  }, 2500);
 }
 
   </script>
