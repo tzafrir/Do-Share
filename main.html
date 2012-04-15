@@ -357,12 +357,12 @@ function refreshIfNeeded() {
 
 function setListeners() {
   $('#addLink').delegate('.enabled', 'click', function() {
-    $('#linkBar').show();
+    $('#linkBar').show('blind', 200);
     $(this).removeClass('enabled');
     $(this).addClass('disabled');
   });
   $('#addLink').delegate('.disabled', 'click', function() {
-    $('#linkBar').hide();
+    $('#linkBar').hide('blind', 200);
     $(this).removeClass('disabled');
     $(this).addClass('enabled');
   });
