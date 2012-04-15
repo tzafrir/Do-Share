@@ -252,6 +252,11 @@ body {
   display: none;
 }
 
+#closeScheduleBar {
+  float: right;
+  cursor: pointer;
+}
+
 #posts .column {
   width: 300px;
 }

@@ -373,6 +373,23 @@ function setListeners() {
     $('#link').val($('#linkInput').val());
     $('#addLink').children().click();
   });
+  $('#buttonSchedule').click(function() {
+    var jself = $(this);
+    if (jself.data('active')) {
+      $('#scheduleBar').hide('blind', 200);
+      jself.removeClass('opened');
+      jself.addClass('closed');
+      jself.data('active', null);
+    } else {
+      $('#scheduleBar').show('blind', 200);
+      jself.removeClass('closed');
+      jself.addClass('opened');
+      jself.data('active', true);
+    }
+  });
+  $('#closeScheduleBar').click(function() {
+    $('#buttonSchedule').click();
+  });
 }
 
 function onLoad() {
@@ -406,7 +423,7 @@ function onLoad() {
         <div id="linkBar">
           <input id="linkInput" placeholder="link" />
           <button id="submitLink">Add</button>
-          <div id="closeLinkBar">x</div>
+          <div id="closeLinkBar" class="xButton">x</div>
         </div>
       </div>
       <input type="hidden" id="link" />
@@ -417,10 +434,11 @@ function onLoad() {
     <div id="buttonBar">
       <button onclick="delPost()" id="buttonDelete">delete post :(</button>
       <button onclick="post('draft')" id="buttonDraft">save draft</button>
-      <button onclick="showScheduleBar()" id="buttonSchedule">schedule</button>
+      <button id="buttonSchedule" class="closed">schedule</button>
       <button onclick="post('post')" id="buttonPost">share now</button>
     </div>
     <div id="scheduleBar">
+      <div id="closeScheduleBar" class="xButton">x</div>
       <p><input id="time" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
       <p id="timeParsed"></p>
       <button onclick="post('scheduled')" id="buttonScheduleStepTwo">schedule</button>
