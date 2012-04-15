@@ -64,7 +64,7 @@ function post(state) {
 function processMediaItems(mediaArray) {
   var result = {'images': []};
   mediaArray.forEach(function(media) {
-    if (media[24][4] == "image") {
+    if (media[24][4] == "image" || media[24][4] == "photo") {
       var url = media[41][0][1];
       if (!url.match(/http/)) {
         url = 'https:' + url;
