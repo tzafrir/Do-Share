@@ -94,6 +94,7 @@ function delPost() {
   if (document.getElementById('post' + writeTimeStamp)) {
     chrome.extension.sendRequest({'type': 'delPost', 'writeTimeStamp': writeTimeStamp}, refresh);
   } else {
+    localStorage.removeItem('autocomplete');
     refresh();
   }
 }
