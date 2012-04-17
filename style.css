@@ -55,7 +55,7 @@ table {
 
 body {
   background-color: #f3f3f3;
-  font-family: Roboto;
+  font-family: Roboto, Helvetica, Arial;
 }
 
 #appWrap {
