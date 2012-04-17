@@ -49,6 +49,7 @@ function post(state) {
     'state': state,
     'content': getContent() || '',
     'share_id': val('share_id'),
+    'reshare': (mem[writeTimeStamp] && mem[writeTimeStamp].reshare) || undefined,
     'image_id': val('image_id'),
     'title': val('title'),
     'timeStamp': new Date(val('time')).getTime() || undefined,
@@ -129,7 +130,7 @@ function addDraftEditBox(post) {
   if (!post) {
     if (localStorage['autosave']) {
       post = JSON.parse(localStorage['autosave']);
-      localStorage.removeItem('autosave');
+      mem[post.writeTimeStamp] = post;
     } else {
       post = {};
     }
@@ -137,7 +138,7 @@ function addDraftEditBox(post) {
   var writeTimeStamp = post.writeTimeStamp || '';
   var content = post.content || '';
   var share_id = post.share_id || '';
-  var link = post.link || '';
+  var link = (!post.reshare && post.link) || '';
   var image_id = post.image_id || '';
   var title = post.title || '';
   var time = post.timeStamp ? new Date(post.timeStamp).toString() : '';
