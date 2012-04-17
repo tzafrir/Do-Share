@@ -259,10 +259,15 @@ GPEditor.prototype.onKeyDown = function(event, element) {
       BACKSPACE: 8
     };
     var k = event.keyCode;
-    if (k == KEY.ESC || k == KEY.BACKSPACE && !input.val()) {
+    if (k == KEY.BACKSPACE && !input.val()) {
       setCaretAfter(wrapper[0]);
       acDiv.remove();
       wrapper.remove();
+    } else if (k == KEY.ESC) {
+      setCaretAfter(wrapper[0]);
+      proflinkWrapper.remove();
+      wrapper.text('+' + input.val());
+      acDiv.remove();
     }
   })
   .data('autocomplete')._renderItem = function(ul, item) {
