@@ -19,6 +19,7 @@
   <script>
 var mem = {};
 var touch = {};
+var needRefresh = false;
 var gpe;
 
 var postsCurrentlyDisplayed = [];
@@ -430,9 +431,19 @@ function setListeners() {
     post('scheduled');
     $('#buttonSchedule').click();
   });
+  $('#content').keyup(function() {
+    needRefresh = true;
+  });
+  $('input').change(function() {
+    needRefresh = true;
+  });
 }
 
 function autosave() {
+  if (!needRefresh) {
+    return;
+  }
+  needRefresh = false;
   var currentPost = getEditedPost('', 0);
   if (!isEmptyPost(currentPost)) {
     post('autosave');
