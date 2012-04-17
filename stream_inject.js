@@ -1,99 +1,79 @@
 (function(){
+
 /**
  * Injection code inspired by https://github.com/mohamedmansour/extended-share-extension
  */
 
-var ATTRIBUTE = 'ds-item-attr';
-
 var CONTENT_PANE_ID = '#contentPane';
-var STREAM_ARTICLE_ID = 'div:nth-of-type(2) > div:first-child';
-var STREAM_UPDATE_SELECTOR = 'div[id^="update"]';
-var STREAM_ACTION_BAR_SELECTOR = STREAM_UPDATE_SELECTOR + ' > div > div:nth-of-type(3)';
-var STREAM_AUTHOR_SELECTOR = 'div > div > h3 > span';
-var STREAM_IMAGE_SELECTOR = STREAM_UPDATE_SELECTOR + ' > div div[data-content-type] > img';
+var STREAM_UPDATE_SELECTOR = 'div[id^="update"]:not([tz_doshare])';
 
-var RESCAN_PERIOD = 200;
+var BUTTON_CLASSNAME = 'HPvmqf';
+var SPAN_CLASSNAME = 'jEMdk';
 
-var originalTextNode = document.createTextNode(' \u00a0-\u00a0 ');
-
-// Send a heartbeat to the background page, just in case this is the first user interaction with
-// do share since logging in.
-chrome.extension.sendRequest({type: 'getId'}, function(){});
-
-/**
- * Render the "Send to Do Share" Link on each post.
- */
-function onContentModified(e) {
+function onNodeInserted(e) {
   // This happens when a new stream is selected
-  if (e.relatedNode && e.relatedNode.parentNode && e.relatedNode.parentNode.id == 'contentPane') {
+  if (e.target && e.target.id && e.target.id.indexOf('update') == 0) {
+    processPost(e.target);
+  } else if (e.relatedNode && e.relatedNode.parentNode && e.relatedNode.parentNode.id == 'contentPane') {
     // We're only interested in the insertion of entire content pane
-    renderAllItems(e.target);
-  } else if (e.target.nodeType == Node.ELEMENT_NODE && e.target.id.indexOf('update') == 0) {
-    var actionBar = e.target.querySelector(STREAM_ACTION_BAR_SELECTOR);
-    renderItem(actionBar);
+    processAllItems();
   }
 };
 
 /**
- * Render on all the items of the documents, or within the specified subtree
- * if applicable
+ * Process
  */
-function renderAllItems(subtreeDOM) {
-  var actionBars = (typeof subtreeDOM == 'undefined') ?
-      document.querySelectorAll(STREAM_ACTION_BAR_SELECTOR) :
-      subtreeDOM.querySelectorAll(STREAM_ACTION_BAR_SELECTOR);
-  console.log('bars: ' + actionBars.length);
-  for (var i = 0; i < actionBars.length; i++) {
-    renderItem(actionBars[i]);
+function processAllItems(subtreeDOM) {
+  var posts = document.querySelectorAll(STREAM_UPDATE_SELECTOR);
+  for (var i = 0; i < posts.length; i++) {
+    processPost(posts[i]);
   }
 }
 
-/**
- * Render the "Send to Do Share" Link on each post.
- *
- * @param {Object<ModifiedDOM>} event modified event.
- */
-function renderItem(itemDOM) {
-  if (itemDOM && !itemDOM.attributes[ATTRIBUTE]) {
-    var shareNode = document.createElement('span');
-    shareNode.innerHTML = "Send to Do Share";
-    shareNode.className = itemDOM.children[1].className.split(' ')[0];
-    shareNode.onclick = function() {
-      sendToDoShare(itemDOM);
-    };
-    itemDOM.appendChild(originalTextNode.cloneNode(true));
-    itemDOM.appendChild(shareNode);
-    itemDOM.style.height = '25px';  // To prevent the actionBar overlapping the comments for users
-                                    // with many extensions.
-    itemDOM.setAttribute(ATTRIBUTE, '');
+function processPost(itemDOM) {
+  if (itemDOM) {
+    addButtonToPost(itemDOM);
   }
-};
+}
 
-function sendToDoShare(itemDOM) {
-  var url = itemDOM.parentElement && itemDOM.parentElement.querySelector('a[target="_blank"]').href;
+function addButtonToPost(itemDOM) {
+  itemDOM.setAttribute('tz_doshare', true);
+  var plusOne = itemDOM.querySelector('[g\\:entity]');
+  if (!plusOne) {
+    console.error('!plusone');
+    return;
+  }
+  var shareNode = document.createElement('div');
+  var innerSpan = document.createElement('span');
+
+  innerSpan.className = SPAN_CLASSNAME;
+  shareNode.appendChild(innerSpan);
+  innerSpan.innerText = 'DS';
+
+  shareNode.className = BUTTON_CLASSNAME;
+  shareNode.onclick = function(){
+    var url = itemDOM.querySelector('[target=_blank]').href;
+    if (url) {
+      console.log(url);
+      sendReshare(url);
+    }
+  };
+
+  var parent = plusOne.parentElement;
+  var allButtons = parent.querySelectorAll('.' + BUTTON_CLASSNAME);
+  plusOne.parentNode.insertBefore(shareNode, allButtons[allButtons.length - 1]);
+}
+
+function sendReshare(url) {
   chrome.extension.sendRequest({'type': 'resharePost', 'url': url}, function(){});
-}
-
-function processNotifications() {
-  var bars = document.body ? document.body.querySelectorAll(STREAM_ACTION_BAR_SELECTOR + ":not([tz_ds])") : [];
-
-  for (var i = 0; i < bars.length; ++i) {
-    var bar = bars[i];
-    bar.setAttribute('tz_ds', true);
-    renderItem(bar);
-  }
-
-  window.setTimeout(processNotifications, RESCAN_PERIOD);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
   // Listen when the subtree is modified for new posts.
   var googlePlusContentPane = document.querySelector(CONTENT_PANE_ID);
   if (googlePlusContentPane) {
-    googlePlusContentPane.addEventListener('DOMNodeInserted', onContentModified);
-    renderAllItems(googlePlusContentPane);
-  } else if (document.location.toString().match('_/notifications')) {
-    processNotifications();
+    googlePlusContentPane.parentElement.addEventListener('DOMNodeInserted', onNodeInserted);
+    processAllItems();
   }
 });
 })();
