@@ -36,16 +36,16 @@ function parseTimeField() {
 
 function sendPost(post) {
   if (post.state == 'autosave') {
-    localStorage['autosave'] = JSON.stringify(post);
+    post.state = post.timeStamp ? 'scheduled' : 'draft';
+    chrome.extension.sendRequest({'type': 'post', 'post': post}, refreshPosts);
+    $('#write_time_stamp').val(post.writeTimeStamp);
   } else {
-    localStorage.removeItem('autosave');
     chrome.extension.sendRequest({'type': 'post', 'post': post}, refresh);
   }
 }
 
-function post(state) {
-  var writeTimeStamp = Number(val('write_time_stamp') || 0);
-  var post = {
+function getEditedPost(state, writeTimeStamp) {
+  return {
     'state': state,
     'content': getContent() || '',
     'share_id': val('share_id'),
@@ -55,7 +55,21 @@ function post(state) {
     'timeStamp': new Date(val('time')).getTime() || undefined,
     'link': val('link') || undefined,
     'touch': new Date().getTime()
+  };
+}
+
+function isEmptyPost(post) {
+  for (var key in post) {
+    if (post[key] && key != 'touch') {
+      return false;
+    }
   }
+  return true;
+}
+
+function post(state) {
+  var writeTimeStamp = Number(val('write_time_stamp') || 0);
+  var post = getEditedPost(state, writeTimeStamp);
   if (writeTimeStamp) {
     post.writeTimeStamp = writeTimeStamp;
     var savedPost = mem[writeTimeStamp];
@@ -92,7 +106,6 @@ function processMediaItems(mediaArray) {
 
 function delPost() {
   var writeTimeStamp = Number(val('write_time_stamp'));
-  localStorage.removeItem('autosave');
   if (document.getElementById('post' + writeTimeStamp)) {
     chrome.extension.sendRequest({'type': 'delPost', 'writeTimeStamp': writeTimeStamp}, refresh);
   } else {
@@ -128,12 +141,7 @@ function profileAutocompleter(prefix, callback) {
 
 function addDraftEditBox(post) {
   if (!post) {
-    if (localStorage['autosave']) {
-      post = JSON.parse(localStorage['autosave']);
-      mem[post.writeTimeStamp] = post;
-    } else {
-      post = {};
-    }
+    post = {};
   }
   var writeTimeStamp = post.writeTimeStamp || '';
   var content = post.content || '';
@@ -420,6 +428,15 @@ function setListeners() {
   });
 }
 
+function autosave() {
+  var currentPost = getEditedPost('', 0);
+  if (!isEmptyPost(currentPost)) {
+    post('autosave');
+  } else {
+    delPost();
+  }
+}
+
 function onLoad() {
   var savedPostJson = localStorage['_tmp_post'];
   var savedPost;
@@ -432,8 +449,8 @@ function onLoad() {
   setListeners();
   refreshIfNeeded();
   window.setInterval(function() {
-    post('autosave');
-  }, 2500);
+    autosave();
+  }, 400);
 }
 
   </script>
