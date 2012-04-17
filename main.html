@@ -31,7 +31,7 @@ function val(name) {
 }
 
 function parseTimeField() {
-  $('#timeParsed').text(new Date(val('time')).toString());
+  $('#timeParsed').text(new Date(val('timeInput')).toString());
 }
 
 function sendPost(post) {
@@ -161,6 +161,7 @@ function addDraftEditBox(post) {
   $('#link').val(link);
   $('#image_id').val(image_id);
   $('#time').val(time);
+  $('#timeInput').val(time);
   $('#write_time_stamp').val(writeTimeStamp);
 
   $('#reshare').html(renderReshare(post));
@@ -412,7 +413,7 @@ function setListeners() {
   $('#buttonSchedule').click(function() {
     var jself = $(this);
     if (jself.data('active')) {
-      $('#scheduleBar').hide('blind', 200);
+      $('#scheduleBar').hide('blind', 400);
       jself.removeClass('opened');
       jself.addClass('closed');
       jself.data('active', null);
@@ -424,6 +425,11 @@ function setListeners() {
     }
   });
   $('#closeScheduleBar').click(function() {
+    $('#buttonSchedule').click();
+  });
+  $('#buttonScheduleStepTwo').click(function() {
+    $('#time').val($('#timeInput').val());
+    post('scheduled');
     $('#buttonSchedule').click();
   });
 }
@@ -476,6 +482,7 @@ function onLoad() {
         <div id="postMedia"></div>
       </div>
       <input type="hidden" id="link" />
+      <input type="hidden" id="time" />
       <input type="hidden" id="image_id" />
       <input type="hidden" id="share_id" />
       <input type="hidden" id="write_time_stamp" />
@@ -488,9 +495,9 @@ function onLoad() {
     </div>
     <div id="scheduleBar">
       <div id="closeScheduleBar" class="xButton">x</div>
-      <p><input id="time" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
+      <p><input id="timeInput" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
       <p id="timeParsed"></p>
-      <button onclick="post('scheduled')" id="buttonScheduleStepTwo">schedule</button>
+      <button id="buttonScheduleStepTwo">schedule</button>
     </div>
     <div id="posts">
       <div class="column drafts">

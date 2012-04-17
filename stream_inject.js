@@ -15,7 +15,6 @@ function onNodeInserted(e) {
   if (e.target && e.target.id && e.target.id.indexOf('update') == 0) {
     processPost(e.target);
   } else if (e.relatedNode && e.relatedNode.parentNode && e.relatedNode.parentNode.id == 'contentPane') {
-    // We're only interested in the insertion of entire content pane
     processAllItems();
   }
 };
