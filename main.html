@@ -91,10 +91,10 @@ function processMediaItems(mediaArray) {
 
 function delPost() {
   var writeTimeStamp = Number(val('write_time_stamp'));
+  localStorage.removeItem('autosave');
   if (document.getElementById('post' + writeTimeStamp)) {
     chrome.extension.sendRequest({'type': 'delPost', 'writeTimeStamp': writeTimeStamp}, refresh);
   } else {
-    localStorage.removeItem('autocomplete');
     refresh();
   }
 }
