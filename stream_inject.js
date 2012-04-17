@@ -8,6 +8,7 @@ var CONTENT_PANE_ID = '#contentPane';
 var STREAM_UPDATE_SELECTOR = 'div[id^="update"]:not([tz_doshare])';
 
 var BUTTON_CLASSNAME = 'HPvmqf';
+var BUTTONS_SELECTOR = '.BRowJd, .' + BUTTON_CLASSNAME;
 var SPAN_CLASSNAME = 'jEMdk';
 
 function onNodeInserted(e) {
@@ -58,9 +59,9 @@ function addButtonToPost(itemDOM) {
     }
   };
 
-  var parent = plusOne.parentElement;
-  var allButtons = parent.querySelectorAll('.' + BUTTON_CLASSNAME);
-  plusOne.parentNode.insertBefore(shareNode, allButtons[allButtons.length - 1]);
+  var allButtons = itemDOM.querySelectorAll(BUTTONS_SELECTOR);
+  var lastButton = allButtons[allButtons.length - 1];
+  plusOne.parentNode.insertBefore(shareNode, lastButton.nextSibling);
 }
 
 function sendReshare(url) {
