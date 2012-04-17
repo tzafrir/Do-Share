@@ -2,35 +2,18 @@
 var INTERVAL = 500;
 var ATTRIBUTE = 'doshare';
 
-var _sharebox;
+var SHAREBOX_ID = ':0.f';
 
 function scanSharebox() {
-  var sharebox = document.getElementById(':0.f');
-  if (sharebox && !sharebox.attributes[ATTRIBUTE]) {
-    _sharebox = sharebox;
-    sharebox.setAttribute(ATTRIBUTE, 1);
-    var p = sharebox.parentElement.parentElement.parentElement
-                    .parentElement.parentElement;
-    addButton(p);
-  }
-  window.setTimeout(scanSharebox, INTERVAL);
+  var button = document.querySelector('[guidedhelpid=sharebutton]');
+  button && addButton(button);
 }
 
-function addButton(parent) {
-  var div = document.createElement('div');
-  var style = div.style;
-
-  style.border = '1px solid #ddd';
-  style.borderBottom = '0';
-  style.padding = '4px';
-  style.paddingTop = '24px';
-  style.cursor = 'pointer';
-
-  div.innerHTML = 'Send to ds <img src="https://nukecomments.appspot.com/ico/nuke.png">';
-
-  div.addEventListener('click', sendToDoShare);
-
-  parent.insertBefore(div, parent.children[1]);
+function addButton(button) {
+  var clone = button.cloneNode(true);
+  clone.onclick = sendToDoShare;
+  clone.innerHTML = 'DS';
+  button.parentElement.insertBefore(clone, button);
 }
 
 function getPlusOneUrl() {
@@ -44,7 +27,8 @@ function getPlusOneUrl() {
 
 function sendToDoShare() {
   var url = getPlusOneUrl();
-  var text = _sharebox.innerText;
+  var sharebox = document.getElementById(SHAREBOX_ID);
+  var text = (sharebox && sharebox.innerText) || '';
   chrome.extension.sendRequest({type: 'newPost', content: text, link: url}, function(){});
 }
 
