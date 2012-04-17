@@ -108,8 +108,6 @@ function delPost() {
   var writeTimeStamp = Number(val('write_time_stamp'));
   if (document.getElementById('post' + writeTimeStamp)) {
     chrome.extension.sendRequest({'type': 'delPost', 'writeTimeStamp': writeTimeStamp}, refresh);
-  } else {
-    refresh();
   }
 }
 
