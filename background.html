@@ -216,6 +216,9 @@ function publish(post, callback) {
   if (post.title) {
     post.content = '*' + post.title + '*\n\n' + post.content;
   }
+  if (post.circle_ids instanceof Array) {
+    post.aclItems = parseAcls(post.circle_ids);
+  }
   plus.newPost(callback || c, post);
   console.log("Posting");
   console.log(post);
@@ -458,8 +461,6 @@ function onRequest(request, sender, callback) {
         callback(response.data);
       }
     });
-  } else if (type == 'parseAcls') {
-    callback(parseAcls(request.ids));
   }
 }
 
