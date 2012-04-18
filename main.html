@@ -14,7 +14,10 @@
 
 <script src="libs/jquery-1.7.1.min.js"></script>
 <script src="libs/jquery-ui-1.8.18.custom.min.js"></script>
-<link rel="stylesheet" type="text/css" href="jqueryui_css/ui-lightness/jquery-ui-1.8.18.custom.css"> 
+<link rel="stylesheet" type="text/css" href="jqueryui_css/ui-lightness/jquery-ui-1.8.18.custom.css">
+
+<script src="libs/chosen.jquery.min.js"></script>
+<link rel="stylesheet" href="libs/chosen.css" />
 
   <script>
 var mem = {};
@@ -452,6 +455,19 @@ function autosave() {
   }
 }
 
+function populateCircleChooser() {
+  chrome.extension.sendRequest({type: 'getCircles'}, function(circles) {
+    circles.forEach(function(circle) {
+      // TODO: Verify that id 15 is blocked for everyone.
+      if (circle.id == '15' || circle.name == 'Blocked') {
+        return;
+      }
+      $('#circleChooser').append($('<option>').attr({value: circle.id}).text(circle.name));
+    });
+    $('#circleChooser').chosen({no_results_text: "No circles matching"});
+  });
+}
+
 function onLoad() {
   var savedPostJson = localStorage['_tmp_post'];
   var savedPost;
@@ -461,6 +477,7 @@ function onLoad() {
   }
   localStorage.removeItem('_tmp_post');
   addDraftEditBox(savedPost);
+  populateCircleChooser();
   setListeners();
   refreshIfNeeded();
   window.setInterval(function() {
@@ -495,6 +512,10 @@ function onLoad() {
       <input type="hidden" id="image_id" />
       <input type="hidden" id="share_id" />
       <input type="hidden" id="write_time_stamp" />
+    </div>
+    <div id="circleChooserBar">
+      <select multiple id="circleChooser" data-placeholder="Add Circles...">
+      </select>
     </div>
     <div id="buttonBar">
       <button onclick="delPost()" id="buttonDelete">delete post :(</button>

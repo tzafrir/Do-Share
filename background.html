@@ -432,6 +432,12 @@ function onRequest(request, sender, callback) {
     profileAutocomplete(request.prefix, callback);
   } else if (type == 'getLinkMedia') {
     getLinkMedia(request.link, callback);
+  } else if (type == 'getCircles') {
+    plus.getCircles(function(response) {
+      if (response.status) {
+        callback(response.data);
+      }
+    });
   }
 }
 
