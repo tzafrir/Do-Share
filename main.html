@@ -56,7 +56,7 @@ function getEditedPost(state, writeTimeStamp) {
     'reshare': (mem[writeTimeStamp] && mem[writeTimeStamp].reshare) || undefined,
     'image_id': val('image_id'),
     'title': val('title'),
-    'circle_ids': $('#circleChooser').val(),
+    'circle_ids': $('#circleChooser').val() || [],
     'timeStamp': new Date(val('time')).getTime() || undefined,
     'link': val('link') || undefined,
     'touch': new Date().getTime()
@@ -148,7 +148,9 @@ function profileAutocompleter(prefix, callback) {
 
 function addDraftEditBox(post) {
   if (!post) {
-    post = {};
+    post = {
+      circle_ids: ['PUBLIC']
+    };
   }
   var writeTimeStamp = post.writeTimeStamp || '';
   var content = post.content || '';
@@ -448,6 +450,17 @@ function setListeners() {
   $('input').change(function() {
     needRefresh = true;
   });
+  $('#sendFeedback').click(function() {
+    post('autosave');
+    window.setTimeout(function() {
+      addDraftEditBox({
+        title: 'Do Share Feedback',
+        content: '\n\n#DoShareFeedback #DoShare\n\n_(CC @115470071077898720170)_',
+        circle_ids: ['PUBLIC']
+      });
+      $('[contenteditable]').focus();
+    }, 200);
+  });
 }
 
 function autosave() {
@@ -552,3 +565,4 @@ function onLoad() {
       </div>
     </div>
   </div>
+  <div id="sendFeedback">Send Feedback</div>
