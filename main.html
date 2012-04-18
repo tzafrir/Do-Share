@@ -65,6 +65,10 @@ function getEditedPost(state, writeTimeStamp) {
 
 function isEmptyPost(post) {
   for (var key in post) {
+    if (key == 'circle_ids' && post[key]) {
+      // If the user entered few items, consider the post empty.
+      return (post[key].length < 4);
+    }
     if (post[key] && key != 'touch') {
       return false;
     }
@@ -153,6 +157,7 @@ function addDraftEditBox(post) {
   var image_id = post.image_id || '';
   var title = post.title || '';
   var time = post.timeStamp ? new Date(post.timeStamp).toString() : '';
+  var circle_ids = post.circle_ids || [];
   var medias;
   if (post.rawMedia) {
     medias = processMediaItems(post.rawMedia);
@@ -166,6 +171,8 @@ function addDraftEditBox(post) {
   $('#time').val(time);
   $('#timeInput').val(time);
   $('#write_time_stamp').val(writeTimeStamp);
+
+  $('#circleChooser').val(circle_ids).trigger("liszt:updated");
 
   $('#reshare').html(renderReshare(post));
   populateLinkMediaArea(post.rawMedia);
