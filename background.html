@@ -393,6 +393,26 @@ function resharePost(url) {
   });
 }
 
+function parseAcls(ids) {
+  if (!ids instanceof Array) {
+    return;
+  }
+  return ids.map(function(id) {
+    if (id == 'PUBLIC') {
+      return {type: GooglePlusAPI.AclType.PUBLIC};
+    } else if (id == 'EXTENDED_CIRCLES') {
+      return {type: GooglePlusAPI.AclType.EXTENDED_CIRCLES};
+    } else if (id == 'YOUR_CIRCLES') {
+      return {type: GooglePlusAPI.AclType.YOUR_CIRCLES};
+    } else {
+      return {
+        type: GooglePlusAPI.AclType.SPECIFIED_CIRCLE,
+        id: id
+      }
+    }
+  });
+}
+
 function onRequest(request, sender, callback) {
   var type = request.type;
   if (type == "post") {
@@ -438,6 +458,8 @@ function onRequest(request, sender, callback) {
         callback(response.data);
       }
     });
+  } else if (type == 'parseAcls') {
+    callback(parseAcls(request.ids));
   }
 }
 
