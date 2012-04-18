@@ -56,6 +56,7 @@ function getEditedPost(state, writeTimeStamp) {
     'reshare': (mem[writeTimeStamp] && mem[writeTimeStamp].reshare) || undefined,
     'image_id': val('image_id'),
     'title': val('title'),
+    'circle_ids': $('#circleChooser').val(),
     'timeStamp': new Date(val('time')).getTime() || undefined,
     'link': val('link') || undefined,
     'touch': new Date().getTime()
