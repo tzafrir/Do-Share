@@ -394,7 +394,7 @@ function resharePost(url) {
 }
 
 function parseAcls(ids) {
-  if (!ids instanceof Array) {
+  if (!(ids instanceof Array)) {
     return;
   }
   return ids.map(function(id) {
