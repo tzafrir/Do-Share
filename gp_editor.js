@@ -136,7 +136,7 @@ GPEditor.prototype.visitNormalizedHtmlNode = function(element) {
       break;
     case "A":
       if (element.className == 'proflink') {
-        data = '@' + element.getAttribute('oid') + ' ' || '';
+        data = '@' + element.getAttribute('oid');
         dontCrawlChildren = true;
       }
       break;
@@ -149,7 +149,7 @@ GPEditor.prototype.visitNormalizedHtmlNode = function(element) {
       break;
     case "SPAN":
       if (element.className == 'proflinkPrefix') {
-        return s + ' ';
+        return s;
       }
       break;
   }
