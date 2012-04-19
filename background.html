@@ -411,7 +411,7 @@ function getLinkMedia(link, callback) {
       console.error('Error fetching media for ' + link);
     }
     if (response.data) {
-      callback(processMediaItems(response.data));
+      callback(response.data);
     }
   }, link);
 }
@@ -489,7 +489,9 @@ function onRequest(request, sender, callback) {
   } else if (type == 'profileAutocomplete') {
     profileAutocomplete(request.prefix, callback);
   } else if (type == 'getLinkMedia') {
-    getLinkMedia(request.link, callback);
+    getLinkMedia(request.link, function(rawMedia) {
+      callback(processMediaItems(rawMedia));
+    });
   } else if (type == 'getCircles') {
     plus.getCircles(function(response) {
       if (response.status) {
