@@ -156,7 +156,7 @@ function addDraftEditBox(post) {
   $('#circleChooser').val(circle_ids).trigger("liszt:updated");
 
   $('#reshare').html(renderReshare(post));
-  populateLinkMediaArea(post.rawMedia);
+  populateEditorMediaArea(post.medias);
 
   if (gpe) {
     gpe.destroy();
@@ -362,18 +362,30 @@ function refreshIfNeeded() {
   window.setTimeout(refreshIfNeeded, 300);
 }
 
-function populateLinkMediaArea() {
+function populateEditorMediaArea(medias) {
   var link = $('#link').val();
-  if (!link) {
-    $('#postMedia').hide('blind', 500, function(){$(this).html('')});
-    return;
-  }
-  chrome.extension.sendRequest({type: 'getLinkMedia', link: link}, function(medias) {
-    if (medias) {
-      $('#postMedia').html(renderMediaItems(medias))
-          .show('blind', 500);
+  var mediasLink = medias && medias.link && medias.link.url;
+  function renderMedias(medias) {
+    $('#postMedia').html(renderMediaItems(medias))
+        .show('blind', 500);
+  };
+  if (link || mediasLink) {
+    if (link == mediasLink) {
+      renderMedias(medias);
+    } else {
+      chrome.extension.sendRequest({type: 'getLinkMedia', link: link}, function(result) {
+        if (result) {
+          renderMedias(result);
+        }
+      });
     }
-  });
+  } else {
+    if (medias && (medias.video || medias.images && medias.images.length)) {
+      renderMedias(medias);
+    } else {
+      $('#postMedia').hide('blind', 500, function(){$(this).html('')});
+    }
+  }
 }
 
 function setListeners() {
@@ -393,7 +405,7 @@ function setListeners() {
   $('#submitLink').click(function() {
     $('#link').val($('#linkInput').val());
     $('#addLink').children().click();
-    populateLinkMediaArea();
+    populateEditorMediaArea();
   });
   $('#linkInput').keydown(function(e) {
     if (e.keyCode == 13) {
