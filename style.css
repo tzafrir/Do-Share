@@ -303,6 +303,8 @@ body {
   padding: 20px;
   -webkit-transition: all 0.2s ease-in-out;
   cursor: pointer;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 .postTitle, .postDate {
