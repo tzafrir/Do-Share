@@ -434,9 +434,14 @@ function setListeners() {
     $('#buttonSchedule').click();
   });
   $('#buttonScheduleStepTwo').click(function() {
-    $('#time').val($('#timeInput').val());
-    post('scheduled');
-    $('#buttonSchedule').click();
+    var time = $('#timeInput').val();
+    if (new Date(time) < new Date()) {
+      alert('Time too early (TODO: ERROR)');
+    } else {
+      $('#time').val(time);
+      post('scheduled');
+      $('#buttonSchedule').click();
+    }
   });
   $('#editbox').keyup(function() {
     needRefresh = true;

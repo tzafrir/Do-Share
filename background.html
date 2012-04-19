@@ -357,6 +357,10 @@ function delPost(writeTimeStamp, callback) {
 }
 
 function post(post, callback) {
+    if (post.state == 'scheduled' && post.timeStamp < new Date().getTime()) {
+      callback({error: 'SCHEDULE_PAST'});
+      return;
+    }
     if (!post) {
       console.error('Missing request.post');
       callback(false);
