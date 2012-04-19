@@ -506,19 +506,19 @@ function onLoad() {
         </div>
         <div id="postMedia"></div>
       </div>
+      <div id="circleChooserBar">
+        <select multiple id="circleChooser" data-placeholder="Add Circles...">
+          <option value="PUBLIC">Public</option>
+          <option value="EXTENDED_CIRCLES">Extended Circles</option>
+          <option value="YOUR_CIRCLES">Your Circles</option>
+          <!-- Circles added dynamically -->
+        </select>
+      </div>
       <input type="hidden" id="link" />
       <input type="hidden" id="time" />
       <input type="hidden" id="image_id" />
       <input type="hidden" id="share_id" />
       <input type="hidden" id="write_time_stamp" />
-    </div>
-    <div id="circleChooserBar">
-      <select multiple id="circleChooser" data-placeholder="Add Circles...">
-        <option value="PUBLIC">Public</option>
-        <option value="EXTENDED_CIRCLES">Extended Circles</option>
-        <option value="YOUR_CIRCLES">Your Circles</option>
-        <!-- Circles added dynamically -->
-      </select>
     </div>
     <div id="buttonBar">
       <button onclick="delPost()" id="buttonDelete">delete post :(</button>
