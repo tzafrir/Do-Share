@@ -426,7 +426,8 @@ function resharePost(url) {
   fetchPostData(url, function(data) {
     var post = {reshare: data,
                 share_id: data.update_id,
-                writeTimeStamp: new Date().getTime()};
+                writeTimeStamp: new Date().getTime(),
+                circle_ids: ['PUBLIC']};
     newPost(post);
   });
 }
