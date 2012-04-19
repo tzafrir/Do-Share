@@ -342,7 +342,7 @@ function fetchPost(writeTimeStamp, callback) {
       return;
     }
     race = true;
-    callback(item);
+    callback(preparePost(item));
   };
   db.processItem(writeTimeStamp, racer);
   s.processItem(writeTimeStamp, racer);
