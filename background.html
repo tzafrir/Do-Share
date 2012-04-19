@@ -249,25 +249,39 @@ function addPost(post, callback) {
   }
 }
 
+function preparePost(post) {
+  if (post.rawMedia) {
+    post.medias = processMediaItems(post.rawMedia);
+  }
+  if (post.reshare && post.reshare.rawMedia) {
+    post.reshare.medias = processMediaItems(post.reshare.rawMedia);
+  }
+  return post;
+}
+
 function fetchAll(callback) {
   if (!dbInit) {
     return;
   }
   var result = {posts: [], lastUpdate: lastUpdate};
+  var parseMedia = function(result) {
+    result.posts.forEach(preparePost);
+    callback(result);
+  };
   var wrapCallback = function() {
     s.count(function(count) {
       if (count == 0) {
-        callback(result);
+        parseMedia(result);
       } else {
         s.processAllItems(function(item) {
           result.posts.push(item);
           if (--count == 0) {
-            callback(result);
+            parseMedia(result);
           }
         });
       }
     });
-  }
+  };
   db.count(function(count) {
     if (count == 0) {
       wrapCallback();
@@ -281,6 +295,28 @@ function fetchAll(callback) {
       });
     }
   });
+}
+
+function processMediaItems(mediaArray) {
+  var result = {'images': []};
+  mediaArray.forEach(function(media) {
+    if (media[24][4] == "image" || media[24][4] == "photo") {
+      var url = media[41][0][1];
+      if (!url.match(/http/)) {
+        url = 'https:' + url;
+      }
+      var image = {'url': url};
+      result.images.push(image);
+    }
+    var type = media[24][3];
+    if (type == "text/html" || type == "application/x-shockwave-flash") {
+      result.link = {'url': media[24][1], 'title': media[3], 'description': media[21]};
+    }
+    if (type == "application/x-shockwave-flash") {
+      result.video = {'embed': media[5][1].replace(/autoplay=1/, ''), 'w': media[5][3], 'h': media[5][2]};
+    }
+  });
+  return result;
 }
 
 function publishDraft(writeTimeStamp, callback) {
@@ -375,14 +411,14 @@ function getLinkMedia(link, callback) {
       console.error('Error fetching media for ' + link);
     }
     if (response.data) {
-      callback(response.data);
+      callback(processMediaItems(response.data));
     }
   }, link);
 }
 
 function newPost(post) {
   // Set temporary values and open the frontend. Expect frontend to clear these from LS.
-  localStorage['_tmp_post'] = JSON.stringify(post);
+  localStorage['_tmp_post'] = JSON.stringify(preparePost(post));
   chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
 }
 

@@ -91,27 +91,7 @@ function post(state) {
   sendPost(post);
 }
 
-function processMediaItems(mediaArray) {
-  var result = {'images': []};
-  mediaArray.forEach(function(media) {
-    if (media[24][4] == "image" || media[24][4] == "photo") {
-      var url = media[41][0][1];
-      if (!url.match(/http/)) {
-        url = 'https:' + url;
-      }
-      var image = {'url': url};
-      result.images.push(image);
-    }
-    var type = media[24][3];
-    if (type == "text/html" || type == "application/x-shockwave-flash") {
-      result.link = {'url': media[24][1], 'title': media[3], 'description': media[21]};
-    }
-    if (type == "application/x-shockwave-flash") {
-      result.video = {'embed': media[5][1].replace(/autoplay=1/, ''), 'w': media[5][3], 'h': media[5][2]};
-    }
-  });
-  return result;
-}
+
 
 function delPost() {
   var writeTimeStamp = Number(val('write_time_stamp'));
@@ -160,9 +140,8 @@ function addDraftEditBox(post) {
   var title = post.title || '';
   var time = post.timeStamp ? new Date(post.timeStamp).toString() : '';
   var circle_ids = post.circle_ids || [];
-  var medias;
-  if (post.rawMedia) {
-    medias = processMediaItems(post.rawMedia);
+  var medias = post.medias;
+  if (medias) {
     link = medias.link && medias.link.url || '';
   }
 
@@ -196,7 +175,7 @@ function renderReshare(post) {
          (rs.via_name ? ' (via ' + rs.via_name + ')' : '') +
          ':</h2>' +
          '<p>' + rs.content.replace(/(class=\'ot-hashtag\' href=\')/g, "$1https://plus.google.com/") + '</p>' +
-         (rs.rawMedia ? renderMediaItems(processMediaItems(rs.rawMedia)) : '') + "</div>";
+         (rs.medias ? renderMediaItems(rs.medias) : '') + "</div>";
 }
 
 function renderReshareMeta(post) {
@@ -236,8 +215,7 @@ function removeRemovedPosts(removedPosts) {
 }
 
 function getImgHtml(post) {
-  function getMediaHtml(rawMedia) {
-    var items = processMediaItems(rawMedia)
+  function getMediaHtml(items) {
     var image = items.images[0];
     var video = items.video;
     if (video) {
@@ -247,10 +225,10 @@ function getImgHtml(post) {
       return "<img width='260' src='" + image.url + "' /" + ">";
     }
   };
-  if (post.reshare && post.reshare.rawMedia) {
-    return getMediaHtml(post.reshare.rawMedia);
-  } else if (post.rawMedia) {
-    return getMediaHtml(post.rawMedia);
+  if (post.reshare && post.reshare.medias) {
+    return getMediaHtml(post.reshare.medias);
+  } else if (post.medias) {
+    return getMediaHtml(post.medias);
   }
 }
 
@@ -390,9 +368,9 @@ function populateLinkMediaArea() {
     $('#postMedia').hide('blind', 500, function(){$(this).html('')});
     return;
   }
-  chrome.extension.sendRequest({type: 'getLinkMedia', link: link}, function(rawMedia) {
-    if (rawMedia) {
-      $('#postMedia').html(renderMediaItems(processMediaItems(rawMedia)))
+  chrome.extension.sendRequest({type: 'getLinkMedia', link: link}, function(medias) {
+    if (medias) {
+      $('#postMedia').html(renderMediaItems(medias))
           .show('blind', 500);
     }
   });
