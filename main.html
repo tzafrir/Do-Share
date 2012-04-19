@@ -66,8 +66,10 @@ function getEditedPost(state, writeTimeStamp) {
 function isEmptyPost(post) {
   for (var key in post) {
     if (key == 'circle_ids' && post[key]) {
-      // If the user entered few items, consider the post empty.
-      return (post[key].length < 4);
+      // If the user entered only a few items, consider the post empty.
+      if (post[key].length > 3) {
+        return false;
+      }
     }
     if (post[key] && key != 'touch') {
       return false;
