@@ -70,8 +70,7 @@ function isEmptyPost(post) {
       if (post[key].length > 3) {
         return false;
       }
-    }
-    if (post[key] && key != 'touch') {
+    } else if (post[key] && key != 'touch') {
       return false;
     }
   }
