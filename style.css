@@ -137,6 +137,11 @@ body {
   opacity: 0.4;
 }
 
+#postActions .invalid {
+  opacity: 0.3;
+  cursor: default;
+}
+
 .active {
   background-color: #92ac75;
   color: #fff;

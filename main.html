@@ -368,6 +368,7 @@ function populateEditorMediaArea(medias) {
   function renderMedias(medias) {
     $('#postMedia').html(renderMediaItems(medias))
         .show('blind', 500);
+    $('#addLinkAction').attr({'class': 'invalid'});
   };
   if (link || mediasLink) {
     if (link == mediasLink) {
@@ -384,6 +385,7 @@ function populateEditorMediaArea(medias) {
       renderMedias(medias);
     } else {
       $('#postMedia').hide('blind', 500, function(){$(this).html('')});
+      $('#addLinkAction').attr({'class': 'enabled'});
     }
   }
 }
@@ -437,7 +439,7 @@ function setListeners() {
   $('#editbox').keyup(function() {
     needRefresh = true;
   });
-  $('input').change(function() {
+  $('input, #circleChooser').change(function() {
     needRefresh = true;
   });
   $('#sendFeedback').click(function() {
@@ -507,7 +509,7 @@ function onLoad() {
       <div class="titleBar"><input id="title" placeholder="Title (optional)" /></div>
       <div id="content" class="editbox"></div>
       <div id="postActions">
-        <div class="postAction" id="addLink"><span class="enabled">U</span></div>
+        <div class="postAction" id="addLink"><span id="addLinkAction" class="enabled">U</span></div>
       </div>
       <div id="attachments">
         <div id="reshare"></div>
