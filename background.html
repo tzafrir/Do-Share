@@ -216,8 +216,8 @@ function publish(post, callback) {
   if (post.title) {
     post.content = '*' + post.title + '*\n\n' + post.content;
   }
-  if (post.circle_ids instanceof Array) {
-    post.aclItems = parseAcls(post.circle_ids);
+  if (post.entities instanceof Array) {
+    post.aclItems = parseEntities(post.entities);
   }
   plus.newPost(callback || c, post);
   console.log("Posting");
@@ -431,26 +431,34 @@ function resharePost(url) {
     var post = {reshare: data,
                 share_id: data.update_id,
                 writeTimeStamp: new Date().getTime(),
-                circle_ids: ['PUBLIC']};
+                entities: [{name: 'Public', circleId: 'PUBLIC'}]};
     newPost(post);
   });
 }
 
-function parseAcls(ids) {
-  if (!(ids instanceof Array)) {
+function parseEntities(entities) {
+  if (!(entities instanceof Array)) {
     return;
   }
-  return ids.map(function(id) {
-    if (id == 'PUBLIC') {
-      return {type: GooglePlusAPI.AclType.PUBLIC};
-    } else if (id == 'EXTENDED_CIRCLES') {
-      return {type: GooglePlusAPI.AclType.EXTENDED_CIRCLES};
-    } else if (id == 'YOUR_CIRCLES') {
-      return {type: GooglePlusAPI.AclType.YOUR_CIRCLES};
-    } else {
+  return entities.map(function(entity) {
+    if (entity.circleId) {
+      var id = entity.circleId;
+      if (id == 'PUBLIC') {
+        return {type: GooglePlusAPI.AclType.PUBLIC};
+      } else if (id == 'EXTENDED_CIRCLES') {
+        return {type: GooglePlusAPI.AclType.EXTENDED_CIRCLES};
+      } else if (id == 'YOUR_CIRCLES') {
+        return {type: GooglePlusAPI.AclType.YOUR_CIRCLES};
+      } else {
+        return {
+          type: GooglePlusAPI.AclType.SPECIFIED_CIRCLE,
+          id: id
+        }
+      }
+    } else if (entity.personId) {
       return {
-        type: GooglePlusAPI.AclType.SPECIFIED_CIRCLE,
-        id: id
+        type: GooglePlusAPI.AclType.SPECIFIED_PERSON,
+        id: entity.personId
       }
     }
   });
@@ -508,7 +516,7 @@ function onRequest(request, sender, callback) {
 
 chrome.extension.onRequest.addListener(onRequest);
 chrome.browserAction.onClicked.addListener(function() {
-  newPost('', '');
+  newPost({entities: [{name: 'Public', circleId: 'PUBLIC'}]});
 });
 
 </script>

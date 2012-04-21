@@ -16,14 +16,17 @@
 <script src="libs/jquery-ui-1.8.18.custom.min.js"></script>
 <link rel="stylesheet" type="text/css" href="jqueryui_css/ui-lightness/jquery-ui-1.8.18.custom.css">
 
-<script src="libs/chosen.jquery.min.js"></script>
-<link rel="stylesheet" href="libs/chosen.css" />
+<script>
+var PUBLIC_ENTITY = {
+  name: 'Public',
+  circleId: 'PUBLIC'
+};
 
-  <script>
 var mem = {};
 var touch = {};
 var needRefresh = false;
 var gpe;
+var audienceChooser;
 
 var postsCurrentlyDisplayed = [];
 
@@ -56,7 +59,7 @@ function getEditedPost(state, writeTimeStamp) {
     'reshare': (mem[writeTimeStamp] && mem[writeTimeStamp].reshare) || undefined,
     'image_id': val('image_id'),
     'title': val('title'),
-    'circle_ids': $('#circleChooser').val() || [],
+    'entities': audienceChooser.getEntities(),
     'timeStamp': new Date(val('time')).getTime() || undefined,
     'link': val('link') || undefined,
     'touch': new Date().getTime()
@@ -65,7 +68,7 @@ function getEditedPost(state, writeTimeStamp) {
 
 function isEmptyPost(post) {
   for (var key in post) {
-    if (key == 'circle_ids' && post[key]) {
+    if (key == 'entities' && post[key]) {
       // If the user entered only a few items, consider the post empty.
       if (post[key].length > 3) {
         return false;
@@ -130,7 +133,7 @@ function profileAutocompleter(prefix, callback) {
 function addDraftEditBox(post) {
   if (!post) {
     post = {
-      circle_ids: ['PUBLIC']
+      entities: [PUBLIC_ENTITY]
     };
   }
   var writeTimeStamp = post.writeTimeStamp || '';
@@ -140,7 +143,7 @@ function addDraftEditBox(post) {
   var image_id = post.image_id || '';
   var title = post.title || '';
   var time = post.timeStamp ? new Date(post.timeStamp).toString() : '';
-  var circle_ids = post.circle_ids || [];
+  var entities = post.entities || [];
   var medias = post.medias;
   if (medias) {
     link = medias.link && medias.link.url || '';
@@ -154,7 +157,7 @@ function addDraftEditBox(post) {
   $('#timeInput').val(time);
   $('#write_time_stamp').val(writeTimeStamp);
 
-  $('#circleChooser').val(circle_ids).trigger("liszt:updated");
+  audienceChooser = new AudienceChooser(entities);
 
   $('#reshare').html(renderReshare(post));
   populateEditorMediaArea(post.medias);
@@ -445,7 +448,7 @@ function setListeners() {
   $('#editbox').keyup(function() {
     needRefresh = true;
   });
-  $('input, #circleChooser').change(function() {
+  $('input').change(function() {
     needRefresh = true;
   });
   $('#sendFeedback').click(function() {
@@ -454,11 +457,55 @@ function setListeners() {
       addDraftEditBox({
         title: 'Do Share Feedback',
         content: '\n\n#DoShareFeedback #DoShare\n\n_(CC @115470071077898720170)_',
-        circle_ids: []
+        entities: []
       });
       $('[contenteditable]').focus();
     }, 200);
   });
+  $('#circleChooser').autocomplete({
+    minLength: 0,
+    appendTo: $('#circleChooserBar'),
+    position: {
+      of: $('#circleChooserBar')
+    },
+    focus: function(){},
+    open: function() {
+      $('.ui-autocomplete').css('width', 'inherit');
+    },
+    select: function(event, ui) {
+      audienceChooser.addEntity(ui.item);
+    },
+    source: function(request, callback) {
+      chrome.extension.sendRequest({type: 'getCircles'}, function(circles) {
+        callback([
+          PUBLIC_ENTITY,
+          {
+            name: 'Extended Circles',
+            circleId: 'EXTENDED_CIRCLES'
+          },
+          {
+            name: 'Your Circles',
+            circleId: 'YOUR CIRCLES'
+          }
+        ].concat(circles.filter(function(circle) {
+          return !(circle.id == '15' || circle.name == 'Blocked');
+        })).filter(function(circle) {
+          return !!circle.name.toLowerCase().match(request.term.toLowerCase());
+        }).map(function(circle) {
+          return {
+            name: circle.name,
+            circleId: circle.id
+          };
+        }));
+      });
+    }
+  }).data('autocomplete')._renderItem = function(ul, item) {
+    return $('<li></li>')
+      .data('item.autocomplete', item)
+      .append('<a><span class="entityPhoto"' + (item.photoUrl ? '<img src="' + item.photoUrl + '" /' + '>' : '') +
+          '</span>' +  item.name + '</a>')
+      .appendTo(ul);
+  };
 }
 
 function autosave() {
@@ -474,17 +521,50 @@ function autosave() {
   }
 }
 
-function populateCircleChooser() {
-  chrome.extension.sendRequest({type: 'getCircles'}, function(circles) {
-    circles.forEach(function(circle) {
-      // TODO: Verify that id 15 is blocked for everyone.
-      if (circle.id == '15' || circle.name == 'Blocked') {
-        return;
-      }
-      $('#circleChooser').append($('<option>').attr({value: circle.id}).text(circle.name));
-    });
-    $('#circleChooser').chosen({no_results_text: "No circles matching"});
+/**
+ * Entity {
+ *   circleId OR personId
+ *   name
+ * }
+ */
+function AudienceChooser(entities) {
+  this._entities = entities || [];
+  this._chooser = $('#circleChooser');
+  this.updateChooser();
+}
+
+AudienceChooser.prototype.updateChooser = function() {
+  $('.audienceChooserEntity').remove();
+  var self = this;
+  $(this._entities.map(function(entity) {
+    return button = $('<div class="audienceChooserEntity ' +
+        (entity.circleId ? 'c_' + entity.circleId : 'p_' + entity.personId) + '">' +
+        entity.name + '</div>').append(
+          $('<span>x</span>')
+              .addClass('deleteEntityButton')
+              .click(function() {self.removeEntity(entity)})
+        )[0];
+  })).prependTo($('#circleChooserBar'));
+  needRefresh = true;
+}
+
+AudienceChooser.prototype.getEntities = function() {
+  return this._entities;
+}
+
+AudienceChooser.prototype.addEntity = function(entity) {
+  if (!entity) {
+    return;
+  }
+  this._entities.push(entity);
+  this.updateChooser();
+}
+
+AudienceChooser.prototype.removeEntity = function(entity) {
+  this._entities = this._entities.filter(function(e) {
+    return e != entity;
   });
+  this.updateChooser();
 }
 
 function onLoad() {
@@ -496,7 +576,6 @@ function onLoad() {
   }
   localStorage.removeItem('_tmp_post');
   addDraftEditBox(savedPost);
-  populateCircleChooser();
   setListeners();
   refreshIfNeeded();
   window.setInterval(function() {
@@ -526,19 +605,14 @@ function onLoad() {
         </div>
         <div id="postMedia"></div>
       </div>
-      <div id="circleChooserBar">
-        <select multiple id="circleChooser" data-placeholder="Add Circles...">
-          <option value="PUBLIC">Public</option>
-          <option value="EXTENDED_CIRCLES">Extended Circles</option>
-          <option value="YOUR_CIRCLES">Your Circles</option>
-          <!-- Circles added dynamically -->
-        </select>
-      </div>
       <input type="hidden" id="link" />
       <input type="hidden" id="time" />
       <input type="hidden" id="image_id" />
       <input type="hidden" id="share_id" />
       <input type="hidden" id="write_time_stamp" />
+    </div>
+    <div id="circleChooserBar">
+      <input id="circleChooser"> 
     </div>
     <div id="buttonBar">
       <button onclick="delPost()" id="buttonDelete">delete post :(</button>
