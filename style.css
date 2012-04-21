@@ -58,6 +58,7 @@ table {
 body {
   background-color: #f3f3f3;
   font-family: Roboto, Helvetica, Arial;
+  font-size: 13px;
 }
 
 #appWrap, #circleChooserBar {
@@ -215,16 +216,17 @@ body {
   border: 1px solid #bebebe;
   margin-top: 10px;
   background: #f6f9f3;
+  cursor: text;
 }
 
 .audienceChooserEntity {
   display: block;
   float: left;
   width: auto;
-  height: 20px;
+  height: 28px;
   font-size: 13px;
   color: #fff;
-  padding: 4px 10px 10px 10px;
+  padding: 7px 10px 10px 10px;
   margin-right: 10px;
   margin-bottom: 3px;
   background-color: #0694c4;
@@ -238,9 +240,18 @@ body {
 
 #circleChooser {
   width: auto;
+  height: 28px;
   border: 0;
   outline: 0;
   background: transparent;
+}
+
+#circleChooser::-webkit-input-placeholder {
+  color: #bb1951;
+}
+
+#circleChooser:focus::-webkit-input-placeholder {
+  color: rgba(0,0,0,0);
 }
 
 #buttonBar {
