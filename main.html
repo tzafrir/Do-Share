@@ -499,6 +499,8 @@ function setListeners() {
         }));
       });
     }
+  }).focus(function() {
+    $('#circleChooser').autocomplete('search', '');
   }).data('autocomplete')._renderItem = function(ul, item) {
     return $('<li></li>')
       .data('item.autocomplete', item)
@@ -612,7 +614,7 @@ function onLoad() {
       <input type="hidden" id="write_time_stamp" />
     </div>
     <div id="circleChooserBar">
-      <input id="circleChooser"> 
+      <input id="circleChooser" placeholder="+ Add more people&hellip;">
     </div>
     <div id="buttonBar">
       <button onclick="delPost()" id="buttonDelete">delete post :(</button>
