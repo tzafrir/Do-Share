@@ -436,7 +436,7 @@ function collapse(immediately) {
     if (immediately === true) {
       $('.hideWhenCollapsed, #scheduleBar').hide();
     } else {
-      $('.hideWhenCollapsed, #scheduleBar').hide('blind', 400);
+      $('.hideWhenCollapsed, #scheduleBar:visible').hide('blind', 400);
     }
     $('#posts').css({opacity: 1.0});
     $('#editbox, .hideWhenCollapsed').css({opacity: 1});
