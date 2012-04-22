@@ -308,8 +308,8 @@ function addPostToColumn(div, column) {
   if (lastUpdate == 0) {
     $(column).prepend(div);
   } else {
-    $(div).addClass('invisible').prependTo($(column));
-    window.setTimeout(function(){$(div).removeClass('invisible');}, 1);
+    $(div).addClass('activity').hide().prependTo($(column))
+        .show('fade', 200, function(){$(this).removeClass('activity')});
   }
 }
 

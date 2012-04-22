@@ -384,18 +384,11 @@ body {
   font-weight: 800;
 }
 
-#posts .savedPost.invisible {
-  padding: 0;
-  height: 0;
-  opacity: 0;
-}
-
 .drafts .savedPost {
   background-color: #f1ebe0;
 }
 
 .drafts .savedPost:hover,
-.drafts .savedPost.invisible,
 .drafts .savedPost.activity {
   background-color: #f0a81d;
 }
@@ -405,7 +398,6 @@ body {
 }
 
 .scheduled .savedPost:hover,
-.scheduled .savedPost.invisible,
 .scheduled .savedPost.activity {
   background-color: #f07d3f;
 }
