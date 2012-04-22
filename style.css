@@ -153,13 +153,14 @@ body {
   width: 24px;
   display: inline-block;
   text-align: center;
-  height: 20px;
-  padding: 2px;
-  margin-top: 5px;
-  font-family: serif;
+  height: 24px;
+  padding: 4px;
+  margin-top: 4px;
   border-radius: 6px;
   margin-left: 8px;
-  font-size: 125%;
+  font-size: 16px;
+  font-family: default;
+  font-weight: bold;
 }
 
 #postActions .disabled {
@@ -171,8 +172,13 @@ body {
   cursor: default;
 }
 
-.active {
+.toolbar .active {
   background-color: #92ac75;
+  color: #fff;
+}
+
+.toolbar span:hover:not(.active) {
+  background-color: #acc398;
   color: #fff;
 }
 
