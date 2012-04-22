@@ -495,7 +495,7 @@ function setListeners() {
         }).map(function(circle) {
           return {
             name: circle.name,
-            circleId: circle.id
+            circleId: circle.circleId || circle.id
           };
         });
         callback(matchingCircles);
@@ -551,7 +551,7 @@ AudienceChooser.prototype.updateChooser = function() {
   $('.audienceChooserEntity').remove();
   var self = this;
   $(this._entities.map(function(entity) {
-    return button = $('<div class="audienceChooserEntity ' +
+    return $('<div class="audienceChooserEntity ' +
         (entity.circleId ? 'c_' + entity.circleId : 'p_' + entity.personId) + '">' +
         entity.name + '</div>').append(
           $('<span>x</span>')

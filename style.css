@@ -233,6 +233,12 @@ body {
   border-radius: 5px;
 }
 
+.audienceChooserEntity.c_PUBLIC,
+.audienceChooserEntity.c_EXTENDED_CIRCLES,
+.audienceChooserEntity.c_YOUR_CIRCLES {
+  background-color: #57a046;
+}
+
 .deleteEntityButton {
   padding-left: 8px;
   cursor: pointer;
