@@ -530,6 +530,13 @@ function setListeners() {
           '</span>' +  item.name + '</a>')
       .appendTo(ul);
   };
+  $('#attachments').on('DOMSubtreeModified', function() {
+    if ($(this).height() > 0) {
+      $(this).addClass('notempty');
+    } else {
+      $(this).removeClass('notempty');
+    }
+  });
 }
 
 function autosave() {

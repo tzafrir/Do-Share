@@ -167,8 +167,8 @@ body {
   -webkit-transition: all 0.2s ease-in-out;
 }
 
-#attachments {
-  border-top: 1px solid #aec693
+#attachments.notempty {
+  border-top: 1px solid #aec693;
 }
 
 .reshare {
