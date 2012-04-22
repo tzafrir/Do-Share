@@ -600,6 +600,13 @@ function setListeners() {
   });
   $('#title').focus(uncollapse);
   $('#collapseEditbox').click(collapse);
+  $(document).click(function(e){
+    collapse();
+  });
+  $('#writingArea').click(function(e){
+    // Block the event from reaching document's handler.
+    e.stopPropagation();
+  });
 }
 
 function autosave() {
@@ -688,45 +695,47 @@ function onLoad() {
     <div id="top">
       <header><h1><img src="img/logo.png" /></h1></header>
     </div>
-    <div id="editbox">
-      <div class="titleBar"><input id="title" autocomplete="off" /></div>
-      <div class="hideWhenCollapsed">
-        <div id="content" class="editbox"></div>
-        <div id="postActions">
-          <div class="postAction" id="addLink"><span id="addLinkAction" class="enabled">U</span></div>
-        </div>
-        <div id="attachments">
-          <div id="reshare"></div>
-          <div id="linkBar">
-            <input id="linkInput" placeholder="link" />
-            <button id="submitLink">Add</button>
-            <div id="closeLinkBar" class="xButton">x</div>
+    <div id="writingArea">
+      <div id="editbox">
+        <div class="titleBar"><input id="title" autocomplete="off" /></div>
+        <div class="hideWhenCollapsed">
+          <div id="content" class="editbox"></div>
+          <div id="postActions">
+            <div class="postAction" id="addLink"><span id="addLinkAction" class="enabled">U</span></div>
           </div>
-          <div id="postMedia"></div>
+          <div id="attachments">
+            <div id="reshare"></div>
+            <div id="linkBar">
+              <input id="linkInput" placeholder="link" />
+              <button id="submitLink">Add</button>
+              <div id="closeLinkBar" class="xButton">x</div>
+            </div>
+            <div id="postMedia"></div>
+          </div>
+        </div>
+        <input type="hidden" id="link" />
+        <input type="hidden" id="time" />
+        <input type="hidden" id="image_id" />
+        <input type="hidden" id="share_id" />
+        <input type="hidden" id="write_time_stamp" />
+      </div>
+      <div class="hideWhenCollapsed">
+        <div id="circleChooserBar">
+          <input id="circleChooser" placeholder="+ Add more people&hellip;">
+        </div>
+        <div id="buttonBar">
+          <div><button id="buttonDelete">delete post :(</button></div>
+          <div><button id="buttonDraft">save draft</button></div>
+          <div><button id="buttonSchedule" class="closed">schedule</button></div>
+          <div><button id="buttonPost">share now</button></div>
         </div>
       </div>
-      <input type="hidden" id="link" />
-      <input type="hidden" id="time" />
-      <input type="hidden" id="image_id" />
-      <input type="hidden" id="share_id" />
-      <input type="hidden" id="write_time_stamp" />
-    </div>
-    <div class="hideWhenCollapsed">
-      <div id="circleChooserBar">
-        <input id="circleChooser" placeholder="+ Add more people&hellip;">
+      <div id="scheduleBar">
+        <div id="closeScheduleBar" class="xButton">x</div>
+        <p><input id="timeInput" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
+        <p id="timeParsed"></p>
+        <button id="buttonScheduleStepTwo">schedule</button>
       </div>
-      <div id="buttonBar">
-        <div><button id="buttonDelete">delete post :(</button></div>
-        <div><button id="buttonDraft">save draft</button></div>
-        <div><button id="buttonSchedule" class="closed">schedule</button></div>
-        <div><button id="buttonPost">share now</button></div>
-      </div>
-    </div>
-    <div id="scheduleBar">
-      <div id="closeScheduleBar" class="xButton">x</div>
-      <p><input id="timeInput" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
-      <p id="timeParsed"></p>
-      <button id="buttonScheduleStepTwo">schedule</button>
     </div>
     <div id="posts">
       <div class="column drafts">
