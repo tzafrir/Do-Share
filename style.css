@@ -457,14 +457,17 @@ body {
 #sendFeedback {
   position: absolute;
   top: 0;
-  left: 100px;
-  background: transparent;
+  left: -9999px;
+  background-image: -webkit-linear-gradient(top, #acc398, #c6d5b7);
   border: 2px solid #AAA;
   border-top: 0;
   border-radius: 8px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  padding: 20px 25px 10px 25px;
-  text-shadow: 0px 1px 1px rgba(255, 165, 0, 0.56);
+  font-size: 18px;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+  padding: 10px 5px 10px 5px;
   cursor: pointer;
 }

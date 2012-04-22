@@ -448,6 +448,7 @@ function collapse(immediately) {
 }
 
 function setListeners() {
+  $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'})
   $('#addLink').delegate('.enabled', 'click', function() {
     $('#linkBar').show('blind', 200);
     $(this).removeClass('enabled');
@@ -737,5 +738,5 @@ function onLoad() {
       </div>
     </div>
   </div>
-  <div id="sendFeedback">Send Feedback</div>
+  <div id="sendFeedback">send feedback!</div>
   <div id="collapseEditbox"></div>
