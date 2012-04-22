@@ -385,21 +385,21 @@ body {
 }
 
 .drafts .savedPost {
-  background-color: #f1ebe0;
+  background-color: #f1ebe1;
 }
 
 .drafts .savedPost:hover,
 .drafts .savedPost.activity {
-  background-color: #f0a81d;
+  background-color: #f1a643;
 }
 
 .scheduled .savedPost {
-  background-color: #f3e8e2;
+  background-color: #f3e8e3;
 }
 
 .scheduled .savedPost:hover,
 .scheduled .savedPost.activity {
-  background-color: #f07d3f;
+  background-color: #f17c4c;
 }
 
 #sendFeedback {
