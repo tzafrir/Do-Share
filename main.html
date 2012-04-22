@@ -206,6 +206,7 @@ function editDraft(writeTimeStamp) {
     $('body').animate({scrollTop: 0}, 450);
     stopRefreshing = true;
     addDraftEditBox(post);
+    uncollapse();
   });
 }
 
@@ -403,6 +404,36 @@ function populateEditorMediaArea(medias) {
   }
 }
 
+function uncollapse() {
+  if ($('#editbox').is('.collapsed')) {
+    $('#title').attr({placeholder: 'Title (optional)'});
+    $('#editbox').removeClass('collapsed');
+    $('.hideWhenCollapsed').show('blind', 400, function() {
+      $('#collapseEditbox').position({
+        my: 'right bottom',
+        at: 'right top',
+        of: '.titleBar',
+        offset: '-6 -6',
+        collision: 'none'
+      }).show(100);
+    });
+  }
+}
+
+function collapse(immediately) {
+  if (!$('#editbox').is('.collapsed')) {
+    $('#collapseEditbox').hide();
+    $('#title').attr({placeholder: "Create new post..."});
+    $('#editbox').addClass('collapsed');
+    addDraftEditBox();
+    if (immediately === true) {
+      $('.hideWhenCollapsed').hide();
+    } else {
+      $('.hideWhenCollapsed').hide('blind', 400);
+    }
+  }
+}
+
 function setListeners() {
   $('#addLink').delegate('.enabled', 'click', function() {
     $('#linkBar').show('blind', 200);
@@ -444,6 +475,14 @@ function setListeners() {
   $('#closeScheduleBar').click(function() {
     $('#buttonSchedule').click();
   });
+  $('#buttonDelete').click(function() {
+    delPost();
+    collapse();
+  });
+  $('#buttonDraft').click(function() {
+    post('draft');
+    collapse();
+  });
   $('#buttonScheduleStepTwo').click(function() {
     var time = $('#timeInput').val();
     if (new Date(time) < new Date()) {
@@ -453,6 +492,11 @@ function setListeners() {
       post('scheduled');
       $('#buttonSchedule').click();
     }
+    collapse();
+  });
+  $('#buttonPost').click(function() {
+    post('post');
+    collapse();
   });
   $('#editbox').keyup(function() {
     needRefresh = true;
@@ -537,6 +581,8 @@ function setListeners() {
       $(this).removeClass('notempty');
     }
   });
+  $('#title').focus(uncollapse);
+  $('#collapseEditbox').click(collapse);
 }
 
 function autosave() {
@@ -611,6 +657,7 @@ function onLoad() {
   window.setInterval(function() {
     autosave();
   }, 400);
+  collapse(true);
 }
 
   </script>
@@ -621,19 +668,21 @@ function onLoad() {
       <header><h1>Do Share</h1></header>
     </div>
     <div id="editbox">
-      <div class="titleBar"><input id="title" placeholder="Title (optional)" autocomplete="off" /></div>
-      <div id="content" class="editbox"></div>
-      <div id="postActions">
-        <div class="postAction" id="addLink"><span id="addLinkAction" class="enabled">U</span></div>
-      </div>
-      <div id="attachments">
-        <div id="reshare"></div>
-        <div id="linkBar">
-          <input id="linkInput" placeholder="link" />
-          <button id="submitLink">Add</button>
-          <div id="closeLinkBar" class="xButton">x</div>
+      <div class="titleBar"><input id="title" autocomplete="off" /></div>
+      <div class="hideWhenCollapsed">
+        <div id="content" class="editbox"></div>
+        <div id="postActions">
+          <div class="postAction" id="addLink"><span id="addLinkAction" class="enabled">U</span></div>
         </div>
-        <div id="postMedia"></div>
+        <div id="attachments">
+          <div id="reshare"></div>
+          <div id="linkBar">
+            <input id="linkInput" placeholder="link" />
+            <button id="submitLink">Add</button>
+            <div id="closeLinkBar" class="xButton">x</div>
+          </div>
+          <div id="postMedia"></div>
+        </div>
       </div>
       <input type="hidden" id="link" />
       <input type="hidden" id="time" />
@@ -641,20 +690,22 @@ function onLoad() {
       <input type="hidden" id="share_id" />
       <input type="hidden" id="write_time_stamp" />
     </div>
-    <div id="circleChooserBar">
-      <input id="circleChooser" placeholder="+ Add more people&hellip;">
-    </div>
-    <div id="buttonBar">
-      <button onclick="delPost()" id="buttonDelete">delete post :(</button>
-      <button onclick="post('draft')" id="buttonDraft">save draft</button>
-      <button id="buttonSchedule" class="closed">schedule</button>
-      <button onclick="post('post')" id="buttonPost">share now</button>
-    </div>
-    <div id="scheduleBar">
-      <div id="closeScheduleBar" class="xButton">x</div>
-      <p><input id="timeInput" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
-      <p id="timeParsed"></p>
-      <button id="buttonScheduleStepTwo">schedule</button>
+    <div class="hideWhenCollapsed">
+      <div id="circleChooserBar">
+        <input id="circleChooser" placeholder="+ Add more people&hellip;">
+      </div>
+      <div id="buttonBar">
+        <button id="buttonDelete">delete post :(</button>
+        <button id="buttonDraft">save draft</button>
+        <button id="buttonSchedule" class="closed">schedule</button>
+        <button id="buttonPost">share now</button>
+      </div>
+      <div id="scheduleBar">
+        <div id="closeScheduleBar" class="xButton">x</div>
+        <p><input id="timeInput" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
+        <p id="timeParsed"></p>
+        <button id="buttonScheduleStepTwo">schedule</button>
+      </div>
     </div>
     <div id="posts">
       <div class="column drafts">
@@ -668,3 +719,4 @@ function onLoad() {
     </div>
   </div>
   <div id="sendFeedback">Send Feedback</div>
+  <div id="collapseEditbox"></div>

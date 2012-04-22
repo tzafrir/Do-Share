@@ -77,8 +77,13 @@ body {
 }
 
 #editbox {
-  background-color: #f6f9f3;
+  background-color: #fff;
   border: 1px solid #aec693;
+  -webkit-transition: all 0.2s ease-in-out;
+}
+
+#editbox.collapsed {
+  border-color: #dedede;
 }
 
 .titleBar {
@@ -93,6 +98,18 @@ body {
   height: 50px;
   font-size: 18px;
   padding-left: 15px;
+}
+
+#collapseEditbox {
+  width: 16px;
+  height: 16px;
+  display: none;
+  cursor: pointer;
+  border: 1px solid red;
+}
+
+.hideWhenCollapsed {
+  display: none;
 }
 
 .editbox .gp-e-container {
