@@ -473,11 +473,12 @@ function setListeners() {
       $('.ui-autocomplete').css('width', 'inherit');
     },
     select: function(event, ui) {
+      comingFromSelect = true;
       audienceChooser.addEntity(ui.item);
     },
     source: function(request, callback) {
       chrome.extension.sendRequest({type: 'getCircles'}, function(circles) {
-        callback([
+        var matchingCircles = [
           PUBLIC_ENTITY,
           {
             name: 'Extended Circles',
@@ -496,15 +497,26 @@ function setListeners() {
             name: circle.name,
             circleId: circle.id
           };
-        }));
+        });
+        callback(matchingCircles);
+        if (request.term.length > 0) {
+          chrome.extension.sendRequest({type: 'profileAutocomplete', prefix: request.term}, function(profiles) {
+            profiles.forEach(function(profileResult) {
+              profileResult.personId = profileResult.id;
+            });
+            callback(matchingCircles.concat(profiles));
+          });
+        }
       });
     }
   }).focus(function() {
-    $('#circleChooser').autocomplete('search', '');
+    if (!($('.ui-autocomplete').is(':visible'))) {
+      $('#circleChooser').autocomplete('search');
+    }
   }).data('autocomplete')._renderItem = function(ul, item) {
     return $('<li></li>')
       .data('item.autocomplete', item)
-      .append('<a><span class="entityPhoto"' + (item.photoUrl ? '<img src="' + item.photoUrl + '" /' + '>' : '') +
+      .append('<a><span class="entityPhoto">' + (item.photoUrl ? '<img src="' + item.photoUrl + '" /' + '>' : '') +
           '</span>' +  item.name + '</a>')
       .appendTo(ul);
   };
