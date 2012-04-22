@@ -412,21 +412,32 @@ body {
   cursor: pointer;
   overflow-x: hidden;
   text-overflow: ellipsis;
+  font-size: 14px;
+  color: #605e5a;
 }
 
-.postTitle, .postDate {
+.postDate {
+  font-size: 14px;
+  color: #98224c;
+  -webkit-margin-after: 15px;
+}
+
+.postTitle {
+  font-size: 18px;
+  color: #484643;
   display: block;
   -webkit-margin-after: 0.5em;
-  font-weight: 800;
+  font-weight: 300;
 }
 
 .drafts .savedPost {
   background-color: #f1ebe1;
 }
 
-.drafts .savedPost:hover,
-.drafts .savedPost.activity {
+#posts .drafts .savedPost:hover,
+#posts .drafts .savedPost.activity {
   background-color: #f1a643;
+  color: #483112;
 }
 
 .scheduled .savedPost {
