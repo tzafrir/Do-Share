@@ -140,12 +140,13 @@ body {
 }
 
 .toolbar {
-  background-color: #e5f2d6;
-  border-top: 1px solid #cadbb7;
-  border-bottom: 1px solid #cadbb7;
+  background-color: #e5f1d9;
+  border: 1px solid #c9dabb;
+  border-left: 0;
+  border-right: 0;
   font-family: sans-serif;
   cursor: pointer;
-  height: 35px;
+  height: 36px;
 }
 
 .toolbar span {
