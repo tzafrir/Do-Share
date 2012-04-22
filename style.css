@@ -68,12 +68,12 @@ body {
 
 #top {
   text-align: center;
-  height: 100px;
+  height: 110px;
 }
 
-#top header {
-  font-size: 200%;
-  padding: 30px;
+#top img {
+  height: 30px;
+  margin-top: 40px;
 }
 
 #editbox {
