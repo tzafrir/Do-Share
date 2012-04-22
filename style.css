@@ -304,10 +304,10 @@ body {
 
 #buttonBar button, #buttonScheduleStepTwo {
   width: 140px;
-  margin-left: 17px;
+  margin-left: 20px;
   height: 34px;
   border: 2px solid;
-  border-radius: 6px;
+  border-radius: 5px;
   color: #fff;
   font-size: 16px;
   font-weight: 300;
