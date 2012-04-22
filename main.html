@@ -423,6 +423,7 @@ function uncollapse(force) {
     } else {
       $('.hideWhenCollapsed').show('blind', 400, pos);
     }
+    $('#posts').css({opacity: 0.1});
   }
 }
 
@@ -437,6 +438,7 @@ function collapse(immediately) {
     } else {
       $('.hideWhenCollapsed').hide('blind', 400);
     }
+    $('#posts').css({opacity: 1.0});
   }
 }
 

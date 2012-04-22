@@ -338,6 +338,10 @@ body {
   cursor: pointer;
 }
 
+#posts {
+  -webkit-transition: all 0.2s ease-in-out;
+}
+
 #posts .column {
   width: 300px;
 }
