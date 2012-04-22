@@ -434,9 +434,9 @@ function collapse(immediately) {
     $('#editbox').addClass('collapsed');
     addDraftEditBox();
     if (immediately === true) {
-      $('.hideWhenCollapsed').hide();
+      $('.hideWhenCollapsed, #scheduleBar').hide();
     } else {
-      $('.hideWhenCollapsed').hide('blind', 400);
+      $('.hideWhenCollapsed, #scheduleBar').hide('blind', 400);
     }
     $('#posts').css({opacity: 1.0});
   }
@@ -712,12 +712,12 @@ function onLoad() {
         <button id="buttonSchedule" class="closed">schedule</button>
         <button id="buttonPost">share now</button>
       </div>
-      <div id="scheduleBar">
-        <div id="closeScheduleBar" class="xButton">x</div>
-        <p><input id="timeInput" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
-        <p id="timeParsed"></p>
-        <button id="buttonScheduleStepTwo">schedule</button>
-      </div>
+    </div>
+    <div id="scheduleBar">
+      <div id="closeScheduleBar" class="xButton">x</div>
+      <p><input id="timeInput" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
+      <p id="timeParsed"></p>
+      <button id="buttonScheduleStepTwo">schedule</button>
     </div>
     <div id="posts">
       <div class="column drafts">
