@@ -422,6 +422,10 @@ body {
   -webkit-margin-after: 15px;
 }
 
+.postDate:hover {
+  color: #6d1030;
+}
+
 .postTitle {
   font-size: 18px;
   color: #484643;
@@ -447,6 +451,7 @@ body {
 .scheduled .savedPost:hover,
 .scheduled .savedPost.activity {
   background-color: #f17c4c;
+  color: #483112;
 }
 
 #sendFeedback {
