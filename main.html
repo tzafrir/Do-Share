@@ -404,11 +404,11 @@ function populateEditorMediaArea(medias) {
   }
 }
 
-function uncollapse() {
-  if ($('#editbox').is('.collapsed')) {
+function uncollapse(force) {
+  if ($('#editbox').is('.collapsed') || force === true) {
     $('#title').attr({placeholder: 'Title (optional)'});
     $('#editbox').removeClass('collapsed');
-    $('.hideWhenCollapsed').show('blind', 400, function() {
+    var pos = function() {
       $('#collapseEditbox').position({
         my: 'right bottom',
         at: 'right top',
@@ -416,7 +416,13 @@ function uncollapse() {
         offset: '-6 -6',
         collision: 'none'
       }).show(100);
-    });
+    };
+    if (force === true) {
+      $('.hideWhenCollapsed').show();
+      pos();
+    } else {
+      $('.hideWhenCollapsed').show('blind', 400, pos);
+    }
   }
 }
 
@@ -657,7 +663,11 @@ function onLoad() {
   window.setInterval(function() {
     autosave();
   }, 400);
-  collapse(true);
+  if (savedPostJson) {
+    uncollapse(true);
+  } else {
+    collapse(true);
+  }
 }
 
   </script>
