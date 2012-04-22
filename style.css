@@ -338,7 +338,7 @@ body {
   cursor: pointer;
 }
 
-#posts {
+#posts, #editbox, .hideWhenCollapsed  {
   -webkit-transition: all 0.2s ease-in-out;
 }
 

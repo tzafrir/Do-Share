@@ -478,11 +478,13 @@ function setListeners() {
       jself.removeClass('opened');
       jself.addClass('closed');
       jself.data('active', null);
+      $('#editbox, .hideWhenCollapsed').css({opacity: 1.0});
     } else {
       $('#scheduleBar').show('blind', 200);
       jself.removeClass('closed');
       jself.addClass('opened');
       jself.data('active', true);
+      $('#editbox, .hideWhenCollapsed').css({opacity: 0.1});
     }
   });
   $('#closeScheduleBar').click(function() {
