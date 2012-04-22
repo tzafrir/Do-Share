@@ -99,7 +99,7 @@ function post(state) {
 function blinkPost(writeTimeStamp) {
   var post = $('#post' + writeTimeStamp);
   post.addClass('activity');
-  window.setTimeout(function(){post.removeClass('activity')}, 200);
+  window.setTimeout(function(){post.removeClass('activity')}, 400);
 }
 
 function delPost() {
