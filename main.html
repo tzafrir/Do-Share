@@ -439,6 +439,11 @@ function collapse(immediately) {
       $('.hideWhenCollapsed, #scheduleBar').hide('blind', 400);
     }
     $('#posts').css({opacity: 1.0});
+    $('#editbox, .hideWhenCollapsed').css({opacity: 1});
+    var sbutton = $('#buttonSchedule');
+    sbutton.removeClass('opened');
+    sbutton.addClass('closed');
+    sbutton.data('active', null);
   }
 }
 
