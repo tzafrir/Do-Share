@@ -478,7 +478,7 @@ function setListeners() {
       $('.ui-autocomplete').css('width', 'inherit');
     },
     select: function(event, ui) {
-      comingFromSelect = true;
+      needRefresh = true;
       audienceChooser.addEntity(ui.item);
     },
     source: function(request, callback) {
@@ -564,7 +564,6 @@ AudienceChooser.prototype.updateChooser = function() {
               .click(function() {self.removeEntity(entity)})
         )[0];
   })).prependTo($('#circleChooserBar'));
-  needRefresh = true;
 }
 
 AudienceChooser.prototype.getEntities = function() {
