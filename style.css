@@ -377,7 +377,9 @@ body {
   background-color: #f1ebe0;
 }
 
-.drafts .savedPost:hover, .drafts .savedPost.invisible {
+.drafts .savedPost:hover,
+.drafts .savedPost.invisible,
+.drafts .savedPost.activity {
   background-color: #f0a81d;
 }
 
@@ -385,7 +387,9 @@ body {
   background-color: #f3e8e2;
 }
 
-.scheduled .savedPost:hover, .scheduled .savedPost.invisible {
+.scheduled .savedPost:hover,
+.scheduled .savedPost.invisible,
+.scheduled .savedPost.activity {
   background-color: #f07d3f;
 }
 

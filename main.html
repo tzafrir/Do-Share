@@ -93,9 +93,14 @@ function post(state) {
     post.writeTimeStamp = new Date().getTime();
   }
   sendPost(post);
+  blinkPost(writeTimeStamp);
 }
 
-
+function blinkPost(writeTimeStamp) {
+  var post = $('#post' + writeTimeStamp);
+  post.addClass('activity');
+  window.setTimeout(function(){post.removeClass('activity')}, 200);
+}
 
 function delPost() {
   var writeTimeStamp = Number(val('write_time_stamp'));
