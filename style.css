@@ -296,46 +296,61 @@ body {
   margin-top: 18px;
 }
 
+#buttonBar div {
+  float: left;
+  width: auto;
+  height: 40px;
+}
+
 #buttonBar button, #buttonScheduleStepTwo {
-  width: -webkit-calc(25% - 15px);
-  margin-left: 16px;
+  width: 140px;
+  margin-left: 17px;
   height: 34px;
   border: 2px solid;
   border-radius: 6px;
   color: #fff;
   font-size: 16px;
-  font-weight: 800;
-  text-shadow: 0px -1px 1px #888;
+  font-weight: 300;
+  text-shadow: 0px -1px 0 rgba(0,0,0,0.3);
   cursor: pointer;
   font-family: Roboto;
 }
 
-#buttonBar button:first-child, #buttonScheduleStepTwo {
+#buttonBar div:first-child button, #buttonScheduleStepTwo {
   margin-left: 0;
 }
 
+#buttonBar #buttonDelete:active,
+#buttonBar #buttonDraft:active,
+#buttonBar #buttonSchedule:active,
+#buttonBar #buttonPost:active,
+#buttonScheduleStepTwo:active {
+  margin-top: 2px;
+  box-shadow: none;
+}
+
 #buttonBar #buttonDelete {
-  background-color: #d5d5d5;
+  background-image: -webkit-linear-gradient(top, #cac9c9, #d6d5d5);
   border-color: #cac9c9;
-  box-shadow: 0px 2px 2px #e2e2e2;
+  box-shadow: 0px 2px 0 #e2e2e2;
 }
 
 #buttonBar #buttonDraft {
-  background-color: #f4bf24;
-  border-color: #f0a81d;
-  box-shadow: 0px 2px 2px #dadada;
+  background-image: -webkit-linear-gradient(top, #f1a643, #f4bf4d);
+  border-color: #f1a643;
+  box-shadow: 0px 2px 0 #dadada;
 }
 
 #buttonBar #buttonSchedule, #buttonScheduleStepTwo {
-  background-color: #f1813f;
-  border-color: #f07d3f;
-  box-shadow: 0px 2px 2px #dadada;
+  background-image: -webkit-linear-gradient(top, #f17c4c, #f49459);
+  border-color: #f17c4c;
+  box-shadow: 0px 2px 0 #dadada;
 }
 
 #buttonBar #buttonPost {
-  background-color: #d62473;
-  border-color: #c31f59;
-  box-shadow: 0px 2px 2px #cfcfcf;
+  background-image: -webkit-linear-gradient(top, #bb1a51, #d92671);
+  border-color: #bb1a51;
+  box-shadow: 0px 2px 0 #cfcfcf;
 }
 
 #scheduleBar {
