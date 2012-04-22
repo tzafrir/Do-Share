@@ -145,7 +145,6 @@ body {
   border-left: 0;
   border-right: 0;
   font-family: sans-serif;
-  cursor: pointer;
   height: 36px;
 }
 
@@ -161,6 +160,7 @@ body {
   font-size: 16px;
   font-family: default;
   font-weight: bold;
+  cursor: pointer;
 }
 
 #postActions .disabled {
