@@ -361,6 +361,7 @@ body {
   padding: 10px;
   box-shadow: 0px 2px 2px #888;
   display: none;
+  clear: both;
 }
 
 #closeScheduleBar {
@@ -377,18 +378,19 @@ body {
 }
 
 #posts .columnHead {
-  font-size: 150%;
+  font-size: 24px;
   text-align: center;
-  padding: 30px;
-  font-weight: 800;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-weight: bold;
 }
 
 .drafts .columnHead {
-  color: #e69e13;
+  color: #e79c3c;
 }
 
 .scheduled .columnHead {
-  color: #f07d3f;
+  color: #f17c4c;
 }
 
 #posts .column.drafts {
