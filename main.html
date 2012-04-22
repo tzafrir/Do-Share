@@ -93,7 +93,9 @@ function post(state) {
     post.writeTimeStamp = new Date().getTime();
   }
   sendPost(post);
-  blinkPost(writeTimeStamp);
+  if (state != 'autosave') {
+    blinkPost(writeTimeStamp);
+  }
 }
 
 function blinkPost(writeTimeStamp) {
@@ -457,7 +459,8 @@ function setListeners() {
     needRefresh = true;
   });
   $('#sendFeedback').click(function() {
-    post('autosave');
+    needRefresh = true;
+    autosave();
     window.setTimeout(function() {
       addDraftEditBox({
         title: 'Do Share Feedback',
