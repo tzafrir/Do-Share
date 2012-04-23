@@ -72,7 +72,7 @@ GPEditor.prototype.normalizeHtml = function(element) {
   element.innerHTML = element.innerHTML
     // Add space if in middle of word.
     .replace(/([a-zA-Z0-9\.,])(<b[ >]|<i[ >]|<s(trike|)[ >])/g, "$1 $2")
-    .replace(/(<\/b>|<\/i>|<\/s(trike|)>)([a-zA-Z0-9])/g, "$1 $2");
+    .replace(/(<\/b>|<\/i>|<\/s(trike|)>)([a-zA-Z0-9])/g, "$1 $3");
 }
 
 GPEditor.prototype.getText = function() {
@@ -106,9 +106,11 @@ GPEditor.prototype.plusFormatToHtml = function(text) {
 GPEditor.prototype.normalizedHtmlToPlusFormat = function(element) {
   var clone = element.cloneNode(true);
   clone.innerHTML = clone.innerHTML
-      .replace(/<.*?>\s*<.*?>/g, '')
-      .replace(/( +)(<\/.*?>)/g, "$2$1");
-  return this.visitNormalizedHtmlNode(element);
+      .replace(/( +|(&nbsp;)+)(<\/.*?>)/g, "$3$1")
+      .replace(/<b><\/b>/g, '')
+      .replace(/<i><\/i>/g, '')
+      .replace(/<(s|strike)><\/(s|strike)>/g, '');
+  return this.visitNormalizedHtmlNode(clone);
 }
 
 GPEditor.prototype.visitNormalizedHtmlNode = function(element) {
