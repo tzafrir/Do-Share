@@ -249,34 +249,20 @@ function addPost(post, callback) {
   }
 }
 
-function preparePost(post) {
-  if (post.rawMedia) {
-    post.medias = processMediaItems(post.rawMedia);
-  }
-  if (post.reshare && post.reshare.rawMedia) {
-    post.reshare.medias = processMediaItems(post.reshare.rawMedia);
-  }
-  return post;
-}
-
 function fetchAll(callback) {
   if (!dbInit) {
     return;
   }
   var result = {posts: [], lastUpdate: lastUpdate};
-  var parseMedia = function(result) {
-    result.posts.forEach(preparePost);
-    callback(result);
-  };
   var wrapCallback = function() {
     s.count(function(count) {
       if (count == 0) {
-        parseMedia(result);
+        callback(result);
       } else {
         s.processAllItems(function(item) {
           result.posts.push(item);
           if (--count == 0) {
-            parseMedia(result);
+            callback(result);
           }
         });
       }
@@ -342,7 +328,7 @@ function fetchPost(writeTimeStamp, callback) {
       return;
     }
     race = true;
-    callback(preparePost(item));
+    callback(item);
   };
   db.processItem(writeTimeStamp, racer);
   s.processItem(writeTimeStamp, racer);
@@ -379,6 +365,9 @@ function post(post, callback) {
 
     // If reshare, don't waste time on fetching media links.
     if (post.reshare) {
+      if (post.reshare.rawMedia) {
+        post.reshare.medias = processMediaItems(post.reshare.rawMedia);
+      }
       postThis();
       return;
     }
@@ -387,6 +376,7 @@ function post(post, callback) {
       getLinkMedia(post.link, function(data) {
         if (data) {
           post.rawMedia = data;
+          post.medias = processMediaItems(data);
         }
         postThis();
       });
@@ -422,7 +412,7 @@ function getLinkMedia(link, callback) {
 
 function newPost(post) {
   // Set temporary values and open the frontend. Expect frontend to clear these from LS.
-  localStorage['_tmp_post'] = JSON.stringify(preparePost(post));
+  localStorage['_tmp_post'] = JSON.stringify(post);
   chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
 }
 
