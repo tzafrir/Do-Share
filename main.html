@@ -158,9 +158,15 @@ function addDraftEditBox(post) {
     link = medias.link && medias.link.url || '';
   }
 
+  if (gpe) {
+    gpe.destroy();
+  }
+  gpe = new GPEditor(document.getElementById('content'),
+      content, writeTimeStamp, profileAutocompleter);
+
   $('#title').val(title);
   $('#share_id').val(share_id);
-  $('#link').val(link);
+  $('#link, #linkInput').val(link);
   $('#image_id').val(image_id);
   $('#time').val(time);
   $('#timeInput').val(time);
@@ -177,11 +183,11 @@ function addDraftEditBox(post) {
     populateEditorMediaArea(post.medias);
   }
 
-  if (gpe) {
-    gpe.destroy();
+  if (link || post.reshare) {
+    $('#attachments').addClass('notempty');
+  } else {
+    $('#attachments').removeClass('notempty');
   }
-  gpe = new GPEditor(document.getElementById('content'),
-      content, writeTimeStamp, profileAutocompleter);
 }
 
 function renderReshare(post) {
@@ -405,7 +411,7 @@ function populateEditorMediaArea(medias) {
     if (medias && (medias.video || medias.images && medias.images.length)) {
       renderMedias(medias);
     } else {
-      $('#postMedia').hide('blind', 500, function(){$(this).html('')});
+      $('#postMedia').html('');
       $('#addLinkAction').attr({'class': 'enabled'});
     }
   }
@@ -439,7 +445,11 @@ function collapse(immediately) {
     $('#collapseEditbox').hide();
     $('#title').attr({placeholder: "Create new post..."});
     $('#editbox').addClass('collapsed');
-    addDraftEditBox();
+    if (isEmptyPost(getEditedPost())) {
+      delPost();
+    } else {
+      addDraftEditBox();
+    }
     if (immediately === true) {
       $('.hideWhenCollapsed, #scheduleBar').hide();
     } else {
@@ -447,6 +457,7 @@ function collapse(immediately) {
     }
     $('#posts').css({opacity: 1.0});
     $('#editbox, .hideWhenCollapsed').css({opacity: 1});
+    $('#linkBar').hide();
     var sbutton = $('#buttonSchedule');
     sbutton.removeClass('opened');
     sbutton.addClass('closed');
@@ -461,11 +472,13 @@ function setListeners() {
   });
   $('#addLink').delegate('.enabled', 'click', function() {
     $('#linkBar').show('blind', 200);
+    $('#attachments').addClass('notempty');
     $(this).removeClass('enabled');
     $(this).addClass('disabled');
   });
   $('#addLink').delegate('.disabled', 'click', function() {
     $('#linkBar').hide('blind', 200);
+    $('#attachments').removeClass('notempty');
     $(this).removeClass('disabled');
     $(this).addClass('enabled');
   });
@@ -474,7 +487,7 @@ function setListeners() {
   });
   $('#submitLink').click(function() {
     $('#link').val($('#linkInput').val());
-    $('#addLink').children().click();
+    $('#linkBar').hide('blind', 100);
     populateEditorMediaArea();
   });
   $('#linkInput').keydown(function(e) {
@@ -601,25 +614,14 @@ function setListeners() {
           '</span>' +  item.name + '</a>')
       .appendTo(ul);
   };
-  $('#attachments').on('DOMSubtreeModified', function() {
-    if ($(this).height() > 0) {
-      $(this).addClass('notempty');
-    } else {
-      $(this).removeClass('notempty');
-    }
-  });
   $('#title').focus(uncollapse);
   $('#collapseEditbox').click(collapse);
   $(document).click(function(e){
     collapse();
   });
-  $('#writingArea').click(function(e){
+  $('#appWrap').click(function(e){
     // Block the event from reaching document's handler.
     e.stopPropagation();
-  }).on('blur', '*', function() {
-    if (isEmptyPost(getEditedPost())) {
-      delPost();
-    }
   });
 }
 
@@ -685,8 +687,8 @@ function onLoad() {
     mem[savedPost.writeTimeStamp] = savedPost;
   }
   localStorage.removeItem('_tmp_post');
-  addDraftEditBox(savedPost);
   setListeners();
+  addDraftEditBox(savedPost);
   refreshIfNeeded();
   window.setInterval(function() {
     autosave();

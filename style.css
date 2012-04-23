@@ -201,6 +201,7 @@ body {
 
 #attachments.notempty {
   border-top: 1px solid #aec693;
+  background: #f6f9f3;
 }
 
 .reshare {
