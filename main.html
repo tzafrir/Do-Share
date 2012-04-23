@@ -615,6 +615,10 @@ function setListeners() {
   $('#writingArea').click(function(e){
     // Block the event from reaching document's handler.
     e.stopPropagation();
+  }).on('blur', '*', function() {
+    if (isEmptyPost(getEditedPost())) {
+      delPost();
+    }
   });
 }
 
@@ -624,11 +628,7 @@ function autosave() {
   }
   needRefresh = false;
   var currentPost = getEditedPost('', 0);
-  if (!isEmptyPost(currentPost)) {
-    post('autosave');
-  } else {
-    delPost();
-  }
+  post('autosave');
 }
 
 /**
