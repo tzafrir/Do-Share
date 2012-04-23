@@ -448,7 +448,10 @@ function collapse(immediately) {
 }
 
 function setListeners() {
-  $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'})
+  $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
+  $(window).resize(function() {
+    $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
+  });
   $('#addLink').delegate('.enabled', 'click', function() {
     $('#linkBar').show('blind', 200);
     $(this).removeClass('enabled');
