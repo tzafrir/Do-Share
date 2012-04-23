@@ -168,8 +168,14 @@ function addDraftEditBox(post) {
 
   audienceChooser = new AudienceChooser(entities);
 
-  $('#reshare').html(renderReshare(post));
-  populateEditorMediaArea(post.medias);
+  if (post.reshare) {
+    $('#reshare').html(renderReshare(post));
+    $('#addLinkAction').attr({'class': 'invalid'});
+  } else {
+    $('#reshare').html('');
+    $('#addLinkAction').attr({'class': 'enabled'});
+    populateEditorMediaArea(post.medias);
+  }
 
   if (gpe) {
     gpe.destroy();
