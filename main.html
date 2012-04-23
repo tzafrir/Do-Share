@@ -388,6 +388,7 @@ function populateEditorMediaArea(medias) {
   function renderMedias(medias) {
     $('#postMedia').html(renderMediaItems(medias))
         .show('blind', 500);
+    $('#linkBar').hide('blind', 100);
     $('#addLinkAction').attr({'class': 'invalid'});
   };
   if (link || mediasLink) {
