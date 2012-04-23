@@ -202,9 +202,9 @@ function renderReshareMeta(post) {
 function editDraft(writeTimeStamp) {
   chrome.extension.sendRequest({type: 'fetchPost', writeTimeStamp: writeTimeStamp},
       function(post) {
-    // TODO: Save previous post as draft.
     $('body').animate({scrollTop: 0}, 450);
     stopRefreshing = true;
+    mem[post.writeTimeStamp] = post;
     addDraftEditBox(post);
     uncollapse();
   });
