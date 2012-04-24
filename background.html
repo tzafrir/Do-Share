@@ -412,9 +412,25 @@ function getLinkMedia(link, callback) {
 }
 
 function newPost(post) {
-  // Set temporary values and open the frontend. Expect frontend to clear these from LS.
-  localStorage['_tmp_post'] = JSON.stringify(post);
-  chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
+  function openNewPost() {
+    // Set temporary values and open the frontend. Expect frontend to clear these from LS.
+    localStorage['_tmp_post'] = JSON.stringify(post);
+    chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
+  }
+  if (post.image_id) {
+    plus.fetchPhotoMetadata(function(response) {
+      if (response.error || !response.data) {
+        console.error(response);
+        callback(false);
+      } else {
+        post.rawMedia = [plus._createPicasaImageItem(response.data)];
+        post.medias = processMediaItems(post.rawMedia);
+        openNewPost();
+      }
+    }, post.image_id);
+  } else {
+    openNewPost ();
+  }
 }
 
 function resharePost(url) {
