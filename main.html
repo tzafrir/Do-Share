@@ -458,6 +458,7 @@ function collapse(immediately) {
     sbutton.removeClass('opened');
     sbutton.addClass('closed');
     sbutton.data('active', null);
+    resetDeleteButton();
   }
 }
 
@@ -474,6 +475,16 @@ function animateButtonText(jButton, newText, duration) {
 
 function isValidTime(timeString) {
   return !!timeString.match(/^(([0-9])|([0-1][0-9])|([2][0-3])):(([0-5][0-9]))(|:(([0-5][0-9])))$/);
+}
+
+function resetDeleteButton() {
+  var jDelete = $('#buttonDelete');
+  jDelete.text(jDelete.data('text')).removeClass('confirm');
+  var timeoutId = jDelete.data('timeoutId');
+  if (timeoutId) {
+    window.clearTimeout(timeoutId);
+    jDelete.data('timeoutId', 0);
+  }
 }
 
 function setListeners() {
@@ -526,8 +537,27 @@ function setListeners() {
     }
   });
   $('#buttonDelete').click(function() {
-    delPost();
-    collapse();
+    if ($(this).is('.confirm')) {
+      delPost();
+      collapse();
+      resetDeleteButton();
+    } else {
+      var duration = 200;
+      $(this).data('text', $(this).text())
+        .slideUp(duration, function() {
+          $(this).text('are you sure?')
+            .addClass('confirm')
+            .slideDown(duration);
+        });
+      var self = this;
+      $(this).data('timeoutId', window.setTimeout(function() {
+        $(self).slideUp(duration, function() {
+          $(self).text($(self).data('text'))
+              .removeClass('confirm')
+              .slideDown(duration);
+        });
+      }, 10000));
+    }
   });
   $('#buttonDraft').click(function() {
     post('draft');

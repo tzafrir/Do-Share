@@ -344,6 +344,11 @@ img {
   box-shadow: 0px 2px 0 #e2e2e2;
 }
 
+#buttonBar #buttonDelete.confirm {
+  background-image: -webkit-linear-gradient(top, #9c9c9c, #b8b8b8);
+  border-color: #9c9c9c;
+}
+
 #buttonBar #buttonDraft {
   background-image: -webkit-linear-gradient(top, #f1a643, #f4bf4d);
   border-color: #f1a643;
