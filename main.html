@@ -502,13 +502,13 @@ function setListeners() {
       jself.removeClass('opened');
       jself.addClass('closed');
       jself.data('active', null);
-      $('#editbox, .hideWhenCollapsed').css({opacity: 1.0});
+      $('#editbox, #barContainer').css({opacity: 1.0});
     } else {
       $('#scheduleBar').show('blind', 200);
       jself.removeClass('closed');
       jself.addClass('opened');
       jself.data('active', true);
-      $('#editbox, .hideWhenCollapsed').css({opacity: 0.1});
+      $('#editbox, #barContainer').css({opacity: 0.4});
     }
   });
   $('#closeScheduleBar').click(function() {
@@ -731,7 +731,7 @@ function onLoad() {
         <input type="hidden" id="share_id" />
         <input type="hidden" id="write_time_stamp" />
       </div>
-      <div class="hideWhenCollapsed">
+      <div id="barContainer" class="hideWhenCollapsed">
         <div id="circleChooserBar">
           <input id="circleChooser" placeholder="+ Add more people&hellip;">
         </div>
