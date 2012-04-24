@@ -271,8 +271,7 @@ img {
 }
 
 .audienceChooserEntity.c_PUBLIC,
-.audienceChooserEntity.c_EXTENDED_CIRCLES,
-.audienceChooserEntity.c_YOUR_CIRCLES {
+.audienceChooserEntity.c_EXTENDED_CIRCLES {
   background-color: #57a046;
 }
 
