@@ -479,7 +479,7 @@ function isValidTime(timeString) {
 
 function resetDeleteButton() {
   var jDelete = $('#buttonDelete');
-  jDelete.text(jDelete.data('text')).removeClass('confirm');
+  jDelete.removeClass('confirm').text(jDelete.data('text'));
   var timeoutId = jDelete.data('timeoutId');
   if (timeoutId) {
     window.clearTimeout(timeoutId);
