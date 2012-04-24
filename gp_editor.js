@@ -195,6 +195,15 @@ GPEditor.prototype.onKeyDown = function(event, element) {
   var self = this;
 
   var range = window.getSelection().getRangeAt(0);
+
+  var offset = range.startOffset;
+  if (offset > 0) {
+    var lastChar = range.commonAncestorContainer.data[offset - 1];
+    if (!(lastChar == ' ' || lastChar == String.fromCharCode(160))) { // &nbsp;
+      return;
+    }
+  }
+
   range.deleteContents();
 
   function setCaretAfter(element) {
