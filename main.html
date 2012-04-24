@@ -37,10 +37,6 @@ function val(name) {
   return ($ ? $ : undefined);
 }
 
-function parseTimeField() {
-  $('#timeParsed').text(new Date(val('timeInput')).toString());
-}
-
 function sendPost(post) {
   if (post.state == 'autosave') {
     post.state = post.timeStamp ? 'scheduled' : 'draft';
@@ -465,6 +461,10 @@ function collapse(immediately) {
   }
 }
 
+function isValidTime(timeString) {
+  return !!timeString.match(/^(([0-9])|([0-1][0-9])|([2][0-3])):(([0-5][0-9]))(|:(([0-5][0-9])))$/);
+}
+
 function setListeners() {
   $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
   $(window).resize(function() {
@@ -497,22 +497,20 @@ function setListeners() {
   });
   $('#buttonSchedule').click(function() {
     var jself = $(this);
+    var muteWhenScheduling = '#editbox, #circleChooserBar, .buttonNotSchedule';
     if (jself.data('active')) {
       $('#scheduleBar').hide('blind', 400);
       jself.removeClass('opened');
       jself.addClass('closed');
       jself.data('active', null);
-      $('#editbox, #barContainer').css({opacity: 1.0});
+      $(muteWhenScheduling).css({opacity: 1.0});
     } else {
       $('#scheduleBar').show('blind', 200);
       jself.removeClass('closed');
       jself.addClass('opened');
       jself.data('active', true);
-      $('#editbox, #barContainer').css({opacity: 0.4});
+      $(muteWhenScheduling).css({opacity: 0.4});
     }
-  });
-  $('#closeScheduleBar').click(function() {
-    $('#buttonSchedule').click();
   });
   $('#buttonDelete').click(function() {
     delPost();
@@ -523,11 +521,17 @@ function setListeners() {
     collapse();
   });
   $('#buttonScheduleStepTwo').click(function() {
-    var time = $('#timeInput').val();
-    if (new Date(time) < new Date()) {
+    var timeInput = $('#timeInput').val();
+    if (!isValidTime(timeInput)) {
+      // TODO error
+      return;
+    }
+
+    var dateString = $('#dateInput').val() + ' ' + timeInput;
+    if (new Date(dateString) < new Date()) {
       alert('Time too early (TODO: ERROR)');
     } else {
-      $('#time').val(time);
+      $('#time').val(dateString);
       post('scheduled');
       $('#buttonSchedule').click();
     }
@@ -736,17 +740,19 @@ function onLoad() {
           <input id="circleChooser" placeholder="+ Add more people&hellip;">
         </div>
         <div id="buttonBar">
-          <div><button id="buttonDelete">delete post :(</button></div>
-          <div><button id="buttonDraft">send to drafts</button></div>
+          <div><button id="buttonDelete" class="buttonNotSchedule">delete post :(</button></div>
+          <div><button id="buttonDraft" class="buttonNotSchedule">send to drafts</button></div>
           <div><button id="buttonSchedule" class="closed">schedule</button></div>
-          <div><button id="buttonPost">share now</button></div>
+          <div><button id="buttonPost" class="buttonNotSchedule">share now</button></div>
         </div>
       </div>
+      <div class="clearFix"></div>
       <div id="scheduleBar">
-        <div id="closeScheduleBar" class="xButton">x</div>
-        <p><input id="timeInput" placeholder="Time" /><button onclick="parseTimeField()">Parse</button></p>
-        <p id="timeParsed"></p>
-        <button id="buttonScheduleStepTwo">schedule</button>
+        <p>
+          Share on <input id="dateInput" placeholder="mm/dd/yyyy" />
+          at <input id="timeInput" placeholder="HH:MM" />
+          <button id="buttonScheduleStepTwo">schedule</button>
+        </p>
       </div>
     </div>
     <div id="posts">

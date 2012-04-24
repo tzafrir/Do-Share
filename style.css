@@ -325,6 +325,10 @@ img {
   margin-left: 0;
 }
 
+#buttonScheduleStepTwo {
+  float: right;
+}
+
 #buttonBar #buttonDelete:active,
 #buttonBar #buttonDraft:active,
 #buttonBar #buttonSchedule:active,
@@ -359,19 +363,23 @@ img {
 }
 
 #scheduleBar {
-  height: 80px;
-  text-align: center;
-  border: 2px solid black;
-  margin-top: 20px;
+  height: 56px;
+  border: 1px solid #bebebe;
+  background: #f6f9f3;
+  margin-top: 10px;
   padding: 10px;
-  box-shadow: 0px 2px 2px #888;
   display: none;
-  clear: both;
+  font-size: 13px;
+  color: #7b7c79;
 }
 
-#closeScheduleBar {
-  float: right;
-  cursor: pointer;
+#scheduleBar input {
+  border-radius: 5px;
+  font-size: 14px;
+  outline: 0;
+  height: 28px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 #posts, #editbox, .hideWhenCollapsed  {
@@ -476,4 +484,8 @@ img {
   box-shadow: 0 2px 0 #dadada;
   padding: 10px 5px 10px 5px;
   cursor: pointer;
+}
+
+.clearFix {
+  clear: both;
 }
