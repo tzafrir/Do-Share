@@ -461,6 +461,17 @@ function collapse(immediately) {
   }
 }
 
+function animateButtonText(jButton, newText, duration) {
+  jButton.css({color: 'rgba(255,255,255,0)', 'text-shadow': 'none'});
+  window.setTimeout(function() {
+    jButton.text(newText);
+    jButton.css({color: ''});
+    window.setTimeout(function(){
+      jButton.css({'text-shadow': ''});
+    }, duration);
+  }, duration);
+}
+
 function isValidTime(timeString) {
   return !!timeString.match(/^(([0-9])|([0-1][0-9])|([2][0-3])):(([0-5][0-9]))(|:(([0-5][0-9])))$/);
 }
@@ -504,12 +515,14 @@ function setListeners() {
       jself.addClass('closed');
       jself.data('active', null);
       $(muteWhenScheduling).css({opacity: 1.0});
+      animateButtonText(jself, 'schedule', 300);
     } else {
       $('#scheduleBar').show('blind', 200);
       jself.removeClass('closed');
       jself.addClass('opened');
       jself.data('active', true);
       $(muteWhenScheduling).css({opacity: 0.4});
+      animateButtonText(jself, 'cancel', 400);
     }
   });
   $('#buttonDelete').click(function() {

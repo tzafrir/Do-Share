@@ -319,6 +319,7 @@ img {
   text-shadow: 0px -1px 0 rgba(0,0,0,0.3);
   cursor: pointer;
   font-family: Roboto;
+  -webkit-transition: text-shadow,color 0.3s ease-in-out;
 }
 
 #buttonBar div:first-child button, #buttonScheduleStepTwo {
