@@ -173,6 +173,7 @@ function fetchPostData(url, callback) {
     }
 
     data.rawMedia = postData[11];
+    data.medias = processMediaItems(data.rawMedia);
 
     callback(data);
   });
