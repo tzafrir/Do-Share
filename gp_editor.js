@@ -219,7 +219,7 @@ GPEditor.prototype.onKeyDown = function(event, element) {
         .css({'white-space': 'nowrap'})
         .attr({contenteditable: false})
         .appendTo(wrapper),
-      plusSpan = $('<span></span>').addClass('proflinkPrefix').text('+').appendTo(proflinkWrapper),
+      plusSpan = $('<span></span>').addClass('proflinkPrefix').text((k == KEY.AT ? '@' : '+')).appendTo(proflinkWrapper),
       a = $('<a></a>').addClass('proflink').appendTo(proflinkWrapper),
       dummy = $('<pre>').css({
         display: 'inline-block',
@@ -250,6 +250,7 @@ GPEditor.prototype.onKeyDown = function(event, element) {
     },
     focus: function() {return false;},
     select: function(event, ui) {
+      plusSpan.text('+');
       var item = ui.item;
       a.attr({
             oid: item.id,
