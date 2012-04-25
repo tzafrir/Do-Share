@@ -699,7 +699,9 @@ function setListeners() {
   $.extend($.datepicker,{_checkOffset:function(inst,offset,isFixed){return offset}});
   $('#dateInput').datepicker({
     beforeShow: function(t, inst) {
-      $('#dateInput').datepicker('setDate', (new Date()));
+      if (!$('#dateInput').val()) {
+        $('#dateInput').datepicker('setDate', (new Date()));
+      }
       inst.dpDiv.click(function(e) {
         // Don't let this event reach document's click handler - that closes the editbox!
         e.stopPropagation();
@@ -718,7 +720,9 @@ function setListeners() {
   });
   $('#timeInput').timepicker({
     beforeShow: function(t, inst) {
-      $('#timeInput').timepicker('setDate', (new Date()));
+      if (!$('#timeInput').val()) {
+        $('#timeInput').timepicker('setDate', (new Date()));
+      }
       inst.dpDiv.click(function(e) {
         // Don't let this event reach document's click handler - that closes the editbox!
         e.stopPropagation();
