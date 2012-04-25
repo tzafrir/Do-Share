@@ -664,13 +664,15 @@ function setListeners() {
   };
   $('#title').focus(uncollapse);
   $('#collapseEditbox').click(collapse);
-  $(document).click(function(e){
-    collapse();
-  });
-  $('#appWrap').click(function(e){
-    // Block the event from reaching document's handler.
-    e.stopPropagation();
-  });
+  {
+    $(document).click(function(e){
+      collapse();
+    });
+    $('#appWrap').click(function(e){
+      // Block the event from reaching document's handler.
+      e.stopPropagation();
+    });
+  }
 }
 
 function autosave() {
