@@ -438,6 +438,7 @@ function uncollapse(force) {
 
 function collapse(immediately) {
   if (!$('#editbox').is('.collapsed')) {
+    $('#buttonSchedule.opened').click();
     $('#collapseEditbox').hide();
     $('#title').attr({placeholder: "Create new post..."});
     $('#editbox').addClass('collapsed');
@@ -459,7 +460,6 @@ function collapse(immediately) {
     sbutton.addClass('closed');
     sbutton.data('active', null);
     resetDeleteButton();
-    $('#buttonSchedule').text('schedule');
   }
 }
 
