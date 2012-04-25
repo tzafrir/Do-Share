@@ -511,6 +511,19 @@ function resetDeleteButton() {
   }
 }
 
+function animateBlur(jElement, steps, interval, initial, stepSize) {
+  if (steps) {
+    if (initial > 0.05) {
+      jElement.css({'-webkit-filter': 'blur(' + initial + 'px)'});
+    } else {
+      jElement.css({'-webkit-filter': ''});
+    }
+    window.setTimeout(function() {
+      animateBlur(jElement, steps - 1, interval, initial + stepSize, stepSize);
+    }, interval);
+  }
+};
+
 function setListeners() {
   $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
   $(window).resize(function() {
@@ -588,21 +601,32 @@ function setListeners() {
     collapse();
   });
   $('#buttonScheduleStepTwo').click(function() {
-    var timeInput = $('#timeInput').val();
-    if (!isValidTime(timeInput)) {
-      // TODO error
-      return;
-    }
+    if (localStorage['iUnderstand'] == "1") {
+      var timeInput = $('#timeInput').val();
+      if (!isValidTime(timeInput)) {
+        // TODO error
+        return;
+      }
 
-    var dateString = $('#dateInput').val() + ' ' + timeInput;
-    if (new Date(dateString) < new Date()) {
-      alert('Time too early (TODO: ERROR)');
+      var dateString = $('#dateInput').val() + ' ' + timeInput;
+      if (new Date(dateString) < new Date()) {
+        alert('Time too early (TODO: ERROR)');
+      } else {
+        $('#time').val(dateString);
+        post('scheduled');
+        $('#buttonSchedule').click();
+      }
+      collapse();
     } else {
-      $('#time').val(dateString);
-      post('scheduled');
-      $('#buttonSchedule').click();
+      animateBlur($('#appWrap, #sendFeedback'), 5, 200, 0, 0.4);
+      $('#information').fadeIn(1000);
     }
-    collapse();
+  });
+  $('#iUnderstand').click(function() {
+    animateBlur($('#appWrap, #sendFeedback'), 5, 200, 1.6, -0.4);
+    $('#information').fadeOut(1000);
+    localStorage['iUnderstand'] = '1';
+    $('#buttonScheduleStepTwo').click();
   });
   $('#buttonPost').click(function() {
     post('post');
@@ -739,6 +763,9 @@ function setListeners() {
         });
       }, 1);
     }
+  });
+  $('#information').click(function(e) {
+    e.stopPropagation();
   });
 }
 
@@ -884,3 +911,9 @@ function onLoad() {
   </div>
   <div id="sendFeedback">send feedback!</div>
   <div id="collapseEditbox"></div>
+  <div id="information" style="display: none">
+    <h2>IMMA LET YOU FINISH SCHEDULING, BUT</h2>
+    <p>Do Share is a Chrome application that runs <strong>only on your computer</strong>.</p>
+    <p>If your computer is off, <em>Do Share</em> cannot send posts to Google+.<br>If you are not connected to the internet, <em>Do Share</em> cannot send posts to Google+.<br>If Chrome is not running, <em>Do Share</em> cannot send posts to Google+.<br>If you are not logged into Google, <em>Do Share</em> cannot send posts to Google+.<p>
+    <button id="iUnderstand">I got this. My computer needs to run, and be connected to the internet, with Chrome running, while I'm logged into Google, for Do Share to be able to send posts to Google+.<br><br><span class="iUnderstand">I understand!</span></button>
+  </div>

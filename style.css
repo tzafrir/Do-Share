@@ -499,3 +499,55 @@ img {
 .clearFix {
   clear: both;
 }
+
+#information {
+  position: absolute;
+  top: 100px;
+  left: 25%;
+  width: 50%;
+  background: #f6f9f3;
+  border: 2px solid #bebebe;
+  border-radius: 20px;
+  height: auto;
+  padding: 30px 60px 90px 60px;
+  text-align: center;
+  color: #191919;
+}
+
+#information h2 {
+  font-size: 70px;
+  margin-bottom: 20px;
+}
+
+#information p {
+  -webkit-margin-after: 1em;
+  font-size: 16px;
+  text-align: left;
+  line-height: 22px;
+}
+
+#information button {
+  font-size: 18px;
+  width: 50%;
+  position: relative;
+  left: 25%;
+  margin-top: 30px;
+  margin-bottom: 4px;
+  background-image: -webkit-linear-gradient(top, #f17c4c, #f49459);
+  color: #fff;
+  text-shadow: 0px -1px 0 rgba(0,0,0,0.3);
+  font-weight: 300;
+  border: 2px solid #f17c4c;
+  box-shadow: 0px 4px 0 #dadada;
+  border-radius: 10px;
+}
+
+#information button:active {
+  margin-top: 34px;
+  box-shadow: none;
+  margin-bottom: 0;
+}
+
+#information .iUnderstand {
+  font-size: 150%;
+}
