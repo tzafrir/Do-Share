@@ -224,22 +224,36 @@ img {
 
 #linkBar {
   display: none;
-  height: auto;
+  height: 50px;
 }
 
 #linkBar #linkInput {
-  height: 2em;
   width: 80%;
-  background: transparent;
-  margin: 0 0 0 5px;
-  border: 0;
+  background: #fff;
+  margin: 10px;
+  height: -webkit-calc(100% - 20px);
   outline: 0;
+  border-radius: 5px;
+  color: #121212;
 }
 
-#closeLinkBar {
-  float: right;
-  margin: 4px 3px 0 0;
-  cursor: pointer;
+#linkBar button {
+  background-image: -webkit-linear-gradient(top, #adc493, #c5d6b2);
+  border: 2px solid #adc493;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+  width: auto;
+  padding: 5px 10px 5px 10px;
+  box-shadow: 0 2px 0 #dadada;
+}
+
+#linkBar button:active {
+  position: relative;
+  top: 2px;
+  box-shadow: none;
 }
 
 #postMedia {
