@@ -673,6 +673,26 @@ function setListeners() {
       e.stopPropagation();
     });
   }
+  // http://stackoverflow.com/questions/1818670/how-to-control-positioning-of-jqueryui-datepicker
+  $.extend($.datepicker,{_checkOffset:function(inst,offset,isFixed){return offset}});
+  $('#dateInput').datepicker({
+    beforeShow: function(t, inst) {
+      inst.dpDiv.click(function(e) {
+        // Don't let this event reach document's click handler - that closes the editbox!
+        e.stopPropagation();
+      });
+      window.setTimeout(function() {
+        inst.dpDiv.position({
+          my: 'center top',
+          at: 'center bottom',
+          of: '#dateInput',
+          collision: 'none'
+        });
+      }, 1);
+    },
+    minDate: 0,
+    showButtonPanel: true
+  })
 }
 
 function autosave() {
