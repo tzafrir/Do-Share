@@ -701,6 +701,9 @@ function autosave() {
   }
   needRefresh = false;
   var currentPost = getEditedPost('', 0);
+  if (isEmptyPost(currentPost)) {
+    return;
+  }
   post('autosave');
 }
 
