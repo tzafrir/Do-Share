@@ -614,9 +614,11 @@ function setListeners() {
   $('input').change(function() {
     needRefresh = true;
   });
-  $('#sendFeedback').click(function() {
+  $('#sendFeedback').click(function(e) {
+    e.stopPropagation();
     needRefresh = true;
     autosave();
+    collapse();
     window.setTimeout(function() {
       addDraftEditBox({
         title: 'Do Share Feedback',
