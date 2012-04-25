@@ -138,6 +138,25 @@ function profileAutocompleter(prefix, callback) {
   chrome.extension.sendRequest({type: 'profileAutocomplete', prefix: prefix}, callback);
 }
 
+function populateTimeFields(timeStamp) {
+  if (timeStamp) {
+    function f(t) {
+      if (String(t).length == 1) {
+        return '0' + t;
+      } else {
+        return String(t);
+      }
+    }
+    $('#time').val(timeStamp);
+    var d = new Date(timeStamp);
+    $('#dateInput').val(f(d.getMonth() + 1) + '/' + f(d.getDate()) + '/' + d.getFullYear());
+    $('#timeInput').val(f(d.getHours()) + ':' + f(d.getMinutes()) + (d.getSeconds() ? ':' + f(d.getSeconds()) : ''));
+  } else {
+    $('#dateInput').val('');
+    $('#timeInput').val('');
+  }
+}
+
 function addDraftEditBox(post) {
   if (!post) {
     post = {
@@ -150,7 +169,7 @@ function addDraftEditBox(post) {
   var link = (!post.reshare && post.link) || '';
   var image_id = post.image_id || '';
   var title = post.title || '';
-  var time = post.timeStamp ? new Date(post.timeStamp).toString() : '';
+  var timeStamp = post.timeStamp;
   var entities = post.entities || [];
   var medias = post.medias;
   if (medias) {
@@ -167,9 +186,9 @@ function addDraftEditBox(post) {
   $('#share_id').val(share_id);
   $('#link, #linkInput').val(link);
   $('#image_id').val(image_id);
-  $('#time').val(time);
-  $('#timeInput').val(time);
   $('#write_time_stamp').val(writeTimeStamp);
+
+  populateTimeFields(timeStamp);
 
   audienceChooser = new AudienceChooser(entities);
 
