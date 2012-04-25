@@ -541,9 +541,6 @@ function setListeners() {
     $(this).removeClass('disabled');
     $(this).addClass('enabled');
   });
-  $('#closeLinkBar').click(function() {
-    $('#addLink').children().click();
-  });
   $('#submitLink').click(function() {
     $('#link').val($('#linkInput').val());
     $('#linkBar').hide('blind', 100);
@@ -867,7 +864,6 @@ function onLoad() {
             <div id="linkBar">
               <input id="linkInput" placeholder="link" />
               <button id="submitLink">Add</button>
-              <div id="closeLinkBar" class="xButton">x</div>
             </div>
             <div id="postMedia"></div>
           </div>
