@@ -388,6 +388,10 @@ img {
   margin-right: 10px;
 }
 
+#scheduleBar input::-webkit-input-placeholder {
+  color: #666;
+}
+
 #posts, #editbox, .hideWhenCollapsed  {
   -webkit-transition: all 0.2s ease-in-out;
 }
