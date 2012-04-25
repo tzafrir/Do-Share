@@ -460,7 +460,6 @@ function uncollapse(force) {
 
 function collapse(immediately) {
   if (!$('#editbox').is('.collapsed')) {
-    $('#buttonSchedule.opened').click();
     $('#collapseEditbox').hide();
     $('#title').attr({placeholder: "Create new post..."});
     $('#editbox').addClass('collapsed');
@@ -475,7 +474,9 @@ function collapse(immediately) {
       $('.hideWhenCollapsed, #scheduleBar:visible').hide('blind', 400);
     }
     $('#posts').css({opacity: 1.0});
-    $('#editbox, .hideWhenCollapsed').css({opacity: 1});
+    // TODO: figure this out so I don't have to repeat myself.
+    $('#editbox, #circleChooserBar, .buttonNotSchedule').css({opacity: 1});
+    $('#buttonSchedule').text('schedule');
     $('#linkBar').hide();
     var sbutton = $('#buttonSchedule');
     sbutton.removeClass('opened');
