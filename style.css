@@ -228,7 +228,7 @@ img {
 }
 
 #linkBar #linkInput {
-  width: 80%;
+  width: 505px;
   background: #fff;
   margin: 10px;
   height: -webkit-calc(100% - 20px);
