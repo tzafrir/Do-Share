@@ -116,7 +116,7 @@ function fetchOzData(url, callback) {
      * Take outall the script tags
      */
     while (match = re.exec(responseText)) {
-      if(match[1] && match[1].indexOf('AF_initDataQueue') > -1) {
+      if(match[1] && match[1].indexOf('AF_initData') > -1) {
         eval(match[1]);
       }
     }
