@@ -616,13 +616,16 @@ function setListeners() {
       }
       collapse();
     } else {
+      $('iframe').hide();
       animateBlur($('#appWrap, #sendFeedback'), 5, 200, 0, 0.4);
       $('#information').fadeIn(1000);
     }
   });
   $('#iUnderstand').click(function() {
     animateBlur($('#appWrap, #sendFeedback'), 5, 200, 1.6, -0.4);
-    $('#information').fadeOut(1000);
+    $('#information').fadeOut(1000, function() {
+      $('iframe').show();
+    });
     localStorage['iUnderstand'] = '1';
     $('#buttonScheduleStepTwo').click();
   });
