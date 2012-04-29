@@ -23,19 +23,15 @@ BrowserActionController = function() {
  * @param {boolean} altBackground Should an alternative background color be used.
  */
 BrowserActionController.prototype.drawBadgeIcon = function(count, text, altBackground) {
-  var BACKGROUND = 'rgba(22, 162, 61, 1)';
-  var ALT_BACKGROUND = 'rgba(255, 125, 0, 0.8)';
+  var BACKGROUND = '#eeb443';
+  var ALT_BACKGROUND = '#ed7c40';
 
   var ctx = document.createElement('canvas').getContext('2d');
 
   ctx.fillStyle = altBackground ? ALT_BACKGROUND : BACKGROUND;
   ctx.strokeStyle = 'rgba(43, 108, 212, 0.5)';
   
-  // Sadly, the fix below makes the active badge look not like the original
-  // one - therefore we have to have two different fill and stroke calls (with 
-  // different coordinates)
-  ctx.fillRoundRect(0, 0, 19, 19, 2);
-  ctx.strokeRoundRect(0, 0, 19, 19, 2);
+  ctx.fillRoundRect(0, 0, 19, 19, 7);
  
   ctx.font = 'bold 11px arial, sans-serif';
   ctx.fillStyle = '#fff';
@@ -86,7 +82,6 @@ CanvasRenderingContext2D.prototype._createRoundRect = function(x, y, width, heig
   this.lineTo(x, y + radius);
   this.quadraticCurveTo(x, y, x + radius, y);
 };
-
 
 /**
  * Draws a filled rounded rectangle at (x, y) position whose size is determined
