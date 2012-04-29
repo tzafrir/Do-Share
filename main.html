@@ -94,11 +94,11 @@ function post(state) {
   sendPost(post);
   if (state != 'autosave') {
     blinkPost(writeTimeStamp);
+    localStorage['lastUsedCircles'] = JSON.stringify(post.entities.filter(function(entity) {
+      // Save only circles.
+      return !!entity.circleId;
+    }));
   }
-  localStorage['lastUsedCircles'] = JSON.stringify(post.entities.filter(function(entity) {
-    // Save only circles.
-    return !!entity.circleId;
-  }));
 }
 
 function blinkPost(writeTimeStamp) {
