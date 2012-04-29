@@ -711,11 +711,11 @@ function setListeners() {
   $('#title').focus(uncollapse);
   $('#collapseEditbox').click(collapse);
   {
-    $(document).click(function(e){
+    $('#bodyWrap').click(function(e){
       collapse();
     });
     $('#appWrap').click(function(e){
-      // Block the event from reaching document's handler.
+      // Block the event from reaching bodyWrap's handler.
       e.stopPropagation();
     });
   }
@@ -726,10 +726,6 @@ function setListeners() {
       if (!$('#dateInput').val()) {
         $('#dateInput').datepicker('setDate', (new Date()));
       }
-      inst.dpDiv.click(function(e) {
-        // Don't let this event reach document's click handler - that closes the editbox!
-        e.stopPropagation();
-      });
       window.setTimeout(function() {
         inst.dpDiv.position({
           my: 'center top',
@@ -747,10 +743,6 @@ function setListeners() {
       if (!$('#timeInput').val()) {
         $('#timeInput').timepicker('setDate', (new Date()));
       }
-      inst.dpDiv.click(function(e) {
-        // Don't let this event reach document's click handler - that closes the editbox!
-        e.stopPropagation();
-      });
       window.setTimeout(function() {
         inst.dpDiv.position({
           my: 'center top',
@@ -760,9 +752,6 @@ function setListeners() {
         });
       }, 1);
     }
-  });
-  $('#information').click(function(e) {
-    e.stopPropagation();
   });
 }
 
@@ -847,6 +836,7 @@ function onLoad() {
   </script>
 </head>
 <body onload="onLoad()">
+  <div id="bodyWrap">
   <div id="appWrap">
     <div id="top">
       <header><h1><img src="img/logo.png" /></h1></header>
@@ -904,6 +894,7 @@ function onLoad() {
         <div class="postsList"></div>
       </div>
     </div>
+  </div>
   </div>
   <div id="sendFeedback">send feedback</div>
   <div id="collapseEditbox"></div>
