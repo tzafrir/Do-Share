@@ -183,6 +183,7 @@ function addDraftEditBox(post) {
   var title = post.title || '';
   var timeStamp = post.timeStamp;
   var entities = post.entities || [];
+  var mentioned = post.mentioned || {};
   var medias = post.medias;
   if (medias) {
     link = medias.link && medias.link.url || '';
@@ -192,7 +193,7 @@ function addDraftEditBox(post) {
     gpe.destroy();
   }
   gpe = new GPEditor(document.getElementById('content'),
-      content, writeTimeStamp, profileAutocompleter);
+      content, writeTimeStamp, profileAutocompleter, mentioned);
 
   $('#title').val(title);
   $('#share_id').val(share_id);
@@ -330,7 +331,7 @@ function renderPost(post) {
   contentDiv.innerHTML = (date && "<p class='postDate'>" + date + "</p>") +
                   (title && "<span class='postTitle'>" + title + "</span>") +
 
-                  GPEditor.prototype.plusFormatToHtml(content) +
+                  GPEditor.prototype.plusFormatToHtml(content, post.mentioned) +
                   renderReshareMeta(post);
 
   var mediaDiv = $('<div class="mediaDiv">' + postMedia + '</div>')[0];

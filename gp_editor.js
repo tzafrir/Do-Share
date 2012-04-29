@@ -7,7 +7,7 @@
  *
  * @param{function(string, function(person<Array>))} profileAutocompleter.
  */
-function GPEditor(div, text, id, profileAutocompleter) {
+function GPEditor(div, text, id, profileAutocompleter, mentionMap) {
   var toolbar = document.createElement('div');
   toolbar.innerHTML = 
       ('<div class="toolbar">' +
@@ -21,6 +21,8 @@ function GPEditor(div, text, id, profileAutocompleter) {
 
   var container = this._container = document.createElement('div');
   container.className = this.CONTAINER_CLASSNAME;
+  this._mentioned = mentionMap || {};
+
   this.setText(text);
 
   div.appendChild(toolbar);
@@ -29,7 +31,6 @@ function GPEditor(div, text, id, profileAutocompleter) {
   this._div = div;
   this._toolbar = toolbar;
   this._container = container;
-  this._mentioned = {};
 
   Editor(container, id);
 
@@ -85,12 +86,12 @@ GPEditor.prototype.getText = function() {
 }
 
 GPEditor.prototype.setText = function(text) {
-  var html = this.plusFormatToHtml(text);
+  var html = this.plusFormatToHtml(text, this._mentioned);
   this._container.innerHTML = '<p>' + (html || '<br>') + '</p>';
 }
 
-GPEditor.prototype.plusFormatToHtml = function(text) {
-  return text
+GPEditor.prototype.plusFormatToHtml = function(text, mentioned) {
+  var $ = text
     .replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
     .replace(/\n/g, '\n ')
@@ -98,6 +99,16 @@ GPEditor.prototype.plusFormatToHtml = function(text) {
     .replace(/(([\s()\.,!?]|^)((<[^>]*>)|[-\*])*)_([^\n]*?[^\s])_(((<[^>]*>)|[-\*])*([()\.,!?]|$|\s))/g, '$1<i>$5</i>$6')
     .replace(/(([\s()\.,!?]|^)((<[^>]*>)|[\*_])*)-([^\n]*?[^\s])-(((<[^>]*>)|[\*_])*([()\.,!?]|$|\s))/g, '$1<s>$5</s>$6')
     .replace(/\n /g, '<br>');
+  var mentions = $.match(/\d{21}/g) || [];
+  if (mentioned) {
+    for (var i = 0; i < mentions.length; ++i) {
+      var id = mentions[i];
+      var mentionName = mentioned[id];
+      if (mentionName) {
+        $ = $.replace('@' + id, '<span class="proflinkWrapper" style="white-space: nowrap; " contenteditable="false"><span class="proflinkPrefix">+</span><a class="proflink" style="" oid="' + id + '" href="https://plus.google.com/' + id + '">' + mentionName + '</a></span>');
+      }
+    }
+  }
   return $;
 }
 
