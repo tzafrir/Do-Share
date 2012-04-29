@@ -19,6 +19,8 @@
 <script src="libs/jquery-ui-timepicker-addon.js"></script>
 <link rel="stylesheet" href="libs/jquery-ui-timepicker-addon.css" />
 
+<script src="libs/moment.min.js"></script>
+
 <script>
 var PUBLIC_ENTITY = {
   name: 'Public',
@@ -118,7 +120,7 @@ function delPost() {
 
 function getDateString(post) {
   if (post.state == 'scheduled') {
-    return "Will be posted on " + new Date(post.timeStamp).toString();
+    return "Will be posted on " + moment(post.timeStamp).format('dddd, MMMM Do YYYY [at] H:mm');
   } else {
     return '';
   }
