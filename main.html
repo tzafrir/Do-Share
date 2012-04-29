@@ -70,6 +70,9 @@ function getEditedPost(state, writeTimeStamp) {
 
 function isEmptyPost(post) {
   for (var key in post) {
+    if (key == 'mentioned') {
+      continue;
+    }
     if (key == 'entities' && post[key]) {
       // If the user entered only a few items, consider the post empty.
       if (post[key].length > 3) {
