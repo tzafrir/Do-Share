@@ -259,7 +259,7 @@ function removeRemovedPosts(removedPosts) {
   });
 }
 
-function getImgHtml(post) {
+function getSavedPostMediaHtml(post) {
   function getMediaHtml(items) {
     var image = items.images[0];
     var video = items.video;
@@ -298,8 +298,7 @@ function renderPost(post) {
   var date = getDateString(post);
   var title = post.title || '';
 
-  var attachmentHTML = '';
-  var postImage = getImgHtml(post) || '';
+  var postMedia = getSavedPostMediaHtml(post) || '';
 
   div.id = 'post' + post.writeTimeStamp;
   div.onclick = function() {
@@ -313,13 +312,20 @@ function renderPost(post) {
 
   var content = trimContent(post.content);
 
+  var contentDiv = document.createElement('div');
+  contentDiv.className = 'contentDiv';
+
   // Don't look at this :(
-  div.innerHTML = (date && "<p class='postDate'>" + date + "</p>") +
+  contentDiv.innerHTML = (date && "<p class='postDate'>" + date + "</p>") +
                   (title && "<span class='postTitle'>" + title + "</span>") +
 
                   GPEditor.prototype.plusFormatToHtml(content) +
-                  renderReshareMeta(post) +
-                  "<br>" + postImage;
+                  renderReshareMeta(post);
+
+  var mediaDiv = $('<div class="mediaDiv">' + postMedia + '</div>')[0];
+
+  div.appendChild(contentDiv);
+  div.appendChild(mediaDiv);
 
   var existing = document.getElementById(div.id);
   var column = $('#posts ' + (isDraft ? '.drafts' : '.scheduled') + ' .postsList');
@@ -328,7 +334,15 @@ function renderPost(post) {
       removeRemovedPosts([post]);
       addPostToColumn(div, column[0]);
     } else {
-      existing.innerHTML = div.innerHTML;
+      var existingMediaDiv = existing.querySelector('.mediaDiv');
+      if (!existingMediaDiv) {
+        existing.innerHTML = div.innerHTML;
+      } else {
+        existing.querySelector('.contentDiv').innerHTML = contentDiv.innerHTML;
+        if (mediaDiv.innerHTML != existingMediaDiv.innerHTML) {
+          existingMediaDiv.innerHTML = mediaDiv.innerHTML;
+        }
+      }
     }
   } else {
     addPostToColumn(div, column[0]);
