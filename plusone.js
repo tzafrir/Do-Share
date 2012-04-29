@@ -29,7 +29,7 @@ function sendToDoShare() {
   var url = getPlusOneUrl();
   var sharebox = document.getElementById(SHAREBOX_ID);
   var text = (sharebox && sharebox.innerText) || '';
-  chrome.extension.sendRequest({type: 'newPost', content: text, link: url, circle_ids:['PUBLIC']}, function(){});
+  chrome.extension.sendRequest({type: 'newPost', content: text, link: url}, function(){});
 }
 
 document.addEventListener("DOMContentLoaded", scanSharebox);

@@ -95,6 +95,10 @@ function post(state) {
   if (state != 'autosave') {
     blinkPost(writeTimeStamp);
   }
+  localStorage['lastUsedCircles'] = JSON.stringify(post.entities.filter(function(entity) {
+    // Save only circles.
+    return !!entity.circleId;
+  }));
 }
 
 function blinkPost(writeTimeStamp) {
@@ -160,9 +164,13 @@ function populateTimeFields(timeStamp) {
 
 function addDraftEditBox(post) {
   if (!post) {
-    post = {
-      entities: [PUBLIC_ENTITY]
-    };
+    post = {};
+    var lastUsed = localStorage['lastUsedCircles'];
+    if (lastUsed) {
+      post.entities = JSON.parse(lastUsed);
+    } else {
+      post.entities = [];
+    }
   }
   var writeTimeStamp = post.writeTimeStamp || '';
   var content = post.content || '';

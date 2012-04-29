@@ -418,6 +418,14 @@ function newPost(post) {
     localStorage['_tmp_post'] = JSON.stringify(post);
     chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
   }
+  if (!post.entities) {
+    var lastUsed = localStorage['lastUsedCircles'];
+    if (lastUsed) {
+      post.entities = JSON.parse(lastUsed);
+    } else {
+      post.entities = [];
+    }
+  }
   if (post.image_id) {
     plus.fetchPhotoMetadata(function(response) {
       if (response.error || !response.data) {
@@ -438,8 +446,13 @@ function resharePost(url) {
   fetchPostData(url, function(data) {
     var post = {reshare: data,
                 share_id: data.update_id,
-                writeTimeStamp: new Date().getTime(),
-                entities: [{name: 'Public', circleId: 'PUBLIC'}]};
+                writeTimeStamp: new Date().getTime()};
+    var lastUsed = localStorage['lastUsedCircles'];
+    if (lastUsed) {
+      post.entities = JSON.parse(lastUsed);
+    } else {
+      post.entities = [];
+    }
     newPost(post);
   });
 }
@@ -524,7 +537,7 @@ function onRequest(request, sender, callback) {
 
 chrome.extension.onRequest.addListener(onRequest);
 chrome.browserAction.onClicked.addListener(function() {
-  newPost({entities: [{name: 'Public', circleId: 'PUBLIC'}]});
+  newPost({});
 });
 
 </script>
