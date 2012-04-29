@@ -592,6 +592,7 @@ GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
   var mediaItem = this._createMediaBase({
     href: albumLink,
     mediaProvider: 'picasa',
+    mime: 'image/jpeg',
     type: 'image',
   });
 
@@ -599,9 +600,9 @@ GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
   mediaItem[3] = imageData[2];
 
   var imageData1600 = imageData[4];
-  var imageLink1600 = imageData1600[0].replace('https:', '');
+  var imageLink1600 = imageData1600[0];
   mediaItem[5] = [null,
-                  imageLink1600,
+                  imageLink1600.replace('s1600', 's0-d'),
                   imageData1600[2],
                   imageData1600[1]]
 
@@ -610,6 +611,20 @@ GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
                     imageLink128,
                     96,
                     128]]
+
+  mediaItem[47].push([
+    null,
+    albumLink,
+    'http://google.com/profiles/media/container' ,
+    ''
+  ]);
+  mediaItem[47].push([
+    null,
+    'albumid=' + albumData[0] + '&photoid=' + imageData[0],
+    'http://google.com/profiles/media/onepick_media_id',
+    ''
+  ]);
+
   return mediaItem;
 };
 
@@ -1472,6 +1487,8 @@ GooglePlusAPI.prototype.search = function(callback, query, opt_extra) {
  *                                                      audience of the post. See _parseAclItems
  *                                                      for description.
  *                                                      Defaults to [{type: PUBLIC}] if not present.
+ *                            TODO(tzafrir): Make this implicit:
+ *                            Boolean:isPicasaImage
  */
 GooglePlusAPI.prototype.newPost = function(callback, postObj) {
   if (!this._verifySession('newPost', arguments)) {
@@ -1505,6 +1522,9 @@ GooglePlusAPI.prototype.newPost = function(callback, postObj) {
   data[0] = content || '';
   data[1] = 'oz:' + this.getInfo().id + '.' + new Date().getTime().toString(16) + '.0';
   data[2] = sharedPostId;
+  if (postObj.isPicasaImage) {
+    data[4] = true;
+  }
   data[6] = JSON.stringify(postObj.rawMedia || sMedia);
   data[8] = JSON.stringify(acl);
   data[9] = true;
