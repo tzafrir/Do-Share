@@ -459,7 +459,7 @@ img {
   -webkit-margin-after: 15px;
 }
 
-.postDate:hover {
+.scheduled .savedPost:hover .postDate {
   color: #6d1030;
 }
 
