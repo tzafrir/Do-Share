@@ -22,10 +22,6 @@
 <script src="libs/moment.min.js"></script>
 
 <script>
-var PUBLIC_ENTITY = {
-  name: 'Public',
-  circleId: 'PUBLIC'
-};
 
 var mem = {};
 var touch = {};
@@ -695,7 +691,10 @@ function setListeners() {
     source: function(request, callback) {
       chrome.extension.sendRequest({type: 'getCircles'}, function(circles) {
         var matchingCircles = [
-          PUBLIC_ENTITY,
+          {
+            name: 'Public',
+            circleId: 'PUBLIC'
+          },
           {
             name: 'Extended Circles',
             circleId: 'EXTENDED_CIRCLES'
@@ -713,6 +712,9 @@ function setListeners() {
             name: circle.name,
             circleId: circle.circleId || circle.id
           };
+        }).filter(function(circle) {
+          // Drop circles that are already chosen.
+          return !document.querySelector('.c_' + circle.circleId);
         });
         callback(matchingCircles);
         if (request.term.length > 0) {
