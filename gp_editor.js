@@ -29,6 +29,7 @@ function GPEditor(div, text, id, profileAutocompleter) {
   this._div = div;
   this._toolbar = toolbar;
   this._container = container;
+  this._mentioned = {};
 
   Editor(container, id);
 
@@ -261,6 +262,7 @@ GPEditor.prototype.onKeyDown = function(event, element) {
       acDiv.remove();
       dummy.remove();
       $(element).focus();
+      self._mentioned[item.id] = item.name;
     },
 
   })

@@ -49,6 +49,10 @@ function sendPost(post) {
 }
 
 function getEditedPost(state, writeTimeStamp) {
+  var mentioned = (mem[writeTimeStamp] && mem[writeTimeStamp].mentioned) || {};
+  for (var id in gpe._mentioned) {
+    mentioned[id] = gpe._mentioned[id];
+  }
   return {
     'state': state,
     'content': getContent() || '',
@@ -59,7 +63,8 @@ function getEditedPost(state, writeTimeStamp) {
     'entities': audienceChooser.getEntities(),
     'timeStamp': new Date(val('time')).getTime() || undefined,
     'link': val('link') || undefined,
-    'touch': new Date().getTime()
+    'touch': new Date().getTime(),
+    'mentioned': mentioned
   };
 }
 
