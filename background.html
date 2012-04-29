@@ -300,10 +300,19 @@ function processMediaItems(mediaArray) {
       result.link = {'url': media[24][1], 'title': media[3], 'description': media[21]};
     }
     if (type == "application/x-shockwave-flash") {
-      result.video = {'embed': media[5][1].replace(/autoplay=1/, ''), 'w': media[5][3], 'h': media[5][2]};
+      result.video = {'embed': getVideoEmbed(media[5][1]), 'w': media[5][3], 'h': media[5][2]};
     }
   });
   return result;
+}
+
+function getVideoEmbed(embedUrl) {
+  if (embedUrl.match('youtube.com/v/')) {
+    var v = embedUrl.match('/v/(.*?)[?&]')[1];
+    return 'https://www.youtube.com/embed/' + v + '?wmode=opaque';
+  } else {
+    return embedUrl;
+  }
 }
 
 function publishDraft(writeTimeStamp, callback) {

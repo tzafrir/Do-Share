@@ -270,7 +270,7 @@ function getSavedPostMediaHtml(post) {
     var image = items.images[0];
     var video = items.video;
     if (video) {
-      return "<iframe src='" + video.embed + "' width='260' ></iframe>";
+      return "<iframe wmode='opaque' src='" + video.embed + "' width='260' ></iframe>";
     }
     if (image) {
       return "<img width='260' src='" + image.url + "' /" + ">";
@@ -636,16 +636,13 @@ function setListeners() {
       }
       collapse();
     } else {
-      $('iframe').hide();
       animateBlur($('#appWrap, #sendFeedback'), 5, 200, 0, 0.4);
       $('#information').fadeIn(1000);
     }
   });
   $('#iUnderstand').click(function() {
     animateBlur($('#appWrap, #sendFeedback'), 5, 200, 1.6, -0.4);
-    $('#information').fadeOut(1000, function() {
-      $('iframe').show();
-    });
+    $('#information').fadeOut(1000);
     localStorage['iUnderstand'] = '1';
     $('#buttonScheduleStepTwo').click();
   });
