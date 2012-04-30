@@ -522,6 +522,7 @@ function uncollapse(force) {
 function collapse(immediately) {
   if (!$('#editbox').is('.collapsed')) {
     $('#collapseEditbox').hide();
+    $('#postMedia').hide();
     $('#title').attr({placeholder: "Create new post..."});
     $('#editbox').addClass('collapsed');
     if (isEmptyPost(getEditedPost())) {
