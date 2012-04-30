@@ -403,7 +403,7 @@ function renderMediaItems(medias) {
   var link = medias.link;
 
   return (link && link.title ?
-      "<a href='" + link.url +"'>" +
+      "<a href='" + link.url + "'>" +
       "<h3>" + link.title + "</h3></a>" : "") +
 
   (image ? "<img src='" + image.url + "'><br>" : "") +
@@ -412,6 +412,29 @@ function renderMediaItems(medias) {
       "' height='" + video.h / 2 + "' ></iframe>" : '') +
 
   (link && link.description ? "<p>" + link.description + "</p>" : "");
+}
+
+function renderLinkElements(medias) {
+  var link = medias.link;
+  if (!link) {
+    console.error('Missing link');
+    return '';
+  }
+
+  var chosenIndex = (medias.change && medias.change.chosenImageIndex) || 0;
+
+  var result = "<h3><a href='" + link.url + "'>" + link.title + "</a></h3>";
+
+  if (medias.images[chosenIndex]) {
+    result += "<div id='linkImage'><div id='imagePicker'></div>" +
+        "<img src='" + medias.images[chosenIndex].url + "'></div>";
+  }
+
+  if (link.description) {
+    result += "<div id='linkDescription'>" + link.description + "</div>";
+  }
+
+  return result;
 }
 
 function refresh() {
@@ -453,11 +476,11 @@ function populateEditorMediaArea(medias) {
   };
   if (link || mediasLink) {
     if (link == mediasLink) {
-      populate(renderMediaItems(medias));
+      populate(renderLinkElements(medias));
     } else {
       chrome.extension.sendRequest({type: 'getLinkMedia', link: link}, function(result) {
         if (result) {
-          populate(renderMediaItems(result));
+          populate(renderLinkElements(result));
           currentMedias = result;
           needRefresh = true;
         }
