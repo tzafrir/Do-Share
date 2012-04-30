@@ -848,6 +848,13 @@ function setListeners() {
   $('#attachments').delegate('#imagePickNext', 'click', function() {
     shiftChosenImage(1);
   });
+  $('#attachments').delegate('#removeImage', 'click', function() {
+    if (!currentMedias.change) {
+      currentMedias.change = {};
+    }
+    currentMedias.change.chosenImageIndex = -1;
+    populateEditorMediaArea(currentMedias);
+  });
 }
 
 function autosave() {
