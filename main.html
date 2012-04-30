@@ -445,19 +445,19 @@ function refreshIfNeeded() {
 function populateEditorMediaArea(medias) {
   var link = $('#link').val();
   var mediasLink = medias && medias.link && medias.link.url;
-  function renderMedias(medias) {
-    $('#postMedia').html(renderMediaItems(medias))
+  function populate(html) {
+    $('#postMedia').html(html)
         .show('blind', 500);
     $('#linkBar').hide('blind', 100);
     $('#addLinkAction').attr({'class': 'invalid'});
   };
   if (link || mediasLink) {
     if (link == mediasLink) {
-      renderMedias(medias);
+      populate(renderMediaItems(medias));
     } else {
       chrome.extension.sendRequest({type: 'getLinkMedia', link: link}, function(result) {
         if (result) {
-          renderMedias(result);
+          populate(renderMediaItems(result));
           currentMedias = result;
           needRefresh = true;
         }
@@ -465,7 +465,7 @@ function populateEditorMediaArea(medias) {
     }
   } else {
     if (medias && (medias.video || medias.images && medias.images.length)) {
-      renderMedias(medias);
+      populate(renderMediaItems(medias));
     } else {
       $('#postMedia').html('');
       $('#addLinkAction').attr({'class': 'enabled'});
