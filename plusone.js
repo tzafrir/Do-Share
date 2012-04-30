@@ -12,7 +12,7 @@ function scanSharebox() {
 function addButton(button) {
   var clone = button.cloneNode(true);
   clone.onclick = sendToDoShare;
-  clone.innerHTML = 'DS';
+  clone.innerHTML = 'Send to Do Share';
   button.parentElement.insertBefore(clone, button);
 }
 
