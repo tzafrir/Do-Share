@@ -47,8 +47,11 @@ function addButtonToPost(itemDOM) {
   var innerSpan = document.createElement('span');
 
   innerSpan.className = SPAN_CLASSNAME;
+
+  var img = document.createElement('img');
+  img.src = chrome.extension.getURL('img/stream_icon.png');
+  innerSpan.appendChild(img);
   shareNode.appendChild(innerSpan);
-  innerSpan.innerText = 'DS';
 
   shareNode.className = BUTTON_CLASSNAME;
   shareNode.onclick = function(){
@@ -58,6 +61,8 @@ function addButtonToPost(itemDOM) {
       sendReshare(url);
     }
   };
+
+  shareNode.setAttribute('data-tooltip', 'Send to Do Share');
 
   var allButtons = itemDOM.querySelectorAll(BUTTONS_SELECTOR);
   var lastButton = allButtons[allButtons.length - 1];
