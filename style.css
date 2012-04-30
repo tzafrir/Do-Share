@@ -297,6 +297,7 @@ img {
   height: 20px;
   width: 120px;
   color: #fff;
+  -webkit-user-select: none;
 }
 
 #postMedia #imagePicker #removeImage {
