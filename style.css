@@ -530,22 +530,24 @@ img {
 }
 
 #information h2 {
-  font-size: 70px;
+  font-size: 50px;
   margin-bottom: 20px;
 }
 
 #information p {
   -webkit-margin-after: 1em;
   font-size: 16px;
-  text-align: left;
+  text-align: center;
   line-height: 22px;
+}
+
+#information p span {
+  margin-left: 2px;
 }
 
 #information button {
   font-size: 18px;
   width: 50%;
-  position: relative;
-  left: 25%;
   margin-top: 30px;
   margin-bottom: 4px;
   background-image: -webkit-linear-gradient(top, #f17c4c, #f49459);
