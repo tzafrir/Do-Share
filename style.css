@@ -282,6 +282,11 @@ img {
   margin-right: 20px;
 }
 
+#postMedia #linkVideo {
+  float: left;
+  margin-right: 20px;
+}
+
 #postMedia #linkDescription {
   color: #191919;
   font-family: Helvetica, Arial, sans-serif;

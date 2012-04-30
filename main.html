@@ -437,6 +437,11 @@ function renderLinkElements(medias) {
         "<img src='" + medias.images[chosenIndex].url + "'></div>";
   }
 
+  var video = medias.video;
+  if (video) {
+    result += "<div id='linkVideo'><iframe src='" + video.embed + "' width='290' height='200' ></iframe></div>";
+  }
+
   if (link.description && !removeDescription) {
     result += "<div id='linkDescription'>" + link.description +
         "<br><span id='removeDescription'>Remove Description</span></div>";
