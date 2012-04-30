@@ -337,6 +337,8 @@ function renderPost(post) {
                   GPEditor.prototype.plusFormatToHtml(content, post.mentioned) +
                   renderReshareMeta(post);
 
+  $(contentDiv.querySelectorAll('a')).attr({href: null});
+
   var mediaDiv = $('<div class="mediaDiv">' + postMedia + '</div>')[0];
 
   div.appendChild(contentDiv);
