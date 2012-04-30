@@ -31,6 +31,8 @@ var audienceChooser;
 
 var postsCurrentlyDisplayed = [];
 
+var currentMedias;
+
 var lastUpdate = 0;
 
 function val(name) {
@@ -64,7 +66,8 @@ function getEditedPost(state, writeTimeStamp) {
     'timeStamp': new Date(val('time')).getTime() || undefined,
     'link': val('link') || undefined,
     'touch': new Date().getTime(),
-    'mentioned': mentioned
+    'mentioned': mentioned,
+    'medias': currentMedias
   };
 }
 
@@ -191,6 +194,7 @@ function addDraftEditBox(post) {
   if (medias) {
     link = medias.link && medias.link.url || '';
   }
+  currentMedias = medias;
 
   if (gpe) {
     gpe.destroy();
@@ -454,6 +458,8 @@ function populateEditorMediaArea(medias) {
       chrome.extension.sendRequest({type: 'getLinkMedia', link: link}, function(result) {
         if (result) {
           renderMedias(result);
+          currentMedias = result;
+          needRefresh = true;
         }
       });
     }
@@ -664,7 +670,7 @@ function setListeners() {
   $('#editbox').keyup(function() {
     needRefresh = true;
   });
-  $('input').change(function() {
+  $('input:not(#linkInput)').change(function(e) {
     needRefresh = true;
   });
   $('#sendFeedback').click(function(e) {

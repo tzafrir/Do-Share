@@ -285,7 +285,7 @@ function fetchAll(callback) {
 }
 
 function processMediaItems(mediaArray) {
-  var result = {'images': []};
+  var result = {images: [], rawMedia: mediaArray};
   mediaArray.forEach(function(media) {
     if (media[24][4] == "image" || media[24][4] == "photo") {
       var url = media[41][0][1];
@@ -304,6 +304,12 @@ function processMediaItems(mediaArray) {
     }
   });
   return result;
+}
+
+function processFrontendMedias(medias) {
+  if (!medias.change) {
+    return medias.rawMedia;
+  }
 }
 
 function getVideoEmbed(embedUrl) {
@@ -378,6 +384,9 @@ function post(post, callback) {
       if (post.reshare.rawMedia) {
         post.reshare.medias = processMediaItems(post.reshare.rawMedia);
       }
+      postThis();
+    } else if (post.medias) {
+      post.rawMedia = processFrontendMedias(post.medias);
       postThis();
     } else if (post.link) {
       getLinkMedia(post.link, function(data) {
