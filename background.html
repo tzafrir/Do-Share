@@ -307,9 +307,41 @@ function processMediaItems(mediaArray) {
 }
 
 function processFrontendMedias(medias) {
-  if (!medias.change) {
-    return medias.rawMedia;
+  if (medias.change) {
+    var change = medias.change;
+    if (change.chosenImageIndex) {
+      medias.rawMedia = keepNthImage(medias.rawMedia, change.chosenImageIndex);
+    }
+    if (change.removeDescription) {
+      medias.rawMedia = removeDescription(medias.rawMedia);
+    }
   }
+  return medias.rawMedia;
+}
+
+function removeDescription(rawMedia) {
+  rawMedia.forEach(function(media) {
+    var type = media[24][3];
+    if (type == "text/html" || type == "application/x-shockwave-flash") {
+      media[21] = '';
+    }
+  });
+  return rawMedia;
+}
+
+function keepNthImage(rawMedia, n) {
+  var result = [];
+  for (var i = 0, j = 0; i < rawMedia.length; ++i) {
+    var media = rawMedia[i];
+    if (media[24][4] == "image" || media[24][4] == "photo") {
+      if (j++ == n) {
+        result.push(media);
+      }
+    } else {
+      result.push(media);
+    }
+  }
+  return result;
 }
 
 function getVideoEmbed(embedUrl) {
@@ -386,7 +418,9 @@ function post(post, callback) {
       }
       postThis();
     } else if (post.medias) {
+      // Dance for me.
       post.rawMedia = processFrontendMedias(post.medias);
+      post.medias = processMediaItems(post.rawMedia);
       postThis();
     } else if (post.link) {
       getLinkMedia(post.link, function(data) {
