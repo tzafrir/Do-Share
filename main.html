@@ -422,6 +422,7 @@ function renderLinkElements(medias) {
   }
 
   var chosenIndex = (medias.change && medias.change.chosenImageIndex) || 0;
+  var removeDescription = !!(medias.change && medias.change.removeDescription);
 
   var result = "<h3 id='linkTitle'><a href='" + link.url + "'>" + link.title + "</a></h3>";
 
@@ -436,7 +437,7 @@ function renderLinkElements(medias) {
         "<img src='" + medias.images[chosenIndex].url + "'></div>";
   }
 
-  if (link.description) {
+  if (link.description && !removeDescription) {
     result += "<div id='linkDescription'>" + link.description +
         "<br><span id='removeDescription'>Remove Description</span></div>";
   }
@@ -853,6 +854,13 @@ function setListeners() {
       currentMedias.change = {};
     }
     currentMedias.change.chosenImageIndex = -1;
+    populateEditorMediaArea(currentMedias);
+  });
+  $('#attachments').delegate('#removeDescription', 'click', function() {
+    if (!currentMedias.change) {
+      currentMedias.change = {};
+    }
+    currentMedias.change.removeDescription = true;
     populateEditorMediaArea(currentMedias);
   });
 }
