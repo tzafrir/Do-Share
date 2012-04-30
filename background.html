@@ -345,6 +345,7 @@ function keepNthImage(rawMedia, n) {
 }
 
 function getVideoEmbed(embedUrl) {
+  embedUrl = embedUrl.replace('autoplay', 'noplay');
   if (embedUrl.match('youtube.com/v/')) {
     var v = embedUrl.match('/v/(.*?)[?&]')[1];
     return 'https://www.youtube.com/embed/' + v + '?wmode=opaque';
