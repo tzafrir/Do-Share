@@ -830,8 +830,11 @@ function setListeners() {
         });
       }, 1);
     },
+    dayNamesMin: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
     minDate: 0,
-    showButtonPanel: true
+    showButtonPanel: true,
+    showOtherMonths: true,
+		selectOtherMonths: true
   });
   $('#timeInput').timepicker({
     beforeShow: function(t, inst) {

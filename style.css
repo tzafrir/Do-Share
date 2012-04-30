@@ -445,7 +445,7 @@ img {
   border: 1px solid #bebebe;
   background: #f6f9f3;
   margin-top: 10px;
-  margin-bottom: 100px;
+  margin-bottom: 120px;
   padding: 10px;
   display: none;
   font-size: 13px;
@@ -644,4 +644,108 @@ footer a:hover {
 
 #information .iUnderstand {
   font-size: 150%;
+}
+
+body .ui-datepicker-header {
+  background: transparent;
+  border: 0;
+}
+
+body #ui-datepicker-div {
+  background: #fff;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+body .ui-datepicker th {
+  font-size: 15px;
+}
+
+body .ui-datepicker td a,
+body .ui-datepicker td span.ui-state-default {
+  text-align: center;
+  border: 0;
+  outline: 0;
+  font-size: 12px;
+  width: 22px;
+  padding: 4px 0;
+  margin-left: 5px;
+  border-radius: 6px;
+}
+
+body .ui-datepicker-calendar .ui-state-default,
+body .ui-datepicker-calendar .ui-state-hover {
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+
+body .ui-datepicker-calendar .ui-state-default,
+body .ui-datepicker-calendar .ui-state-highlight {
+  color: #555;
+}
+
+body .ui-datepicker td a.ui-priority-secondary,
+body .ui-datepicker td span.ui-state-default {
+  color: #b2b2b2;
+}
+
+body .ui-datepicker-calendar .ui-state-hover {
+  color: #f27d4c;
+}
+
+body .ui-datepicker td a.ui-state-active,
+body .ui-datepicker td.ui-datepicker-today a.ui-state-active {
+  color: #fff;
+  background: #f27d4c;
+}
+
+body .ui-datepicker td.ui-datepicker-today a {
+  background: #fadbe5;
+}
+
+body .ui-datepicker button.ui-state-default {
+  border: 0;
+  background: transparent;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  color: #bb1951;
+}
+
+body #ui-datepicker-div.ui-widget-content {
+  border: 1px solid #d27d4c;
+  border-radius: 5px;
+}
+
+.ui-datepicker-month {
+  font-size: 15px;
+  color: #bb1951;
+}
+
+.ui-datepicker-year {
+  font-size: 15px;
+  color: #f6b9cd;
+}
+
+body .ui-datepicker-prev-hover.ui-state-hover {
+  border: 0;
+  margin: 1px 0 0 1px;
+}
+
+body .ui-datepicker-next-hover.ui-state-hover {
+  border: 0;
+  margin: 1px 1px 0 0;
+}
+
+.ui-datepicker-prev span.ui-icon,
+.ui-datepicker-next span.ui-icon {
+  background: url(img/ds_icons.png);
+  background-repeat: no-repeat;
+  width: 13px;
+}
+
+.ui-datepicker-prev span.ui-icon {
+  background-position-x: -52px;
+}
+
+.ui-datepicker-next span.ui-icon {
+  background-position-x: -65px;
 }
