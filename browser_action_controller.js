@@ -41,10 +41,10 @@ BrowserActionController.prototype.drawBadgeIcon = function(count, text, altBackg
     ctx.fillText('99+', 1, 14);
   }
   else if (count > 9){
-    ctx.fillText(count + '', 3, 14);
+    ctx.fillText(count + '', 4, 14);
   }
   else if (count >= 0) {
-    ctx.fillText(count + '', 6, 14);
+    ctx.fillText(count + '', 7, 14);
   }
   else {
     // TODO error icon
