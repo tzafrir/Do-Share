@@ -423,17 +423,25 @@ function renderLinkElements(medias) {
 
   var chosenIndex = (medias.change && medias.change.chosenImageIndex) || 0;
 
-  var result = "<h3><a href='" + link.url + "'>" + link.title + "</a></h3>";
+  var result = "<h3 id='linkTitle'><a href='" + link.url + "'>" + link.title + "</a></h3>";
 
   if (medias.images[chosenIndex]) {
-    result += "<div id='linkImage'><div id='imagePicker'></div>" +
+    var imagePicker = "<div id='imagePicker'>" +
+        (medias.images.length > 1 ?
+          "<span id='imagePickPrev'>&lt;</span>" +
+          "<span id='imagePickNext'>&gt;</span>" : '') +
+        "<span id='removeImage'>X</span></div>";
+    result += "<div id='linkImage'>" +
+        imagePicker +
         "<img src='" + medias.images[chosenIndex].url + "'></div>";
   }
 
   if (link.description) {
-    result += "<div id='linkDescription'>" + link.description + "</div>";
+    result += "<div id='linkDescription'>" + link.description +
+        "<br><span id='removeDescription'>Remove Description</span></div>";
   }
 
+  result += "<div class='clearFix'></div>";
   return result;
 }
 

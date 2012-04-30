@@ -258,6 +258,57 @@ img {
 
 #postMedia {
   display: none;
+  padding: 20px;
+  line-height: 18px;
+}
+
+#postMedia #linkImage {
+  float: left;
+}
+
+#postMedia #linkTitle {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+#postMedia #linkTitle a {
+  color: #99224b;
+  text-decoration: none;
+}
+
+#postMedia #linkImage img {
+  max-width: 120px;
+  margin-right: 20px;
+}
+
+#postMedia #linkDescription {
+  color: #191919;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+#postMedia #removeDescription {
+  color: #99224b;
+  cursor: pointer;
+}
+
+#postMedia #imagePicker {
+  background: #000;
+  height: 20px;
+  width: 120px;
+  color: #fff;
+}
+
+#postMedia #imagePicker #removeImage {
+  float: right;
+}
+
+#postMedia #imagePicker span {
+  cursor: pointer;
+}
+
+#postMedia #imagePicker #imagePickPrev {
+  margin-right: 5px;
 }
 
 #circleChooserBar {
