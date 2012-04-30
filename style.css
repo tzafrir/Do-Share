@@ -515,6 +515,25 @@ img {
   clear: both;
 }
 
+footer {
+  clear: both;
+  text-align: center;
+  padding-top: 20px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #605e5a;
+}
+
+footer a {
+  color: #98224c;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: #d22965;
+}
+
 #information {
   position: absolute;
   top: 100px;
