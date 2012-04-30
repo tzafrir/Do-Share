@@ -379,10 +379,7 @@ function post(post, callback) {
         post.reshare.medias = processMediaItems(post.reshare.rawMedia);
       }
       postThis();
-      return;
-    }
-
-    if (post.link) {
+    } else if (post.link) {
       getLinkMedia(post.link, function(data) {
         if (data) {
           post.rawMedia = data;
