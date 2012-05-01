@@ -127,7 +127,7 @@ function delPost() {
 
 function getDateString(post) {
   if (post.state == 'scheduled') {
-    return "Will be posted on " + moment(post.timeStamp).format('dddd, MMMM Do YYYY [at] H:mm');
+    return moment(post.timeStamp).format('dddd, MMMM Do YYYY [at] H:mm');
   } else {
     return '';
   }
