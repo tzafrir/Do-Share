@@ -368,12 +368,6 @@ img {
   cursor: pointer;
 }
 
-.entityPhoto {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-}
-
 #circleChooser {
   width: auto;
   height: 28px;
@@ -821,4 +815,62 @@ body .ui-datepicker-next-hover.ui-state-hover {
   padding: 0 0 3px 5px;
   color: #121212;
   font-size: 15px;
+}
+
+#circleChooserBar .ui-autocomplete.ui-menu {
+  max-height: 175px;
+  overflow-y: auto;
+  border-radius: 0;
+  border: 1px solid #bebebe;
+  border-top: 0;
+}
+
+#circleChooserBar .ui-menu-item {
+  border: 0;
+  outline: 0;
+  background: #fff;
+}
+
+#circleChooserBar .ui-menu-item:hover {
+  background: #eff6e9;
+}
+
+#circleChooserBar .ui-menu-item .ui-state-hover {
+  border: 0;
+  background: transparent;
+  margin: 0;
+  color: inherit;
+}
+
+#circleChooserBar .entityPhoto {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}
+
+#circleChooserBar .entityName {
+  font-size: 13px;
+  font-family: Helvetica, Arial, sans-serif;
+  display: inline-block;
+  margin-left: 10px;
+  position: relative;
+  top: -7px;
+}
+
+/* Let's get this party started */
+#circleChooserBar ::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+#circleChooserBar ::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+/* Handle */
+#circleChooserBar ::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  height: 100px;
+  background: #bebebe;
 }
