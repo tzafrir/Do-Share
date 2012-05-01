@@ -120,6 +120,7 @@ img {
   top: 9px;
   left: 610px;
   background: url(img/closepost.png);
+  z-index: 50;
 }
 
 .hideWhenCollapsed {
