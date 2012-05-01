@@ -72,7 +72,7 @@ img {
 
 #top {
   text-align: center;
-  height: 110px;
+  height: 92px;
 }
 
 #top img {
@@ -111,11 +111,15 @@ img {
 }
 
 #collapseEditbox {
-  width: 16px;
-  height: 16px;
-  display: none;
+  width: 18px;
+  height: 18px;
+  opacity: 0;
+  display: block;
   cursor: pointer;
-  border: 1px solid red;
+  position: relative;
+  top: 9px;
+  left: 610px;
+  background: url(img/closepost.png);
 }
 
 .hideWhenCollapsed {

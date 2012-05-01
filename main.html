@@ -510,13 +510,7 @@ function uncollapse(force) {
     $('#title').attr({placeholder: 'Title (optional)'});
     $('#editbox').removeClass('collapsed');
     var pos = function() {
-      $('#collapseEditbox').position({
-        my: 'right bottom',
-        at: 'right top',
-        of: '.titleBar',
-        offset: '-6 -6',
-        collision: 'none'
-      }).show(100);
+      $('#collapseEditbox').animate({opacity: 1}, 400);
     };
     if (force === true) {
       $('.hideWhenCollapsed').show();
@@ -530,7 +524,7 @@ function uncollapse(force) {
 
 function collapse(immediately) {
   if (!$('#editbox').is('.collapsed')) {
-    $('#collapseEditbox').hide();
+    $('#collapseEditbox').animate({opacity: 0}, 400);
     $('#postMedia').hide();
     $('#title').attr({placeholder: "Create new post..."});
     $('#editbox').addClass('collapsed');
@@ -952,6 +946,7 @@ function onLoad() {
     <div id="top">
       <header><h1><img src="img/logo.png" /></h1></header>
     </div>
+    <div id="collapseEditbox"></div>
     <div id="writingArea">
       <div id="editbox">
         <div class="titleBar"><input id="title" autocomplete="off" /></div>
@@ -1012,7 +1007,6 @@ function onLoad() {
     </footer>
   </div>
   <div id="sendFeedback">send feedback</div>
-  <div id="collapseEditbox"></div>
   <div id="information" style="display: none">
     <h2>IMMA LET YOU FINISH SCHEDULING, BUT</h2>
     <p>Do Share is a <span>Chrome application<span> that runs <span><strong>only on your computer</strong></span>.</p>
