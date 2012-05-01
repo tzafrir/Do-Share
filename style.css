@@ -560,10 +560,14 @@ img {
   background-color: #f1ebe1;
 }
 
-#posts .drafts .savedPost:hover,
-#posts .drafts .savedPost.activity {
+.drafts .savedPost:hover,
+.drafts .savedPost.activity {
   background-color: #f1a643;
   color: #483112;
+}
+
+.drafts .savedPost:hover .postError {
+  color: #a70923;
 }
 
 .scheduled .savedPost {
