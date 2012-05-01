@@ -354,20 +354,6 @@ function getVideoEmbed(embedUrl) {
   }
 }
 
-function publishDraft(writeTimeStamp, callback) {
-  db.processItem(writeTimeStamp, function(post) {
-    db._removeItem(writeTimeStamp, function(ok) {
-      if (ok) {
-        // TODO: go back to a sane state if posting failed.
-        publish(post, callback);
-      } else {
-        console.error('Unable to remove item by key: ' + writeTimeStamp);
-        callback(false);
-      }
-    });
-  });
-}
-
 function fetchPost(writeTimeStamp, callback) {
   var race = false;
   var racer = function(item) {
@@ -543,14 +529,6 @@ function onRequest(request, sender, callback) {
     fetchAll(callback);
   } else if (type == "delPost") {
     delPost(request.writeTimeStamp, callback);
-  } else if (type == "publishDraft") {
-    var writeTimeStamp = request.writeTimeStamp;
-    if (!writeTimeStamp) {
-      console.error("Invalid request.writeTimeStamp");
-      callback(false);
-    } else {
-      publishDraft(writeTimeStamp, callback);
-    }
   } else if (type == "fetchPost") {
     fetchPost(request.writeTimeStamp, callback);
   } else if (type == "newPost") {

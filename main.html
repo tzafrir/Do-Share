@@ -133,16 +133,6 @@ function getDateString(post) {
   }
 }
 
-function publishDraft(writeTimeStamp) {
-  chrome.extension.sendRequest({'type': 'publishDraft', 'writeTimeStamp': writeTimeStamp},
-      function(ok) {
-    if (ok) {
-      var draftDiv = document.getElementById('post' + writeTimeStamp);
-      draftDiv.parentElement.removeChild(draftDiv);
-    }
-  });
-}
-
 function getContent() {
   return gpe && gpe.getText();
 }
