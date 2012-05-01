@@ -703,7 +703,7 @@ footer a:hover {
   font-size: 150%;
 }
 
-body .ui-datepicker-header {
+body #ui-datepicker-div .ui-widget-header {
   background: transparent;
   border: 0;
 }
@@ -772,7 +772,8 @@ body #ui-datepicker-div.ui-widget-content {
   border-radius: 5px;
 }
 
-.ui-datepicker-month {
+.ui-datepicker-month,
+.ui-datepicker-title {
   font-size: 15px;
   color: #bb1951;
 }
@@ -805,4 +806,12 @@ body .ui-datepicker-next-hover.ui-state-hover {
 
 .ui-datepicker-next span.ui-icon {
   background-position-x: -65px;
+}
+
+.ui-timepicker-div dl dt,
+.ui-timepicker-div dl dd {
+  margin-left: 5px;
+  padding: 0 0 3px 5px;
+  color: #121212;
+  font-size: 15px;
 }
