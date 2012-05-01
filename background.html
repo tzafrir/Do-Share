@@ -243,7 +243,15 @@ function addPost(post, callback) {
   } else if (state == "draft") {
     draft(post, callback);
   } else if (state == "post") {
-    publish(post, callback);
+    publish(post, function(response) {
+      if (response.status == false) {
+        post.state = 'draft';
+        post.error = "Could not send post to Google+";
+        addPost(post, callback);
+      } else {
+        callback(true);
+      }
+    });
   } else {
     console.error('Invalid state');
     callback(false);
