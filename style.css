@@ -368,6 +368,12 @@ img {
   cursor: pointer;
 }
 
+.entityPhoto {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}
+
 #circleChooser {
   width: auto;
   height: 28px;
