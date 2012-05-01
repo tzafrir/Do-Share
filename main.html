@@ -481,7 +481,7 @@ function populateEditorMediaArea(medias) {
       $('#postMedia').show('blind', 500);
       $('#linkBar').hide('blind', 100);
     }
-    $('#addLinkAction').attr({'class': 'invalid'});
+    $('#addLinkAction').attr({'class': 'loaded'});
   };
   if (link || mediasLink) {
     if (link == mediasLink) {
@@ -615,6 +615,17 @@ function setListeners() {
     $('#attachments').removeClass('notempty');
     $(this).removeClass('disabled');
     $(this).addClass('enabled');
+  });
+  $('#addLink').delegate('.loaded', 'click', function() {
+    // Remove Link
+    $('#link, #linkInput').val('');
+    currentMedias = undefined;
+    $('#attachments').removeClass('notempty');
+    $('#postMedia').hide('blind', 200, function(){$(this).html('');});
+    $(this).removeClass('loaded');
+    $(this).addClass('enabled');
+    // Force autosave.
+    post('autosave');
   });
   $('#submitLink').click(function() {
     $('#link').val($('#linkInput').val());
