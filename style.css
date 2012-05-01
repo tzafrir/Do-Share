@@ -57,7 +57,7 @@ table {
 
 body {
   background-color: #f3f3f3;
-  font-family: Roboto, Helvetica, Arial;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-size: 13px;
 }
 
@@ -103,7 +103,7 @@ img {
   font-size: 16px;
   padding-left: 15px;
   color: #191919;
-  font-family: Roboto, Helvetica, Arial;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
 }
 
 .titleBar input::-webkit-input-placeholder {
