@@ -45,7 +45,7 @@ function c(e){console.log(e)}
 var db = new IDBWrap("nightwatchDb", "writeTimeStamp");
 db.init(dbInitCallback);
 
-var s = new Sched5("nightwatch", "writeTimeStamp", publishScheduled, c);
+var s = new Sched5("nightwatch", "writeTimeStamp", publishScheduled, handleMissedPost);
 s.init(dbInitCallback);
 
 var actionController = new BrowserActionController();
@@ -206,6 +206,12 @@ function profileAutocomplete(prefix, callback) {
     }
     callback(persons);
   }, prefix);
+}
+
+function handleMissedPost(post) {
+  post.state = 'draft';
+  post.error = 'Chrome was not enabled at the scheduled time';
+  addPost(post, c);
 }
 
 function publishScheduled(post) {
