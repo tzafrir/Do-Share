@@ -540,8 +540,12 @@ img {
   height: 14px;
   background: url(img/ds_icons.png);
   background-repeat: no-repeat;
-  background-position: -12px;
+  background-position: 1px;
   margin-right: 4px;
+}
+
+.savedPost:hover .postError:before {
+  background-position: -12px;
 }
 
 .scheduled .savedPost:hover .postDate {
