@@ -257,6 +257,13 @@ img {
   box-shadow: none;
 }
 
+#addLinkAction {
+  display: block;
+  width: 24px;
+  height: 20px;
+  background: url(img/addurl_icon.png);
+}
+
 #postMedia {
   display: none;
   padding: 20px;
