@@ -195,7 +195,7 @@ Sched5.prototype._onSuccess = function(callback) {
 
 Sched5.prototype._onError =  function(callback) {
   return function(event) {
-    _fail(callback, 'Failed with errorCode ' + event.target.errorCode);
+    this._fail(callback, 'Failed with errorCode ' + event.target.errorCode);
   };
 }
 
