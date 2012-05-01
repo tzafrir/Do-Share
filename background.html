@@ -199,9 +199,11 @@ function profileAutocomplete(prefix, callback) {
       var personData = results[i][3][0];
       var person = {
         name: (personData['n'] ? personData['n'] : personObject[0]),
-        id: personData['g'],
-        photoUrl: 'https:' + personData['p'] + '?sz=24'
+        id: personData['g']
       };
+      if (personData['p']) {
+        person.photoUrl = 'https:' + personData['p'] + '?sz=24';
+      }
       persons.push(person);
     }
     callback(persons);
