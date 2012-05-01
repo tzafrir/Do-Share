@@ -307,6 +307,8 @@ function renderPost(post) {
   var date = getDateString(post);
   var title = post.title || '';
 
+  var error = post.error || '';
+
   var postMedia = getSavedPostMediaHtml(post) || '';
 
   div.id = 'post' + post.writeTimeStamp;
@@ -325,7 +327,8 @@ function renderPost(post) {
   contentDiv.className = 'contentDiv';
 
   // Don't look at this :(
-  contentDiv.innerHTML = (date && "<p class='postDate'>" + date + "</p>") +
+  contentDiv.innerHTML = (error && "<div class='postError'>" + error + "</div>") +
+                  (date && "<p class='postDate'>" + date + "</p>") +
                   (title && "<span class='postTitle'>" + title + "</span>") +
 
                   GPEditor.prototype.plusFormatToHtml(content, post.mentioned) +

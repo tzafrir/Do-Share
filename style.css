@@ -518,6 +518,25 @@ img {
   -webkit-margin-after: 15px;
 }
 
+.postError {
+  font-size: 14px;
+  color: #ca1732;
+  font-weight: bold;
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+.postError:before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: url(img/ds_icons.png);
+  background-repeat: no-repeat;
+  background-position: -12px;
+  margin-right: 4px;
+}
+
 .scheduled .savedPost:hover .postDate {
   color: #6d1030;
 }
