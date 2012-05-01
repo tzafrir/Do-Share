@@ -552,6 +552,21 @@ img {
   color: #6d1030;
 }
 
+.savedPost .postDate:before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: url(img/ds_icons.png);
+  background-repeat: no-repeat;
+  background-position: -25px;
+  margin-right: 4px;
+}
+
+.savedPost:hover .postDate:before {
+  background-position: -38px;
+}
+
 .postTitle {
   font-size: 18px;
   color: #484643;
