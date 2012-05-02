@@ -395,15 +395,15 @@ function renderMediaItems(medias) {
   var link = medias.link;
 
   return (link && link.title ?
-      "<a href='" + link.url + "'>" +
-      "<h3>" + link.title + "</h3></a>" : "") +
+      "<h3><a class='mediaLink' href='" + link.url + "'>" +
+      link.title + "</a></h3>" : "") +
 
-  (image ? "<img src='" + image.url + "'><br>" : "") +
+  (image ? "<div id='mediaImage'><img src='" + image.url + "'></div>" : "") +
 
-  (video ? "<iframe src='" + video.embed + "' width='" + video.w / 2 +
-      "' height='" + video.h / 2 + "' ></iframe>" : '') +
+  (video ? "<div id='mediaVideo'><iframe src='" + video.embed + "' width='290' height='200' ></iframe></div>" : '') +
 
-  (link && link.description ? "<p>" + link.description + "</p>" : "");
+  (link && link.description ? "<div id='mediaDescription'>" + link.description + "</div>" : "") +
+  "<div class='clearFix'></div>";
 }
 
 function renderLinkElements(medias) {

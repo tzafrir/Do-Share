@@ -214,11 +214,27 @@ img {
 }
 
 .reshare {
-  padding: 10px;
+  padding: 20px;
 }
 
 .reshare h2, .reshare p, .reshare a, .reshare h3 {
   -webkit-margin-after: 0.4em;
+}
+
+.reshare h2,
+.reshare .mediaLink {
+  font-size: 13px;
+  font-family: Helvetica, Arial, sans-serif;
+  color: #99224b;
+  margin-bottom: 15px;
+}
+
+.reshare .mediaLink {
+  text-decoration: none;
+}
+
+.reshare h3 {
+  margin: 15px 0;
 }
 
 .reshareMeta {
@@ -279,8 +295,11 @@ img {
   line-height: 18px;
 }
 
-#postMedia #linkImage {
+#postMedia #linkImage,
+#reshare #mediaImage {
   float: left;
+  max-width: 120px;
+  margin-right: 20px;
 }
 
 #postMedia #linkTitle {
