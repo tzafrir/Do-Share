@@ -210,7 +210,7 @@ function addDraftEditBox(post) {
     populateEditorMediaArea(post.medias);
   }
 
-  if (link || post.reshare) {
+  if (link || post.reshare || post.medias) {
     $('#attachments').addClass('notempty');
   } else {
     $('#attachments').removeClass('notempty');
@@ -389,7 +389,6 @@ function trimContent(string) {
 }
 
 function renderMediaItems(medias) {
-  // TODO: Scroll through images.
   var image = medias.images[0];
   var video = medias.video;
   var link = medias.link;
@@ -398,12 +397,18 @@ function renderMediaItems(medias) {
       "<h3><a class='mediaLink' href='" + link.url + "'>" +
       link.title + "</a></h3>" : "") +
 
-  (image ? "<div id='mediaImage'><img src='" + image.url + "'></div>" : "") +
+  (!link && image ? renderOtherMedia(medias) : '') +
+  (link && image ? "<div id='mediaImage'><img src='" + image.url + "'></div>" : "") +
 
   (video ? "<div id='mediaVideo'><iframe src='" + video.embed + "' width='290' height='200' ></iframe></div>" : '') +
 
   (link && link.description ? "<div id='mediaDescription'>" + link.description + "</div>" : "") +
   "<div class='clearFix'></div>";
+}
+
+function renderOtherMedia(medias) {
+  var image = medias.images[0];
+  return "<div id='otherMediaImage'>" + (image ? "<img src='" + image.url + "'>" : '') + "</div>";
 }
 
 function renderLinkElements(medias) {
@@ -496,7 +501,7 @@ function populateEditorMediaArea(medias) {
     }
   } else {
     if (medias && (medias.video || medias.images && medias.images.length)) {
-      populate(renderMediaItems(medias));
+      populate(renderOtherMedia(medias));
     } else {
       $('#postMedia').html('');
       $('#addLinkAction').attr({'class': 'enabled'});
