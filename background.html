@@ -586,7 +586,7 @@ function onRequest(request, sender, callback) {
 
 chrome.extension.onRequest.addListener(onRequest);
 chrome.browserAction.onClicked.addListener(function() {
-  newPost({});
+  chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
 });
 
 </script>
