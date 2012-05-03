@@ -626,6 +626,13 @@ function shiftChosenImage(n) {
   populateEditorMediaArea(currentMedias);
 }
 
+function changeTimeIfDraft() {
+  var date = new Date($('#dateInput').val() + ' ' + $('#timeInput').val());
+  if (date.toString() != 'Invalid Date' && document.querySelector('.drafts #post' + $('#write_time_stamp').val())) {
+    $('#time').val(date.getTime());
+  }
+}
+
 function setListeners() {
   $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
   $(window).resize(function() {
@@ -857,6 +864,7 @@ function setListeners() {
         });
       }, 1);
     },
+    onSelect: changeTimeIfDraft,
     dayNamesMin: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
     minDate: 0,
     showButtonPanel: true,
@@ -876,7 +884,8 @@ function setListeners() {
           collision: 'none'
         });
       }, 1);
-    }
+    },
+    onSelect: changeTimeIfDraft,
   });
   $('#attachments').delegate('#imagePickPrev', 'click', function() {
     shiftChosenImage(-1);
