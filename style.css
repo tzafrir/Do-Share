@@ -912,20 +912,22 @@ body .ui-datepicker-next-hover.ui-state-hover {
 }
 
 /* Let's get this party started */
-#circleChooserBar ::-webkit-scrollbar ,
-.gp-mention  ::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 12px;
 }
 
+::-webkit-scrollbar-track {
+  background: #f3f3f3;
+}
+
 /* Track */
-#circleChooserBar ::-webkit-scrollbar-track ,
-.gp-mention  ::-webkit-scrollbar-track {
+#circleChooserBar::-webkit-scrollbar-track,
+.gp-mention::-webkit-scrollbar-track {
   background: #fff;
 }
 
 /* Handle */
-#circleChooserBar ::-webkit-scrollbar-thumb ,
-.gp-mention  ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   -webkit-border-radius: 10px;
   border-radius: 10px;
   height: 100px;
