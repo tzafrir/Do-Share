@@ -439,6 +439,8 @@ img {
 
 #buttonScheduleStepTwo {
   float: right;
+  position: relative;
+  top: -2px;
 }
 
 #buttonBar #buttonDelete:active,
@@ -481,7 +483,7 @@ img {
 }
 
 #scheduleBar {
-  height: 56px;
+  height: 52px;
   border: 1px solid #bebebe;
   background: #f6f9f3;
   margin-top: 10px;
