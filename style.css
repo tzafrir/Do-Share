@@ -848,12 +848,14 @@ body .ui-datepicker-next-hover.ui-state-hover {
   border-radius: 0;
   border: 1px solid #bebebe;
   border-top: 0;
+  padding-top: 7px;
+  background: #fff;
 }
 
 #circleChooserBar .ui-menu-item {
   border: 0;
   outline: 0;
-  background: #fff;
+  background: inherit;
 }
 
 #circleChooserBar .ui-menu-item a:hover {
