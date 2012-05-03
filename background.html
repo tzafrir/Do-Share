@@ -295,7 +295,6 @@ function fetchAll(callback) {
       wrapCallback();
     } else {
       db._processAllItemsByRange(undefined, function(post) {
-        post.timeStamp = undefined;
         result.posts.push(post);
         if (--count == 0) {
           wrapCallback();

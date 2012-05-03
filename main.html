@@ -61,7 +61,7 @@ function val(name) {
 
 function sendPost(post) {
   if (post.state == 'autosave') {
-    post.state = post.timeStamp ? 'scheduled' : 'draft';
+    post.state = document.querySelector('.scheduled #post' + post.writeTimeStamp) ? 'scheduled' : 'draft';
     chrome.extension.sendRequest({'type': 'post', 'post': post}, refreshPosts);
     $('#write_time_stamp').val(post.writeTimeStamp);
   } else {
