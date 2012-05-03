@@ -679,6 +679,7 @@ footer a:hover {
   top: 100px;
   left: 25%;
   width: 50%;
+  z-index: 75;
   background: #f6f9f3;
   border: 2px solid #bebebe;
   border-radius: 20px;
