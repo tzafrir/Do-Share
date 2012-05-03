@@ -841,7 +841,7 @@ function setListeners() {
   };
   $('#circleChooserBar')
       .delegate('#circleChooserBar *', 'click', function(e){e.stopPropagation();})
-      .click(function() {$('#circleChooser').autocomplete('search', '')});
+      .click(function() {$('#circleChooser').focus()});
   $('#title').focus(uncollapse);
   $('#collapseEditbox').click(collapse);
   {
