@@ -855,13 +855,13 @@ body .ui-datepicker-next-hover.ui-state-hover {
   background: #fff;
 }
 
-#circleChooserBar .ui-menu-item:hover {
+#circleChooserBar .ui-menu-item a:hover {
   background: #eff6e9;
 }
 
 #circleChooserBar .ui-menu-item .ui-state-hover {
   border: 0;
-  background: transparent;
+  background: #eff6e9;
   margin: 0;
   color: inherit;
 }
@@ -870,15 +870,18 @@ body .ui-datepicker-next-hover.ui-state-hover {
   display: inline-block;
   width: 24px;
   height: 24px;
+  margin-right: 10px;
 }
 
-#circleChooserBar .entityName {
+#circleChooserBar a {
   font-size: 13px;
   font-family: Helvetica, Arial, sans-serif;
   display: inline-block;
-  margin-left: 10px;
   position: relative;
   top: -7px;
+  width: 100%;
+  height: 35px;
+  border-radius: 0;
 }
 
 /* Let's get this party started */

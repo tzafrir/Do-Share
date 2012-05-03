@@ -802,7 +802,7 @@ function setListeners() {
     return $('<li></li>')
       .data('item.autocomplete', item)
       .append('<a><span class="entityPhoto">' + (item.photoUrl ? '<img src="' + item.photoUrl + '" /' + '>' : '') +
-          '</span><span class="entityName">' +  item.name + '</span></a>')
+          '</span>' +  item.name + '</a>')
       .appendTo(ul);
   };
   $('#title').focus(uncollapse);
