@@ -788,6 +788,7 @@ function setListeners() {
     select: function(event, ui) {
       needRefresh = true;
       audienceChooser.addEntity(ui.item);
+      $('#circleChooser').autocomplete('search', '');
     },
     source: function(request, callback) {
       chrome.extension.sendRequest({type: 'getCircles'}, function(circles) {
