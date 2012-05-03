@@ -794,15 +794,18 @@ function setListeners() {
         var matchingCircles = [
           {
             name: 'Public',
-            circleId: 'PUBLIC'
+            circleId: 'PUBLIC',
+            photoUrl: 'img/icon_public.png'
           },
           {
             name: 'Extended Circles',
-            circleId: 'EXTENDED_CIRCLES'
+            circleId: 'EXTENDED_CIRCLES',
+            photoUrl: 'img/icon_extended.png'
           },
           {
             name: 'Your Circles',
-            circleId: 'YOUR_CIRCLES'
+            circleId: 'YOUR_CIRCLES',
+            photoUrl: 'img/icon_circles.png'
           }
         ].concat(circles.filter(function(circle) {
           return !(circle.id == '15' || circle.name == 'Blocked');
@@ -811,7 +814,8 @@ function setListeners() {
         }).map(function(circle) {
           return {
             name: circle.name,
-            circleId: circle.circleId || circle.id
+            circleId: circle.circleId || circle.id,
+            photoUrl: circle.photoUrl || 'img/icon_circle.png'
           };
         }).filter(function(circle) {
           // Drop circles that are already chosen.
