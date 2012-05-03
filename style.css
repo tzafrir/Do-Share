@@ -850,9 +850,12 @@ body .ui-datepicker-next-hover.ui-state-hover {
   overflow-y: auto;
   border-radius: 0;
   border: 1px solid #bebebe;
-  border-top: 0;
   padding: 0;
   background: #fff;
+}
+
+#circleChooserBar .ui-autocomplete.ui-menu {
+  border-top: 0;
 }
 
 #circleChooserBar .ui-menu-item ,
@@ -885,6 +888,13 @@ body .ui-datepicker-next-hover.ui-state-hover {
   top: 6px;
 }
 
+
+#circleChooserBar .entityPhoto img ,
+.gp-mention .gp-e-image img {
+  width: 24px;
+  height: 24px;
+}
+
 .gp-mention .ui-autocomplete.ui-menu {
   width: 280px;
   max-height: 222px;
@@ -902,17 +912,20 @@ body .ui-datepicker-next-hover.ui-state-hover {
 }
 
 /* Let's get this party started */
-#circleChooserBar ::-webkit-scrollbar {
+#circleChooserBar ::-webkit-scrollbar ,
+.gp-mention  ::-webkit-scrollbar {
   width: 12px;
 }
 
 /* Track */
-#circleChooserBar ::-webkit-scrollbar-track {
+#circleChooserBar ::-webkit-scrollbar-track ,
+.gp-mention  ::-webkit-scrollbar-track {
   background: #fff;
 }
 
 /* Handle */
-#circleChooserBar ::-webkit-scrollbar-thumb {
+#circleChooserBar ::-webkit-scrollbar-thumb ,
+.gp-mention  ::-webkit-scrollbar-thumb {
   -webkit-border-radius: 10px;
   border-radius: 10px;
   height: 100px;
