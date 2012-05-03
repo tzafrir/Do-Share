@@ -840,6 +840,9 @@ function setListeners() {
           '</span>' +  item.name + '</a>')
       .appendTo(ul);
   };
+  $('#circleChooserBar')
+      .delegate('#circleChooserBar *', 'click', function(e){e.stopPropagation();})
+      .click(function() {$('#circleChooser').autocomplete('search', '')});
   $('#title').focus(uncollapse);
   $('#collapseEditbox').click(collapse);
   {
