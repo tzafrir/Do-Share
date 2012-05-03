@@ -844,49 +844,61 @@ body .ui-datepicker-next-hover.ui-state-hover {
   font-size: 15px;
 }
 
-#circleChooserBar .ui-autocomplete.ui-menu {
-  max-height: 175px;
+#circleChooserBar .ui-autocomplete.ui-menu,
+.gp-mention .ui-autocomplete.ui-menu {
+  max-height: 222px;
   overflow-y: auto;
   border-radius: 0;
   border: 1px solid #bebebe;
   border-top: 0;
-  padding-top: 7px;
+  padding: 0;
   background: #fff;
 }
 
-#circleChooserBar .ui-menu-item {
+#circleChooserBar .ui-menu-item ,
+.gp-mention .ui-menu-item {
   border: 0;
   outline: 0;
   background: inherit;
 }
 
-#circleChooserBar .ui-menu-item a:hover {
+#circleChooserBar .ui-menu-item a:hover ,
+.gp-mention .ui-menu-item a:hover {
   background: #eff6e9;
 }
 
-#circleChooserBar .ui-menu-item .ui-state-hover {
+#circleChooserBar .ui-menu-item .ui-state-hover ,
+.gp-mention .ui-menu .ui-menu-item a.ui-state-hover {
   border: 0;
   background: #eff6e9;
   margin: 0;
   color: inherit;
 }
 
-#circleChooserBar .entityPhoto {
+#circleChooserBar .entityPhoto ,
+.gp-mention .gp-e-image {
   display: inline-block;
   width: 24px;
   height: 24px;
   margin-right: 10px;
+  position: relative;
+  top: 6px;
 }
 
-#circleChooserBar a {
+.gp-mention .ui-autocomplete.ui-menu {
+  width: 280px;
+  max-height: 222px;
+}
+
+#circleChooserBar a,
+.gp-mention a {
   font-size: 13px;
   font-family: Helvetica, Arial, sans-serif;
   display: inline-block;
-  position: relative;
-  top: -7px;
   width: 100%;
-  height: 35px;
+  height: 44px;
   border-radius: 0;
+  color: #000;
 }
 
 /* Let's get this party started */

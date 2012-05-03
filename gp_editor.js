@@ -243,7 +243,9 @@ GPEditor.prototype.onKeyDown = function(event, element) {
       wrapper[0].appendChild(document.createTextNode(' '));
   range.insertNode(wrapper[0]);
 
-  var acDiv = $('<div>').addClass("ui-helper-clearfix").appendTo($(document.body)),
+  var acDiv = $('<div>').addClass("ui-helper-clearfix")
+      .addClass('gp-mention')
+      .appendTo($(document.body)),
       input = $('<input>').addClass('gp-ac-input').appendTo(acDiv);
 
   input.position({
@@ -256,11 +258,15 @@ GPEditor.prototype.onKeyDown = function(event, element) {
         window.setTimeout(function(){dummy.text(input.val());}, 1);
       })
       .autocomplete({
+    appendTo: acDiv,
     minLength: 0,
     source: function(request, callback) {
       self._profileAutocompleter(request.term, callback);
     },
     focus: function() {return false;},
+    open: function() {
+      $('.ui-autocomplete').css('width', '');
+    },
     select: function(event, ui) {
       plusSpan.text('+');
       var item = ui.item;
@@ -298,7 +304,7 @@ GPEditor.prototype.onKeyDown = function(event, element) {
   .data('autocomplete')._renderItem = function(ul, item) {
     return $('<li></li>')
       .data('item.autocomplete', item)
-      .append('<a><img src="' + item.photoUrl + '" />' + item.name + '</a>' )
+      .append('<a><span class="gp-e-image"><img src="' + item.photoUrl + '" /></span>' + item.name + '</a>' )
       .appendTo(ul);
   }
   input.css({
