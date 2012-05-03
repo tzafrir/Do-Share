@@ -301,4 +301,9 @@ GPEditor.prototype.onKeyDown = function(event, element) {
       .append('<a><img src="' + item.photoUrl + '" />' + item.name + '</a>' )
       .appendTo(ul);
   }
+  input.css({
+    position: 'absolute',
+    top: input.position().top,
+    left: input.position().left
+  });
 }
