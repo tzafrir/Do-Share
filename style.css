@@ -253,7 +253,7 @@ img {
   background: #fff;
   margin: 10px;
   padding-left: 5px;
-  height: -webkit-calc(100% - 20px);
+  height: 30px;
   outline: 0;
   border-radius: 5px;
   color: #121212;
