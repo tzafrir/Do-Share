@@ -26,6 +26,9 @@
  * jQuery setup.
  */
 
+// http://stackoverflow.com/questions/1818670/how-to-control-positioning-of-jqueryui-datepicker
+$.extend($.datepicker,{_checkOffset:function(inst,offset,isFixed){return offset}});
+
 /**
  * Don't hide the date picker when clicking a date
  * http://stackoverflow.com/a/1762378/153264
@@ -840,8 +843,6 @@ function setListeners() {
       e.stopPropagation();
     });
   }
-  // http://stackoverflow.com/questions/1818670/how-to-control-positioning-of-jqueryui-datepicker
-  $.extend($.datepicker,{_checkOffset:function(inst,offset,isFixed){return offset}});
   $('#dateInput').datepicker({
     beforeShow: function(t, inst) {
       if (!$('#dateInput').val()) {
