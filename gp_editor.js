@@ -298,7 +298,7 @@ GPEditor.prototype.onKeyDown = function(event, element) {
     } else if (k == KEY.ESC) {
       setCaretAfter(wrapper[0]);
       proflinkWrapper.remove();
-      wrapper.text('+' + input.val());
+      wrapper.text(plusSpan.text() + input.val());
       acDiv.remove();
     }
   })
