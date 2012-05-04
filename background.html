@@ -212,7 +212,7 @@ function profileAutocomplete(prefix, callback) {
 
 function handleMissedPost(post) {
   post.state = 'draft';
-  post.error = 'Chrome was not enabled at the scheduled time';
+  post.error = 'Chrome was not running at the scheduled time';
   addPost(post, c);
 }
 
