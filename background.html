@@ -240,7 +240,6 @@ function publish(post, callback) {
       // Avoid UI races by upping the failed posts's id.
       post.writeTimeStamp += 1;
       addPost(post, callback);
-      callback(false);
     } else {
       callback(true);
     }
