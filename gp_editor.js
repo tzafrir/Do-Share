@@ -260,6 +260,7 @@ GPEditor.prototype.onKeyDown = function(event, element) {
       .autocomplete({
     appendTo: acDiv,
     minLength: 0,
+    autoFocus: true,
     source: function(request, callback) {
       self._profileAutocompleter(request.term, callback);
     },
