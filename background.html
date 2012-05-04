@@ -222,13 +222,30 @@ function publishScheduled(post) {
 }
 
 function publish(post, callback) {
+  var postBackup = JSON.stringify(post);
   if (post.title) {
     post.content = '*' + post.title + '*\n\n' + post.content;
   }
   if (post.entities instanceof Array) {
     post.aclItems = parseEntities(post.entities);
   }
-  plus.newPost(callback || c, post);
+  var wrapCallback = function(response) {
+    if (!callback) {
+      callback = c;
+    }
+    if (response.status == false) {
+      post = JSON.parse(postBackup);
+      post.state = 'draft';
+      post.error = "Could not send post to Google+";
+      // Avoid UI races by upping the failed posts's id.
+      post.writeTimeStamp += 1;
+      addPost(post, callback);
+      callback(false);
+    } else {
+      callback(true);
+    }
+  };
+  plus.newPost(wrapCallback, post);
   console.log("Posting");
   console.log(post);
 }
@@ -245,26 +262,13 @@ function addPost(post, callback) {
   var state = post.state;
   update();
 
-  var postBackup = JSON.stringify(post);
-
   delPost(post.writeTimeStamp, function(){});
   if (state == "scheduled") {
     schedule(post, callback);
   } else if (state == "draft") {
     draft(post, callback);
   } else if (state == "post") {
-    publish(post, function(response) {
-      if (response.status == false) {
-        post = JSON.parse(postBackup);
-        post.state = 'draft';
-        post.error = "Could not send post to Google+";
-        // Avoid UI races by upping the failed posts's id.
-        post.writeTimeStamp += 1;
-        addPost(post, callback);
-      } else {
-        callback(true);
-      }
-    });
+    publish(post, callback);
   } else {
     console.error('Invalid state');
     callback(false);
