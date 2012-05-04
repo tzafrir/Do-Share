@@ -838,6 +838,14 @@ function setListeners() {
     if (!($('.ui-autocomplete').is(':visible'))) {
       $('#circleChooser').autocomplete('search');
     }
+  }).keydown(function(event) {
+    var KEY = {
+      BACKSPACE: 8
+    };
+    var k = event.keyCode;
+    if (k == KEY.BACKSPACE && !$(this).val()) {
+      audienceChooser.removeLastEntity();
+    }
   }).data('autocomplete')._renderItem = function(ul, item) {
     return $('<li></li>')
       .data('item.autocomplete', item)
@@ -972,6 +980,11 @@ AudienceChooser.prototype.removeEntity = function(entity) {
   this._entities = this._entities.filter(function(e) {
     return e != entity;
   });
+  this.updateChooser();
+}
+
+AudienceChooser.prototype.removeLastEntity = function() {
+  this._entities.pop();
   this.updateChooser();
 }
 
