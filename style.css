@@ -552,6 +552,7 @@ img {
   text-overflow: ellipsis;
   font-size: 15px;
   color: #605e5a;
+  line-height: 16px;
 }
 
 .postDate {
