@@ -105,6 +105,9 @@ IDBWrap.prototype._getItemStore = function() {
 }
 
 IDBWrap.prototype._processAllItemsByRange = function(keyRange, callback) {
+  if (!keyRange) {
+    keyRange = IDBKeyRange.lowerBound(0);
+  }
   var store = this._getItemStore();
   var cursorRequest = store.openCursor(keyRange);
 
