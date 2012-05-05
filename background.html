@@ -311,7 +311,14 @@ function processMediaItems(mediaArray) {
   var result = {images: [], rawMedia: mediaArray};
   mediaArray.forEach(function(media) {
     if (media[24][4] == "image" || media[24][4] == "photo") {
-      var url = media[5][1];
+      var url;
+      if (media[5]) {
+        url = media[5][1];
+      } else if (media[41]) {
+        url = media[41][0][1];
+      } else {
+        url = media[24][1];
+      }
       if (!url.match(/http/)) {
         url = 'https:' + url;
       }
