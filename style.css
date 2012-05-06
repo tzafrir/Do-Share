@@ -100,10 +100,14 @@ img {
   background: transparent;
   width: 100%;
   height: 50px;
-  font-size: 17px;
+  font-size: 16px;
   padding-left: 15px;
   color: #191919;
   font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+.windows .titleBar input {
+  font-size: 17px;
 }
 
 .titleBar input::-webkit-input-placeholder {
@@ -550,9 +554,13 @@ img {
   cursor: pointer;
   overflow-x: hidden;
   text-overflow: ellipsis;
-  font-size: 15px;
+  font-size: 14px;
   color: #605e5a;
   line-height: 16px;
+}
+
+.windows #posts .savedPost {
+  font-size: 15px;
 }
 
 .postDate {

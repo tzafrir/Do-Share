@@ -1012,6 +1012,11 @@ function onLoad() {
   </script>
 </head>
 <body onload="onLoad()">
+<script>
+if (navigator.userAgent.match('Windows')) {
+  document.body.className = document.body.className + ' windows';
+}
+</script>
   <div id="bodyWrap">
   <div id="appWrap">
     <div id="top">
