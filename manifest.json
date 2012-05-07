@@ -3,6 +3,7 @@
   "description": "Manage your posts on Google+™",
   "version": "0.14",
   "background_page": "background.html",
+  "options_page": "privacy.html",
   "icons": {
     "128": "icon128.png"
   },
