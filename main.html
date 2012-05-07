@@ -368,7 +368,7 @@ function renderPost(post) {
   if (existing) {
     if (stateChange) {
       removeRemovedPosts([post]);
-      addPostToColumn(div, column[0]);
+      addPostToColumn(div, column[0], !isDraft);
     } else {
       var existingMediaDiv = existing.querySelector('.mediaDiv');
       if (!existingMediaDiv) {
@@ -381,16 +381,19 @@ function renderPost(post) {
       }
     }
   } else {
-    addPostToColumn(div, column[0]);
+    addPostToColumn(div, column[0], !isDraft);
   }
 }
 
-function addPostToColumn(div, column) {
+function addPostToColumn(div, column, append) {
   if (lastUpdate == 0) {
-    $(column).prepend(div);
+    if (append) {
+      $(div).appendTo($(column));
+    } else {
+      $(div).prependTo($(column));
+    }
   } else {
-    $(div).addClass('activity').hide().prependTo($(column))
-        .show('fade', 200, function(){$(this).removeClass('activity')});
+    $(div).addClass('activity').hide().prependTo($(column)).show('fade', 200, function(){$(this).removeClass('activity')});
   }
 }
 
