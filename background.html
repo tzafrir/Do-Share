@@ -229,6 +229,10 @@ function publish(post, callback) {
   if (post.entities instanceof Array) {
     post.aclItems = parseEntities(post.entities);
   }
+  if (post.rawMedia && post.rawMedia[0] && post.rawMedia[0][47] && post.rawMedia[0][47][0] &&
+      post.rawMedia[0][47][0][1] == 'picasa') {
+    post.isPicasaImage = true;
+  }
   var wrapCallback = function(response) {
     if (!callback) {
       callback = c;
@@ -454,7 +458,6 @@ function post(post, callback) {
           callback(false);
         } else {
           post.rawMedia = [plus._createPicasaImageItem(response.data)];
-          post.isPicasaImage = true;
           postThis();
         }
       }, post.image_id);
