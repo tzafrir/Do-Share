@@ -200,7 +200,8 @@ GPEditor.prototype.onKeyDown = function(event, element) {
     AT: 50
   };
   var k = event.keyCode;
-  if (!((k == KEY.AT || k == KEY.PLUS) && event.shiftKey)) {
+  // TODO: @ bugs on AZERTY
+  if (!(/*(k == KEY.AT ||*/( k == KEY.PLUS) && event.shiftKey)) {
     return;
   }
 
