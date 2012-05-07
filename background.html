@@ -10,6 +10,25 @@
 <script src="/Sched5.js"></script>
 <script>
 
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-27041781-6']);
+
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = 'https://ssl.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+function trackPost(post) {
+  var pub = false;
+  if (post.entities && post.entities.filter(function(entity) {
+    return entity.circleId == 'PUBLIC';
+  }).length) {
+    pub = true;
+  }
+  _gaq.push(['_trackEvent', 'Post', (pub ? 'public' : 'limited')]);
+}
+
 var ACTION_UPDATE_INTERVAL = 333;
 var INIT_REPEAT_INTERVAL = 3 * 60000;
 
@@ -223,6 +242,7 @@ function publishScheduled(post) {
 
 function publish(post, callback) {
   var postBackup = JSON.stringify(post);
+  trackPost(post);
   if (post.title) {
     post.content = '*' + post.title + '*\n\n' + post.content;
   }

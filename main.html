@@ -57,6 +57,26 @@ var currentMedias;
 
 var lastUpdate = 0;
 
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-27041781-6']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = 'https://ssl.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+function trackSchedule(post) {
+  if (post.timeStamp) {
+     _gaq.push(['_trackEvent', 'Schedule', 'future', 'future', Math.floor((post.timeStamp - new Date().getTime()) / 1000)]);
+  }
+}
+
+function trackClick(buttonName) {
+  _gaq.push(['_trackEvent', buttonName, 'Clicked']);
+}
+
 function val(name) {
   var $ = document.getElementById(name).value;
   return ($ ? $ : undefined);
@@ -123,6 +143,9 @@ function post(state) {
     post.writeTimeStamp = new Date().getTime();
   }
   sendPost(post);
+  if (state == 'scheduled') {
+    trackSchedule(post);
+  }
   if (state != 'autosave') {
     blinkPost(writeTimeStamp);
     localStorage['lastUsedCircles'] = JSON.stringify(post.entities.filter(function(entity) {
@@ -672,6 +695,7 @@ function setListeners() {
     }
   });
   $('#buttonSchedule').click(function() {
+    trackClick(this.id);
     var jself = $(this);
     var muteWhenScheduling = '#editbox, #circleChooserBar, .buttonNotSchedule';
     if (jself.data('active')) {
@@ -691,6 +715,7 @@ function setListeners() {
     }
   });
   $('#buttonDelete').click(function() {
+    trackClick(this.id);
     if ($(this).is('.confirm')) {
       delPost();
       collapse();
@@ -714,10 +739,12 @@ function setListeners() {
     }
   });
   $('#buttonDraft').click(function() {
+    trackClick(this.id);
     post('draft');
     collapse();
   });
   $('#buttonScheduleStepTwo').click(function() {
+    trackClick(this.id);
     if (localStorage['iUnderstand'] == "1") {
       var timeInput = $('#timeInput').val();
       var date = new Date($('#dateInput').val() + ' ' + timeInput);
@@ -747,12 +774,14 @@ function setListeners() {
     }
   });
   $('#iUnderstand').click(function() {
+    trackClick(this.id);
     animateBlur($('#appWrap, #sendFeedback'), 5, 200, 1.6, -0.4);
     $('#information').fadeOut(1000);
     localStorage['iUnderstand'] = '1';
     $('#buttonScheduleStepTwo').click();
   });
   $('#buttonPost').click(function() {
+    trackClick(this.id);
     post('post');
     collapse();
   });
@@ -763,6 +792,7 @@ function setListeners() {
     needRefresh = true;
   });
   $('#sendFeedback').click(function(e) {
+    trackClick(this.id);
     e.stopPropagation();
     needRefresh = true;
     autosave();
