@@ -61,12 +61,6 @@ var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-27041781-6']);
 _gaq.push(['_trackPageview']);
 
-(function() {
- var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
- ga.src = 'https://ssl.google-analytics.com/ga.js';
- var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-
 function trackSchedule(post) {
   if (post.timeStamp) {
      _gaq.push(['_trackEvent', 'Schedule', 'future', 'future', Math.floor((post.timeStamp - new Date().getTime()) / 1000)]);
@@ -1123,3 +1117,10 @@ if (navigator.userAgent.match('Windows')) {
     <p>Scheduled posts will be successfully sent to Google+ if <span>Chrome is running</span>, and <span>logged into Google+ at that time.</span></p>
     <button id="iUnderstand">I got this. Chrome has to be running and connected to the internet, for Do Share to be able to send posts to Google+.<br><br><span class="iUnderstand">I understand!</span></button>
   </div>
+<script>
+  (function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = 'https://ssl.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
