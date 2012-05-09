@@ -7,9 +7,9 @@
 var CONTENT_PANE_ID = '#contentPane';
 var STREAM_UPDATE_SELECTOR = 'div[id^="update"]:not([tz_doshare])';
 
-var BUTTON_CLASSNAME = 'HPvmqf';
-var BUTTONS_SELECTOR = '.BRowJd, .' + BUTTON_CLASSNAME;
-var SPAN_CLASSNAME = 'jEMdk';
+var BUTTON_CLASSNAME = 'Tj';
+var BUTTONS_SELECTOR = '.eswd, .' + BUTTON_CLASSNAME;
+var SPAN_CLASSNAME = 'iq';
 
 function onNodeInserted(e) {
   // This happens when a new stream is selected
@@ -65,6 +65,10 @@ function addButtonToPost(itemDOM) {
   shareNode.setAttribute('data-tooltip', 'Send to Do Share');
 
   var allButtons = itemDOM.querySelectorAll(BUTTONS_SELECTOR);
+  if (allButtons.length == 0) {
+    console.error(allButtons);
+    return;
+  }
   var lastButton = allButtons[allButtons.length - 1];
   plusOne.parentNode.insertBefore(shareNode, lastButton.nextSibling);
 }

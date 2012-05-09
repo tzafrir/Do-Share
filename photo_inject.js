@@ -1,6 +1,6 @@
 (function() {
 
-var PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR = '.WH1rbd.c-wa-Da';
+var PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR = '.yL.a-f-e';
 
 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
@@ -13,6 +13,9 @@ var plusId;
 
 function getPhotoId() {
   var url = window.location.toString();
+  if (!url.match(/photos\/.*\/.+/)) {
+    return;
+  }
   var property = url.split('photos/')[1].split('/')[0];
   if (property == 'fromphone' || property == plusId) {
     return url.split('/').reverse()[0];
@@ -28,12 +31,15 @@ function addButton() {
   }
 
   var photoId = getPhotoId();
-  console.log(photoId);
   if (!photoId) {
     return;
   }
 
   var buttonArea = document.querySelector(PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR);
+  if (!buttonArea) {
+    console.error('no button area found');
+    return;
+  }
   var button1 = buttonArea.childNodes[0];
   var newButton = button1.cloneNode(true);
   newButton.id = "ds-send-photo";
