@@ -20,6 +20,13 @@ function onNodeInserted(e) {
   }
 };
 
+function onNotificationNodeInserted(e) {
+  var update = e.target && e.target.querySelector(STREAM_UPDATE_SELECTOR);
+  if (update) {
+    processPost(update);
+  }
+}
+
 /**
  * Process
  */
@@ -83,6 +90,11 @@ document.addEventListener("DOMContentLoaded", function() {
   if (googlePlusContentPane) {
     googlePlusContentPane.parentElement.addEventListener('DOMNodeInserted', onNodeInserted);
     processAllItems();
+  } else if (document.location.toString().match('notifications/frame')) {
+    var notificationsContainer = document.querySelector('.jRa');
+    if (notificationsContainer) {
+      notificationsContainer.addEventListener('DOMNodeInserted', onNotificationNodeInserted);
+    }
   }
 });
 })();
