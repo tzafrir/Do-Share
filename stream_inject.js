@@ -8,7 +8,7 @@ var CONTENT_PANE_ID = '#contentPane';
 var STREAM_UPDATE_SELECTOR = 'div[id^="update"]:not([tz_doshare])';
 
 var BUTTON_CLASSNAME = 'Tj';
-var BUTTONS_SELECTOR = '.eswd, .' + BUTTON_CLASSNAME;
+var BUTTONS_SELECTOR = 'div.eswd, div.' + BUTTON_CLASSNAME;
 var SPAN_CLASSNAME = 'iq';
 
 function onNodeInserted(e) {
