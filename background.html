@@ -244,7 +244,7 @@ function publish(post, callback) {
   var postBackup = JSON.stringify(post);
   trackPost(post);
   if (post.title) {
-    post.content = '*' + post.title + '*\n\n' + post.content;
+    post.content = '*' + post.title.replace(/(\s|&nbsp;)+$/, '') + '*\n\n' + post.content;
   }
   if (post.entities instanceof Array) {
     post.aclItems = parseEntities(post.entities);
