@@ -1034,6 +1034,11 @@ function onLoad() {
   } else {
     collapse(true);
   }
+  (function() {
+   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+   ga.src = 'https://ssl.google-analytics.com/ga.js';
+   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
 }
 
   </script>
@@ -1117,10 +1122,3 @@ if (navigator.userAgent.match('Windows')) {
     <p>Scheduled posts will be successfully sent to Google+ if <span>Chrome is running</span>, and <span>logged into Google+ at that time.</span></p>
     <button id="iUnderstand">I got this. Chrome has to be running and connected to the internet, for Do Share to be able to send posts to Google+.<br><br><span class="iUnderstand">I understand!</span></button>
   </div>
-<script>
-  (function() {
- var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
- ga.src = 'https://ssl.google-analytics.com/ga.js';
- var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-</script>
