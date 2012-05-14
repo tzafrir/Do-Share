@@ -13,12 +13,6 @@
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-27041781-6']);
 
-(function() {
- var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
- ga.src = 'https://ssl.google-analytics.com/ga.js';
- var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-
 function trackPost(post) {
   var pub = false;
   if (post.entities && post.entities.filter(function(entity) {
@@ -620,5 +614,11 @@ chrome.extension.onRequest.addListener(onRequest);
 chrome.browserAction.onClicked.addListener(function() {
   chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
 });
+
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = 'https://ssl.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
 
 </script>
