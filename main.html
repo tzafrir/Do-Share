@@ -916,6 +916,7 @@ function setListeners() {
 		selectOtherMonths: true
   });
   $('#timeInput').timepicker({
+    currentText: '',
     beforeShow: function(t, inst) {
       if (!$('#timeInput').val()) {
         $('#timeInput').timepicker('setDate', (new Date()));
