@@ -285,12 +285,6 @@ GPEditor.prototype.onKeyDown = function(event, element) {
     },
 
   })
-  .blur(function() {
-    setCaretAfter(wrapper[0]);
-    proflinkWrapper.remove();
-    wrapper.text(plusSpan.text() + input.val());
-    acDiv.remove();
-  })
   .focus()
   .keydown(function(event) {
     var KEY = {
