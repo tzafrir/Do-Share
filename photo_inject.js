@@ -12,7 +12,7 @@ var plusId;
 })();
 
 function getPhotoId() {
-  var url = window.location.toString();
+  var url = window.location.toString().split('?')[0];
   if (!url.match(/photos\/.*\/.+/)) {
     return;
   }
