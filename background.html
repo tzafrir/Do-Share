@@ -125,7 +125,7 @@ function fetchOzData(url, callback) {
     var re = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
     var matches = [];
     var match;
-    var AF_initDataQueue = [];
+    var AF_initDataChunkQueue = [];
 
     /*
      * Take outall the script tags
@@ -140,8 +140,8 @@ function fetchOzData(url, callback) {
      * Thankyou Google :)
      */
     var initDataMap = {};
-    for (var i = 0; i < AF_initDataQueue.length; i++) {
-      var dataPair = AF_initDataQueue[i];
+    for (var i = 0; i < AF_initDataChunkQueue.length; i++) {
+      var dataPair = AF_initDataChunkQueue[i];
       if (dataPair.key != '-1') {
         initDataMap[dataPair.key] = dataPair.data;
       }
