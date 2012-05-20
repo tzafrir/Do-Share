@@ -90,30 +90,6 @@ img {
   border-color: #dedede;
 }
 
-.titleBar {
-  height: 50px;
-}
-
-.titleBar input {
-  border: 0;
-  outline: 0;
-  background: transparent;
-  width: 100%;
-  height: 50px;
-  font-size: 16px;
-  padding-left: 15px;
-  color: #191919;
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-}
-
-.windows .titleBar input {
-  font-size: 17px;
-}
-
-.titleBar input::-webkit-input-placeholder {
-  color: #b2b2b2;
-}
-
 #collapseEditbox {
   width: 18px;
   height: 18px;
@@ -131,7 +107,8 @@ img {
   display: none;
 }
 
-.editbox .gp-e-container {
+.editbox .gp-e-container,
+.titleBar .gp-e-container {
   min-height: 70px;
   max-height: 500px;
   padding: 20px 20px 0 20px;
@@ -141,6 +118,35 @@ img {
   outline: 0;
   overflow-y: auto;
   color: #191919;
+}
+
+.titleBar .gp-e-container {
+  min-height: 50px;
+  max-height: 150px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  width: 100%;
+  font-size: 16px;
+  padding-left: 15px;
+  color: #191919;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+#acInputTitle {
+  color: #191919;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+}
+
+.windows .titleBar .gp-e-container {
+  font-size: 17px;
+}
+
+.titleBar #titlePlaceholder {
+  position: absolute;
+  color: #b2b2b2;
+  width: auto;
 }
 
 .gp-e-container p {
