@@ -832,7 +832,14 @@ function setListeners() {
       $('[contenteditable]').focus();
     }, 200);
   });
-  $('#circleChooser').autocomplete({
+  $('#circleChooser')
+      .keydown(function(e) {
+        if (e.keyCode == $.ui.keyCode.TAB) {
+          console.log('ok')
+          e.stopImmediatePropagation();
+        }
+      })
+      .autocomplete({
     minLength: 0,
     appendTo: $('#circleChooserBar'),
     position: {
