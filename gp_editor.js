@@ -128,7 +128,8 @@ GPEditor.prototype.normalizedHtmlToPlusFormat = function(element) {
       .replace(/( +|(&nbsp;)+)(<\/.*?>)/g, "$3$1")
       .replace(/<b><\/b>/g, '')
       .replace(/<i><\/i>/g, '')
-      .replace(/<(s|strike)><\/(s|strike)>/g, '');
+      .replace(/<(s|strike)><\/(s|strike)>/g, '')
+      .replace(/<p><br><\/p>/g, '<p></p>');
   return this.visitNormalizedHtmlNode(clone);
 }
 
