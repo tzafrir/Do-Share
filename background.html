@@ -24,7 +24,8 @@ function trackPost(post) {
 }
 
 var ACTION_UPDATE_INTERVAL = 666;
-var INIT_REPEAT_INTERVAL = 3 * 60000;
+var INIT_RETRY_INTERVAL = 5 * 1000;
+var INIT_REPEAT_INTERVAL = 15 * 60 * 1000;
 
 var dbInit = false;
 var dbInitCounter = 2;
@@ -38,15 +39,23 @@ function dbInitCallback(ok) {
 
 // Set up the API
 var plus = new GooglePlusAPI();
-window.setTimeout(function(){
-  plus.init(function() {
-    plus.refreshCircles(c, true);
-  }), 1;
-});
 
-window.setInterval(function() {
-  plus.init(function(){});
-}, INIT_REPEAT_INTERVAL);
+function initialize() {
+  try {
+    plus.init(function(response) {
+      if (response.status) {
+        plus.refreshCircles(c, true);
+        window.setTimeout(initialize, INIT_REPEAT_INTERVAL);
+      } else {
+        window.setTimeout(initialize, INIT_RETRY_INTERVAL);
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    window.setTimeout(initialize, INIT_RETRY_INTERVAL);
+  }
+};
+initialize();
 
 var lastUpdate = -1;
 function update() {
