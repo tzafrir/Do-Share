@@ -711,10 +711,12 @@ function setListeners() {
   $('#buttonDelete').click(function() {
     trackClick(this.id);
     if ($(this).is('.confirm')) {
+      trackClick(this.id + 'Confirm');
       delPost();
       collapse();
       resetDeleteButton();
     } else {
+      trackClick(this.id + 'First');
       var duration = 200;
       $(this).data('text', $(this).text())
         .slideUp(duration, function() {
@@ -884,9 +886,13 @@ function setListeners() {
       .delegate('#circleChooserBar *', 'click', function(e){e.stopPropagation();})
       .click(function() {$('#circleChooser').focus()});
   $('#title').focus(uncollapse);
-  $('#collapseEditbox').click(collapse);
+  $('#collapseEditbox').click(function() {
+    collapse();
+    trackClick(this.id);
+  });
   {
     $('#bodyWrap').click(function(e){
+      trackClick('sidebarClose');
       collapse();
     });
     $('#appWrap').click(function(e){
@@ -951,6 +957,9 @@ function setListeners() {
     }
     currentMedias.change.removeDescription = true;
     populateEditorMediaArea(currentMedias);
+  });
+  $('footer a').click(function() {
+    trackClick('profile' + this.innerText.replace(' ', ''));
   });
 }
 
