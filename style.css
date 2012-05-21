@@ -70,6 +70,17 @@ img {
   margin: 0 auto;
 }
 
+#closeCircleChooser {
+  display: none;
+  width: 18px;
+  height: 18px;
+  background: url(img/closepost.png);
+  position: relative;
+  top: 5px;
+  cursor: pointer;
+  float: right;
+}
+
 #top {
   text-align: center;
   height: 92px;

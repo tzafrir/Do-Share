@@ -814,6 +814,12 @@ function setListeners() {
     autoFocus: true,
     open: function() {
       $('.ui-autocomplete').css('width', 'inherit');
+      $('#closeCircleChooser')
+          .css({display: 'inline-block', opacity: 0})
+          .animate({opacity: 1}, 200);
+    },
+    close: function() {
+      $('#closeCircleChooser').fadeOut(200);
     },
     select: function(event, ui) {
       needRefresh = true;
@@ -961,6 +967,9 @@ function setListeners() {
   $('footer a').click(function() {
     trackClick('profile' + this.innerText.replace(' ', ''));
   });
+  $('#closeCircleChooser').click(function() {
+    trackClick(this.id);
+  });
 }
 
 function autosave() {
@@ -1091,6 +1100,7 @@ if (navigator.userAgent.match('Windows')) {
       <div id="barContainer" class="hideWhenCollapsed">
         <div id="circleChooserBar">
           <input id="circleChooser" placeholder="+ Add more people&hellip;">
+          <div id="closeCircleChooser"></div>
         </div>
         <div id="buttonBar">
           <div><button id="buttonDelete" class="buttonNotSchedule">delete post :(</button></div>
