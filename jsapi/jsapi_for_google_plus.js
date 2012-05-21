@@ -152,6 +152,9 @@ GooglePlusAPI.prototype._requestService = function(callback, urlTemplate, postDa
   };
 
   var error = function(jqXHR, textStatus, errorThrown) {
+    if (textStatus == "parsererror") {
+      return;
+    }
     callback({
       error: errorThrown,
       text: textStatus
