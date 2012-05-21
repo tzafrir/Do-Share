@@ -51,6 +51,7 @@ function initialize() {
       }
     });
   } catch (e) {
+    _gaq.push(['_trackEvent', 'Failure', 'plus.init']);
     console.error(e);
     window.setTimeout(initialize, INIT_RETRY_INTERVAL);
   }
@@ -166,8 +167,9 @@ function fetchPostData(url, callback) {
   }
 
   fetchOzData(url, function(dataMap) {
-    var postData = dataMap[20];
-    if (!postData) {
+    var postData = dataMap && dataMap[20];
+    if ((!dataMap) || (!postData)) {
+      _gaq.push(['_trackEvent', 'Failure', 'fetchOzData']);
       console.error('Not a singleton post url');
       return;
     }
@@ -236,6 +238,7 @@ function profileAutocomplete(prefix, callback) {
 
 function handleMissedPost(post) {
   post.state = 'draft';
+  _gaq.push(['_trackEvent', 'MissedPost', 'MissedPost']);
   post.error = 'Chrome was not running at the scheduled time';
   addPost(post, c);
 }
@@ -263,6 +266,7 @@ function publish(post, callback) {
       callback = c;
     }
     if (response.status == false) {
+      _gaq.push(['_trackEvent', 'Failure', 'newPost']);
       post = JSON.parse(postBackup);
       post.state = 'draft';
       post.error = "Could not send post to Google+";
@@ -298,6 +302,7 @@ function addPost(post, callback) {
   } else if (state == "post") {
     publish(post, callback);
   } else {
+    _gaq.push(['_trackEvent', 'Failure', 'Invalid']);
     console.error('Invalid state');
     callback(false);
   }
@@ -418,6 +423,7 @@ function fetchPost(writeTimeStamp, callback) {
   var racer = function(item) {
     if (race) {
       // How did this happen? The assumption is that a post is is in only one of db, s.
+      _gaq.push(['_trackEvent', 'Failure', 'fetchPostRaceWTF']);
       console.error("WTF");
       return;
     }
@@ -442,12 +448,14 @@ function post(post, callback) {
       return;
     }
     if (!post) {
+      _gaq.push(['_trackEvent', 'Failure', 'MissingRequestPost']);
       console.error('Missing request.post');
       callback(false);
       return
     }
     var state = post.state;
     if (!state) {
+      _gaq.push(['_trackEvent', 'Failure', 'MissingPostState']);
       console.error('Missing post.state');
       callback(false);
       return;
@@ -479,6 +487,7 @@ function post(post, callback) {
     } else if (post.image_id) {
       plus.fetchPhotoMetadata(function(response) {
         if (response.error || !response.data) {
+          _gaq.push(['_trackEvent', 'Failure', 'fetchPhotoMetadata']);
           console.error(response);
           callback(false);
         } else {
@@ -498,6 +507,7 @@ function getLinkMedia(link, callback) {
   }
   plus.fetchLinkMedia(function(response) {
     if (!response.status) {
+      _gaq.push(['_trackEvent', 'Failure', 'fetchLinkMedia']);
       console.error('Error fetching media for ' + link);
     }
     if (response.data) {
@@ -523,6 +533,7 @@ function newPost(post) {
   if (post.image_id) {
     plus.fetchPhotoMetadata(function(response) {
       if (response.error || !response.data) {
+        _gaq.push(['_trackEvent', 'Failure', 'fetchPhotoMetadata']);
         console.error(response);
         callback(false);
       } else {
