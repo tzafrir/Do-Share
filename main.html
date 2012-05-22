@@ -815,11 +815,10 @@ function setListeners() {
     open: function() {
       $('.ui-autocomplete').css('width', 'inherit');
       $('#closeCircleChooser')
-          .css({display: 'inline-block', opacity: 0})
-          .animate({opacity: 1}, 200);
+          .css({opacity: 1});
     },
     close: function() {
-      $('#closeCircleChooser').fadeOut(200);
+      $('#closeCircleChooser').css({opacity: 0});
     },
     select: function(event, ui) {
       needRefresh = true;

@@ -71,7 +71,8 @@ img {
 }
 
 #closeCircleChooser {
-  display: none;
+  display: inline-block;
+  opacity: 0;
   width: 18px;
   height: 18px;
   background: url(img/closepost.png);
@@ -79,6 +80,7 @@ img {
   top: 5px;
   cursor: pointer;
   float: right;
+  -webkit-transition: opacity 0.2s ease-in-out;
 }
 
 #top {
