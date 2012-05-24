@@ -35,5 +35,7 @@
                     "https://plusone.google.com/*",
                     "background"
    ],
+   "optional_permissions": [ "https://picasaweb.google.com/",
+                             "https://www.google.com/" ],
    "minimum_chrome_version": "18"
 }

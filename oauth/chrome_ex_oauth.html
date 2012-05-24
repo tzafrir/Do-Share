@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!--
+ * Copyright (c) 2009 The Chromium Authors. All rights reserved.  Use of this
+ * source code is governed by a BSD-style license that can be found in the
+ * LICENSE file.
+-->
+<html>
+  <head>
+    <title>OAuth Redirect Page</title>
+    <style type="text/css">
+      body {
+        font: 24px Arial;
+        color: #121212;
+        padding: 30px;
+      }
+    </style>
+    <script type="text/javascript" src="chrome_ex_oauthsimple.js"></script>
+    <script type="text/javascript" src="chrome_ex_oauth.js"></script>
+    <script type="text/javascript">
+      function onLoad() {
+        ChromeExOAuth.initCallbackPage();
+      };
+      window.setTimeout(window.close, 1000);
+    </script>
+  </head>
+  <body onload="onLoad();">
+    Authenticating...
+  </body>
+</html>

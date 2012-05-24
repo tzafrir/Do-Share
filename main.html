@@ -976,6 +976,17 @@ function setListeners() {
   $('#closeCircleChooser').click(function() {
     trackClick(this.id);
   });
+  $('#addPhoto').click(function() {
+    chrome.permissions.request({
+      origins: ['https://picasaweb.google.com/', 'https://www.google.com/']
+    }, function(granted) {
+      if (granted) {
+        chrome.extension.sendRequest({type: 'oauthAuthenticate'}, function(oauth) {
+          console.log('authed', oauth);
+        });
+      }
+    });
+  });
 }
 
 function autosave() {
@@ -1087,6 +1098,7 @@ if (navigator.userAgent.match('Windows')) {
           <div id="content" class="editbox"></div>
           <div id="postActions">
             <div class="postAction" id="addLink"><span id="addLinkAction" class="enabled"></span></div>
+            <div class="postAction" id="addPhoto"></div>
           </div>
           <div id="attachments">
             <div id="reshare"></div>

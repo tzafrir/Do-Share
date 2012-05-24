@@ -220,6 +220,7 @@ img {
 .postAction {
   float: right;
   cursor: pointer;
+  margin-left: 10px;
 }
 
 .postAction span {
@@ -305,6 +306,13 @@ img {
 
 #addLinkAction.loaded {
   opacity: 0.7;
+}
+
+#addPhoto {
+  display: block;
+  width: 24px;
+  height: 20px;
+  background: url(img/addphoto_icon.png);
 }
 
 #postMedia {
