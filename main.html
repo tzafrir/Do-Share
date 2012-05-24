@@ -977,16 +977,65 @@ function setListeners() {
     trackClick(this.id);
   });
   $('#addPhoto').click(function() {
+    var authed = false;
+    function file_click() {
+      if (authed) {
+        $('#photo_file').click();
+        window.clearInterval(intervalId);
+      }
+    };
+    var intervalId = window.setInterval(file_click, 100);
     chrome.permissions.request({
       origins: ['https://picasaweb.google.com/', 'https://www.google.com/']
     }, function(granted) {
       if (granted) {
         chrome.extension.sendRequest({type: 'oauthAuthenticate'}, function(oauth) {
-          console.log('authed', oauth);
+          if (oauth) {
+            authed = true;
+          }
         });
+      } else {
+        window.clearInterval(intervalId);
       }
     });
   });
+  $('#photo_file').change(function() {
+    var file = this.files[0];
+    if (file) {
+      uploadImage(file);
+    }
+    this.value = '';
+  });
+}
+
+function uploadImage(file) {
+  var oauth = chrome.extension.getBackgroundPage().oauth;
+  var method = 'POST';
+  var url = 'https://picasaweb.google.com/data/feed/api/user/default/albumid/default';
+  var xhr = new XMLHttpRequest();
+  xhr.open(method, url, true);
+  xhr.setRequestHeader("GData-Version", '3.0');
+  xhr.setRequestHeader("Content-Type", file.type);
+  xhr.setRequestHeader("Slug", file.name);
+  xhr.setRequestHeader("Authorization", oauth.getAuthorizationHeader(url, method, ''));
+  xhr.onreadystatechange = function(data) {
+    if (xhr.readyState == 4) {
+      var match = xhr.response.match(/<gphoto:id>(\d+)<\/gphoto:id>/);
+      if (match && match[1]) {
+        $('#image_id').val(match[1]);
+        window.setTimeout(function(){
+          post('autosave');
+        }, 10);
+        match = xhr.response.match(/<content[^>]*src='([^']*)'/);
+        if (match && match[1]) {
+          var medias = {images: [{url: match[1]}]};
+          $('#attachments').addClass('notempty');
+          populateEditorMediaArea(medias);
+        }
+      }
+    }
+  };
+  xhr.send(file);
 }
 
 function autosave() {
@@ -1114,6 +1163,7 @@ if (navigator.userAgent.match('Windows')) {
         <input type="hidden" id="image_id" />
         <input type="hidden" id="share_id" />
         <input type="hidden" id="write_time_stamp" />
+        <input type="file" id="photo_file" accept="image/*" style="opacity: 0; position: absolute; top: -1000px;" />
       </div>
       <div id="barContainer" class="hideWhenCollapsed">
         <div id="circleChooserBar">

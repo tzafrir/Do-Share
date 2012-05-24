@@ -506,6 +506,7 @@ function post(post, callback) {
           callback(false);
         } else {
           post.rawMedia = [plus._createPicasaImageItem(response.data)];
+          post.medias = processMediaItems(post.rawMedia);
           postThis();
         }
       }, post.image_id);
