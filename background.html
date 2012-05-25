@@ -48,6 +48,13 @@ function initialize() {
     plus.init(function(response) {
       if (response.status) {
         plus.refreshCircles(c, true);
+
+        var uid = plus.getInfo().id;
+        if (uid != localStorage['prev_uid']) {
+          oauth.clearTokens();
+        }
+        localStorage['prev_uid'] = uid;
+
         window.setTimeout(initialize, INIT_REPEAT_INTERVAL);
       } else {
         window.setTimeout(initialize, INIT_RETRY_INTERVAL);
