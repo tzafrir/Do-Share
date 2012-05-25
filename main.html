@@ -50,6 +50,7 @@ var touch = {};
 var needRefresh = false;
 var gpe;
 var audienceChooser;
+var linked = {};
 
 var postsCurrentlyDisplayed = [];
 
@@ -464,7 +465,7 @@ function renderLinkElements(medias) {
   var chosenIndex = (medias.change && medias.change.chosenImageIndex) || 0;
   var removeDescription = !!(medias.change && medias.change.removeDescription);
 
-  var result = "<h3 id='linkTitle'><a href='" + link.url + "'>" + link.title + "</a></h3>";
+  var result = "<h3 id='linkTitle'><a href='" + link.url + "'>" + link.title + "</a><div id='removeLink'></div></h3>";
 
   if (medias.images[chosenIndex]) {
     var imagePicker = "<div id='imagePicker'>" +
@@ -596,6 +597,7 @@ function collapse(immediately) {
     sbutton.data('active', null);
     resetDeleteButton();
     $('.gp-mention').remove();
+    linked = {};
   }
 }
 
@@ -656,18 +658,20 @@ function setListeners() {
     $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
   });
   $('#addLink').delegate('.enabled', 'click', function() {
+    trackClick('addLink.open');
     $('#linkBar').show('blind', 200);
     $('#attachments').addClass('notempty');
     $(this).removeClass('enabled');
     $(this).addClass('disabled');
   });
   $('#addLink').delegate('.disabled', 'click', function() {
+    trackClick('addLink.close');
     $('#linkBar').hide('blind', 200);
     $('#attachments').removeClass('notempty');
     $(this).removeClass('disabled');
     $(this).addClass('enabled');
   });
-  $('#addLink').delegate('.loaded', 'click', function() {
+  function removeLink() {
     // Remove Link
     $('#link, #linkInput').val('');
     currentMedias = undefined;
@@ -677,10 +681,21 @@ function setListeners() {
     $(this).addClass('enabled');
     // Force autosave.
     post('autosave');
+  };
+  $('#addLink').delegate('.loaded', 'click', function() {
+    trackClick('addLink.removeLink');
+    removeLink();
+  });
+  $('#attachments').delegate('#removeLink', 'click', function() {
+    trackClick(this.id);
+    $('#addLinkAction').click();
   });
   $('#submitLink').click(function() {
+    trackClick(this.id);
     $('#link').val($('#linkInput').val());
-    $('#linkBar').hide('blind', 100);
+    if ($('#linkBar').is(':visible')) {
+      $('#linkBar').hide('blind', 100);
+    }
     populateEditorMediaArea();
   });
   $('#linkInput').keydown(function(e) {
@@ -975,6 +990,17 @@ function setListeners() {
   });
   $('#closeCircleChooser').click(function() {
     trackClick(this.id);
+  });
+  $('#editbox').bind('paste', function(evt) {
+    var pasted = evt.originalEvent.clipboardData.getData('text/plain');
+    if (pasted && pasted.match(/^http(|s):\/\/[^\s]*$/)) {
+      if (!(linked[pasted]) && !$('#addLinkAction').is('.loaded')) {
+        $('#attachments').addClass('notempty');
+        $('#linkInput').val(pasted);
+        $('#submitLink').click();
+        linked[pasted] = true;
+      }
+    }
   });
 }
 
