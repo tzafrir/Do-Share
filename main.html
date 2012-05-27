@@ -49,6 +49,7 @@ var mem = {};
 var touch = {};
 var needRefresh = false;
 var gpe;
+var title_gpe;
 var audienceChooser;
 var linked = {};
 
@@ -92,13 +93,16 @@ function getEditedPost(state, writeTimeStamp) {
   for (var id in gpe._mentioned) {
     mentioned[id] = gpe._mentioned[id];
   }
+  for (var id in title_gpe._mentioned) {
+    mentioned[id] = title_gpe._mentioned[id];
+  }
   return {
     'state': state,
-    'content': getContent() || '',
+    'content': getContent(gpe) || '',
     'share_id': val('share_id'),
     'reshare': (mem[writeTimeStamp] && mem[writeTimeStamp].reshare) || undefined,
     'image_id': val('image_id'),
-    'title': val('title'),
+    'title': getContent(title_gpe),
     'entities': audienceChooser.getEntities(),
     'timeStamp': new Date(Number(val('time'))).getTime() || undefined,
     'link': val('link') || undefined,
@@ -173,7 +177,7 @@ function getDateString(post) {
   }
 }
 
-function getContent() {
+function getContent(gpe) {
   return gpe && gpe.getText();
 }
 
@@ -229,10 +233,36 @@ function addDraftEditBox(post) {
   if (gpe) {
     gpe.destroy();
   }
+  if (title_gpe) {
+    title_gpe.destroy();
+  }
   gpe = new GPEditor(document.getElementById('content'),
-      content, writeTimeStamp, profileAutocompleter, mentioned);
+      content, writeTimeStamp, profileAutocompleter, mentioned, false);
+  title_gpe = new GPEditor(document.getElementById('title'),
+      title, 'Title', profileAutocompleter, mentioned, true);
+  function onchange(e) {
+    if (title_gpe.getText()) {
+      $('#titlePlaceholder').hide();
+    } else {
+      $('#titlePlaceholder').show().css({display: ''});
+    }
+  };
+  var t = document.getElementById('title');
+  t.addEventListener('DOMCharacterDataModified', onchange);
+  t.addEventListener('keyup', onchange);
+  t.addEventListener('keydown', onchange);
+  t.addEventListener('mouseup', onchange);
+  t.addEventListener('mousedown', function() {
+    window.setTimeout(onchange, 1);
+  });
+  onchange();
+  t.onkeydown = function(e) {
+    // Prevent ctrl-B
+    if (e.keyCode == 66 && e.ctrlKey) {
+      e.preventDefault();
+    }
+  }
 
-  $('#title').val(title);
   $('#share_id').val(share_id);
   $('#link, #linkInput').val(link);
   $('#image_id').val(image_id);
@@ -345,7 +375,7 @@ function renderPost(post) {
   touch[post.writeTimeStamp] = post.touch;
   var div = document.createElement('div');
   var date = getDateString(post);
-  var title = post.title || '';
+  var title = (post.title && GPEditor.prototype.plusFormatToHtml(post.title, post.mentioned)) || '';
 
   var error = post.error || '';
 
@@ -555,7 +585,7 @@ function populateEditorMediaArea(medias) {
 
 function uncollapse(force) {
   if ($('#editbox').is('.collapsed') || force === true) {
-    $('#title').attr({placeholder: 'Title (optional)'});
+    $('#titlePlaceholder').text('Title (optional)');
     $('#editbox').removeClass('collapsed');
     var pos = function() {
       $('#collapseEditbox').animate({opacity: 1}, 400);
@@ -574,7 +604,7 @@ function collapse(immediately) {
   if (!$('#editbox').is('.collapsed')) {
     $('#collapseEditbox').animate({opacity: 0}, 400);
     $('#postMedia').hide();
-    $('#title').attr({placeholder: "Create new post..."});
+    $('#titlePlaceholder').text('Create new post...');
     $('#editbox').addClass('collapsed');
     if (isEmptyPost(getEditedPost())) {
       delPost();
@@ -912,7 +942,10 @@ function setListeners() {
   $('#circleChooserBar')
       .delegate('#circleChooserBar *', 'click', function(e){e.stopPropagation();})
       .click(function() {$('#circleChooser').focus()});
-  $('#title').focus(uncollapse);
+  $('.titleBar').click(function() {
+    uncollapse();
+    $('.titleBar [contenteditable]').focus();
+  });
   $('#collapseEditbox').click(function() {
     collapse();
     trackClick(this.id);
@@ -1226,7 +1259,7 @@ if (navigator.userAgent.match('Windows')) {
     <div id="collapseEditbox"></div>
     <div id="writingArea">
       <div id="editbox">
-        <div class="titleBar"><input id="title" autocomplete="off" /></div>
+        <div class="titleBar"><div id="titlePlaceholder" class="gp-e-container"></div><div id="title"></div></div>
         <div class="hideWhenCollapsed">
           <div id="content" class="editbox"></div>
           <div id="postActions">

@@ -7,7 +7,7 @@
  *
  * @param{function(string, function(person<Array>))} profileAutocompleter.
  */
-function GPEditor(div, text, id, profileAutocompleter, mentionMap) {
+function GPEditor(div, text, id, profileAutocompleter, mentionMap, disableToolbar) {
   var toolbar = document.createElement('div');
   toolbar.innerHTML = 
       ('<div class="toolbar">' +
@@ -15,6 +15,12 @@ function GPEditor(div, text, id, profileAutocompleter, mentionMap) {
         '<span id="italicButton$"><em>I</em></span>' +
         '<span id="overStrike$"><strike>S</strike></span>' +
       '</div>').replace(/\$/g, id);
+  div.appendChild(toolbar);
+  this._toolbar = toolbar;
+
+  if (disableToolbar) {
+    toolbar.style.display = 'none';
+  }
 
   this.CONTAINER_CLASSNAME = 'gp-e-container';
   this._profileAutocompleter = profileAutocompleter;
@@ -25,12 +31,11 @@ function GPEditor(div, text, id, profileAutocompleter, mentionMap) {
 
   this.setText(text);
 
-  div.appendChild(toolbar);
   div.appendChild(container);
 
   this._div = div;
-  this._toolbar = toolbar;
   this._container = container;
+  this._id = id;
 
   Editor(container, id);
 
@@ -66,7 +71,9 @@ function GPEditor(div, text, id, profileAutocompleter, mentionMap) {
 }
 
 GPEditor.prototype.destroy = function() {
-  this._div.removeChild(this._toolbar);
+  if (this._toolbar) {
+    this._div.removeChild(this._toolbar);
+  }
   this._div.removeChild(this._container);
 }
 
@@ -121,7 +128,8 @@ GPEditor.prototype.normalizedHtmlToPlusFormat = function(element) {
       .replace(/( +|(&nbsp;)+)(<\/.*?>)/g, "$3$1")
       .replace(/<b><\/b>/g, '')
       .replace(/<i><\/i>/g, '')
-      .replace(/<(s|strike)><\/(s|strike)>/g, '');
+      .replace(/<(s|strike)><\/(s|strike)>/g, '')
+      .replace(/<p><br><\/p>/g, '<p></p>');
   return this.visitNormalizedHtmlNode(clone);
 }
 
@@ -246,9 +254,11 @@ GPEditor.prototype.onKeyDown = function(event, element) {
 
   var acDiv = $('<div>').addClass("ui-helper-clearfix")
       .addClass('gp-mention')
-      .appendTo($(document.body)),
-      input = $('<input>').addClass('gp-ac-input').appendTo(acDiv);
-
+      .appendTo($(document.body));
+  var input = $('<input>')
+      .addClass('gp-ac-input')
+      .appendTo(acDiv)
+      .attr({id: 'acInput' + this._id});
   input.position({
           my: 'left top',
           at: 'left bottom',
