@@ -1002,16 +1002,18 @@ function setListeners() {
   $('#photo_file').change(function() {
     var file = this.files[0];
     if (file) {
-      uploadImage(file);
+      createAlbumIfNotExisting(function(albumId) {
+        uploadImage(file, albumId);
+      });
     }
     this.value = '';
   });
 }
 
-function uploadImage(file) {
+function uploadImage(file, albumId) {
   var oauth = chrome.extension.getBackgroundPage().oauth;
   var method = 'POST';
-  var url = 'https://picasaweb.google.com/data/feed/api/user/default/albumid/default';
+  var url = 'https://picasaweb.google.com/data/feed/api/user/default/albumid/' + albumId;
   var xhr = new XMLHttpRequest();
   xhr.open(method, url, true);
   xhr.setRequestHeader("GData-Version", '3.0');
@@ -1036,6 +1038,54 @@ function uploadImage(file) {
     }
   };
   xhr.send(file);
+}
+
+function createAlbumIfNotExisting(callback) {
+  var ALBUM_TITLE = 'Photos from Do Share';
+  var oauth = chrome.extension.getBackgroundPage().oauth;
+  var url = 'https://picasaweb.google.com/data/feed/api/user/default/';
+  oauth.sendSignedRequest(url, function(data) {
+    var xml = $.parseXML(data);
+    var nodes = xml.querySelectorAll('entry');
+    var titleNodes = xml.querySelectorAll('entry > title');
+    var foundIndex = -1;
+    for (var i = 0; i < titleNodes.length; i++) {
+      if (titleNodes[i].childNodes[0].data == ALBUM_TITLE) {
+        foundIndex = i;
+        break;
+      }
+    }
+    if (foundIndex != -1) {
+      for (var i = 0; i < nodes[foundIndex].childNodes.length; i++) {
+        var child = nodes[foundIndex].childNodes[i];
+        if (child && child.tagName  == 'gphoto:id') {
+          callback(child.childNodes[0].data);
+          return;
+        }
+      }
+      console.error('Couldn\'t find gphoto:id');
+    } else {
+      oauth.sendSignedRequest(url, function(newAlbumData) {
+        var entry = $.parseXML(newAlbumData).querySelector('entry');
+        for (var i = 0; i < entry.childNodes.length; i++) {
+          var child = entry.childNodes[i];
+          if (child.tagName == 'gphoto:id') {
+            callback(child.childNodes[0].data);
+            return;
+          }
+        }
+      }, {
+        method: 'POST',
+        headers: {
+          'GData-Version': 3,
+          'Content-Type': 'application/atom+xml'
+        },
+        body: "<entry xmlns='http://www.w3.org/2005/Atom' xmlns:media='http://search.yahoo.com/mrss/' xmlns:gphoto='http://schemas.google.com/photos/2007'>\n" +
+              "<title type='text'>" + ALBUM_TITLE + "</title>\n" +
+              "<category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/photos/2007#album'></category></entry>"
+      });
+    }
+  });
 }
 
 function autosave() {
