@@ -243,10 +243,10 @@ function addDraftEditBox(post) {
 
   if (post.reshare) {
     $('#reshare').html(renderReshare(post));
-    $('#addLinkAction').attr({'class': 'invalid'});
+    $('#postActions span').attr({'class': 'invalid'});
   } else {
     $('#reshare').html('');
-    $('#addLinkAction').attr({'class': 'enabled'});
+    $('#postActions span').attr({'class': 'enabled'});
     populateEditorMediaArea(post.medias);
   }
 
@@ -658,14 +658,14 @@ function setListeners() {
   $('#addLink').delegate('.enabled', 'click', function() {
     $('#linkBar').show('blind', 200);
     $('#attachments').addClass('notempty');
-    $(this).removeClass('enabled');
-    $(this).addClass('disabled');
+    $('#postActions span').removeClass('enabled');
+    $('#postActions span').addClass('disabled');
   });
   $('#addLink').delegate('.disabled', 'click', function() {
     $('#linkBar').hide('blind', 200);
     $('#attachments').removeClass('notempty');
-    $(this).removeClass('disabled');
-    $(this).addClass('enabled');
+    $('#postActions span').removeClass('disabled');
+    $('#postActions span').addClass('enabled');
   });
   $('#addLink').delegate('.loaded', 'click', function() {
     // Remove Link
@@ -673,8 +673,8 @@ function setListeners() {
     currentMedias = undefined;
     $('#attachments').removeClass('notempty');
     $('#postMedia').hide('blind', 200, function(){$(this).html('');});
-    $(this).removeClass('loaded');
-    $(this).addClass('enabled');
+    $('#postActions span').removeClass('loaded');
+    $('#postActions span').addClass('enabled');
     // Force autosave.
     post('autosave');
   });
@@ -976,7 +976,7 @@ function setListeners() {
   $('#closeCircleChooser').click(function() {
     trackClick(this.id);
   });
-  $('#addPhoto').click(function() {
+  $('#addPhoto').delegate('.enabled', 'click', function() {
     var authed = false;
     function file_click() {
       if (authed) {
@@ -1000,6 +1000,7 @@ function setListeners() {
     });
   });
   $('#photo_file').change(function() {
+    $('#addPhotoAction').attr({class: 'invalid'});
     var file = this.files[0];
     if (file) {
       createAlbumIfNotExisting(function(albumId) {
@@ -1014,6 +1015,10 @@ function uploadImage(file, albumId) {
   var oauth = chrome.extension.getBackgroundPage().oauth;
   var method = 'POST';
   var url = 'https://picasaweb.google.com/data/feed/api/user/default/albumid/' + albumId;
+
+  $('#attachments').addClass('notempty');
+  $('#postMedia').html('<meter id="uploadProgress"></meter>').show('blind', 100);
+
   var xhr = new XMLHttpRequest();
   xhr.open(method, url, true);
   xhr.setRequestHeader("GData-Version", '3.0');
@@ -1031,12 +1036,14 @@ function uploadImage(file, albumId) {
         match = xhr.response.match(/<content[^>]*src='([^']*)'/);
         if (match && match[1]) {
           var medias = {images: [{url: match[1]}]};
-          $('#attachments').addClass('notempty');
           populateEditorMediaArea(medias);
         }
       }
     }
   };
+  xhr.upload.onprogress = function(event) {
+    $('#uploadProgress').val(event.loaded / file.size);
+  }.bind(this);
   xhr.send(file);
 }
 
@@ -1197,7 +1204,7 @@ if (navigator.userAgent.match('Windows')) {
           <div id="content" class="editbox"></div>
           <div id="postActions">
             <div class="postAction" id="addLink"><span id="addLinkAction" class="enabled"></span></div>
-            <div class="postAction" id="addPhoto"></div>
+            <div class="postAction" id="addPhoto"><span id="addPhotoAction" class="enabled"></span></div>
           </div>
           <div id="attachments">
             <div id="reshare"></div>
