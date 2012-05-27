@@ -1001,6 +1001,7 @@ function setListeners() {
         linked[pasted] = true;
       }
     }
+    $('#addPhotoAction').removeClass('active').addClass('disabled');
   });
   $('#addPhoto').delegate('.enabled', 'click', function() {
     var authed = false;
