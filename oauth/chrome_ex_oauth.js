@@ -261,7 +261,7 @@ ChromeExOAuth.fromConfig = function(oauth_config) {
  * the OAuth flow.  Once an access token is obtained, this function closes
  * chrome_ex_oauth.html.
  */
-ChromeExOAuth.initCallbackPage = function() {
+ChromeExOAuth.initCallbackPage = function(callback) {
   var background_page = chrome.extension.getBackgroundPage();
   var oauth_config = background_page.chromeExOAuthConfig;
   var oauth = ChromeExOAuth.fromConfig(oauth_config);
@@ -269,9 +269,7 @@ ChromeExOAuth.initCallbackPage = function() {
   oauth.initOAuthFlow(function (token, secret) {
     background_page.chromeExOAuthOnAuthorize(token, secret);
     background_page.chromeExOAuthRedirectStarted = false;
-    chrome.tabs.getSelected(null, function (tab) {
-      chrome.tabs.remove(tab.id);
-    });
+    callback();
   });
 };
 
