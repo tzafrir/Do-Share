@@ -529,6 +529,7 @@ function populateEditorMediaArea(medias) {
       $('#postMedia').show('blind', 500);
       $('#linkBar').hide('blind', 100);
     }
+    $('#postActions span').attr({'class': 'disabled'});
     $('#addLinkAction').attr({'class': 'loaded'});
   };
   if (link || mediasLink) {
