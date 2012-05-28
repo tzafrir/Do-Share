@@ -687,8 +687,8 @@ function setListeners() {
   $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
   $('#tellOthers').position({my: 'left', at: 'right', of: '#sendFeedback', offset: '20 0'});
   $(window).resize(function() {
-    $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
-    $('#tellOthers').position({my: 'left', at: 'right', of: '#sendFeedback', offset: '20 0'});
+    $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap', collision: 'none'});
+    $('#tellOthers').position({my: 'left', at: 'right', of: '#sendFeedback', offset: '20 0', collision: 'none'});
   });
   $('#addLink').delegate('.enabled', 'click', function() {
     trackClick('addLink.open');
