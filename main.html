@@ -678,8 +678,7 @@ function setListeners() {
     currentMedias = undefined;
     $('#attachments').removeClass('notempty');
     $('#postMedia').hide('blind', 200, function(){$(this).html('');});
-    $('#postActions span').removeClass('loaded');
-    $('#postActions span').addClass('enabled');
+    $('#postActions span').attr({'class': 'enabled'});
     // Force autosave.
     post('autosave');
   };
