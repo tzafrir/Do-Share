@@ -685,8 +685,10 @@ function changeTimeIfDraft() {
 
 function setListeners() {
   $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
+  $('#tellOthers').position({my: 'left', at: 'right', of: '#sendFeedback', offset: '20 0'});
   $(window).resize(function() {
     $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
+    $('#tellOthers').position({my: 'left', at: 'right', of: '#sendFeedback', offset: '20 0'});
   });
   $('#addLink').delegate('.enabled', 'click', function() {
     trackClick('addLink.open');
@@ -811,13 +813,13 @@ function setListeners() {
         collapse();
       }
     } else {
-      animateBlur($('#appWrap, #sendFeedback'), 5, 200, 0, 0.4);
+      animateBlur($('#appWrap, .topTab'), 5, 200, 0, 0.4);
       $('#information').fadeIn(1000);
     }
   });
   $('#iUnderstand').click(function() {
     trackClick(this.id);
-    animateBlur($('#appWrap, #sendFeedback'), 5, 200, 1.6, -0.4);
+    animateBlur($('#appWrap, .topTab'), 5, 200, 1.6, -0.4);
     $('#information').fadeOut(1000);
     localStorage['iUnderstand'] = '1';
     $('#buttonScheduleStepTwo').click();
@@ -845,6 +847,25 @@ function setListeners() {
         content: '\n\n#DoShareFeedback #DoShare\n\n_(CC @115470071077898720170)_',
         entities: [{personId: '115470071077898720170', name: 'Tzafrir Rehan'}],
         mentioned: {'115470071077898720170': 'Tzafrir Rehan'}
+      });
+      uncollapse();
+      $('[contenteditable]').focus();
+    }, 200);
+  });
+  $('#tellOthers').click(function(e) {
+    trackClick(this.id);
+    e.stopPropagation();
+    needRefresh = true;
+    autosave();
+    collapse();
+    window.setTimeout(function() {
+      addDraftEditBox({
+        content: 'I\'m using @101401846468080203736 by @115470071077898720170 to write and schedule my Google+ posts!\n\n#DoShare',
+        entities: [{circleId: 'PUBLIC', name: 'Public'},
+                   {personId: '115470071077898720170', name: 'Tzafrir Rehan'},
+                   {personId: '101401846468080203736', name: 'Do Share'}],
+        mentioned: {'115470071077898720170': 'Tzafrir Rehan', '101401846468080203736': 'Do Share'},
+        link: 'https://chrome.google.com/webstore/detail/oglhhmnmdocfhmhlekfdecokagmbchnf'
       });
       uncollapse();
       $('[contenteditable]').focus();
@@ -1320,7 +1341,8 @@ if (navigator.userAgent.match('Windows')) {
       Designed by <a href="https://twitter.com/joeltwits">Joel Califa</a>.
     </footer>
   </div>
-  <div id="sendFeedback">send feedback</div>
+  <div id="sendFeedback" class="topTab">send feedback</div>
+  <div id="tellOthers" class="topTab">tell others!</div>
   <div id="information" style="display: none">
     <h2>IMMA LET YOU FINISH SCHEDULING, BUT</h2>
     <p>Do Share is a <span>Chrome application<span> that runs <span><strong>only on your computer</strong></span>.<br>
