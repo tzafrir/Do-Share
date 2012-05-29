@@ -45,7 +45,7 @@ function addButton() {
   newButton.id = "ds-send-photo";
   newButton.querySelector("span").innerText = "Send to Do Share";
   newButton.onclick = function() {
-    chrome.extension.sendRequest({type: 'newPost', image_id: photoId});
+    chrome.extension.sendRequest({type: 'newPost', image_id: photoId, source: 'photoSend'});
   };
   buttonArea.insertBefore(newButton, button1);
 }

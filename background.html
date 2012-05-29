@@ -627,8 +627,10 @@ function onRequest(request, sender, callback) {
              link: request.link || '',
              image_id: request.image_id || '',
              writeTimeStamp: new Date().getTime()});
+    _gaq.push(['_trackEvent', 'Source', request.source || 'unknown']);
   } else if (type == "resharePost") {
     resharePost(request.url);
+    _gaq.push(['_trackEvent', 'Source', 'streamReshare']);
   } else if (type == 'getId') {
     if (!plus.isAuthenticated()) {
       plus.init(c);
