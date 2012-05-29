@@ -1215,7 +1215,10 @@ AudienceChooser.prototype.updateChooser = function() {
         entity.name + '</div>').append(
           $('<span>x</span>')
               .addClass('deleteEntityButton')
-              .click(function() {self.removeEntity(entity)})
+              .click(function(evt) {
+                self.removeEntity(entity);
+                evt.originalEvent.stopPropagation();
+              })
         )[0];
   })).prependTo($('#circleChooserBar'));
 }
