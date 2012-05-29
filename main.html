@@ -1058,6 +1058,7 @@ function setListeners() {
     $('#addPhotoAction').removeClass('active').addClass('disabled');
   });
   $('#addPhoto').delegate('.enabled', 'click', function() {
+    trackClick('addPhoto');
     var authed = false;
     function file_click() {
       if (authed) {
@@ -1077,6 +1078,7 @@ function setListeners() {
         });
       } else {
         window.clearInterval(intervalId);
+        _gaq.push(['_trackEvent', 'NotGranted', 'ChromePermissionsGoogleCom']);
       }
     });
   });
@@ -1125,6 +1127,7 @@ function uploadImage(file, albumId) {
   xhr.upload.onprogress = function(event) {
     $('#uploadProgress').val(event.loaded / file.size);
   }.bind(this);
+  xhr.onerror = function(){_gaq.push(['_trackEvent', 'Failure', 'imageUpload']);}
   xhr.send(file);
 }
 
@@ -1152,7 +1155,9 @@ function createAlbumIfNotExisting(callback) {
         }
       }
       console.error('Couldn\'t find gphoto:id');
+      _gaq.push(['_trackEvent', 'Failure', 'albumFeedParseError']);
     } else {
+      _gaq.push(['_trackEvent', 'NewAlbum', ALBUM_TITLE]);
       oauth.sendSignedRequest(url, function(newAlbumData) {
         var entry = $.parseXML(newAlbumData).querySelector('entry');
         for (var i = 0; i < entry.childNodes.length; i++) {
@@ -1162,6 +1167,7 @@ function createAlbumIfNotExisting(callback) {
             return;
           }
         }
+        _gaq.push(['_trackEvent', 'Failure', 'newAlbumIdParseError']);
       }, {
         method: 'POST',
         headers: {
@@ -1270,6 +1276,7 @@ function setDragAndDrop() {
         createAlbumIfNotExisting(function(albumId) {
           uploadImage(file, albumId);
         });
+        trackClick('photoDragDrop');
       }
       e.preventDefault();
     }
