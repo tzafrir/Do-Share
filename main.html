@@ -1238,6 +1238,44 @@ AudienceChooser.prototype.removeLastEntity = function() {
   this.updateChooser();
 }
 
+function setDragAndDrop() {
+  var editbox = document.getElementById('editbox');
+  function active() {
+    return $('#addPhotoAction').is('.enabled:visible');
+  }
+  editbox.ondragenter = function(e) {
+    if (active()) {
+      e.preventDefault();
+      return false;
+    }
+  }
+  editbox.ondragleave = function(e) {
+    if (active()) {
+      e.preventDefault();
+      return false;
+    }
+  }
+  editbox.ondragover = function(e) {
+    if (active()) {
+      e.dataTransfer.dropEffect = 'move';
+      e.preventDefault();
+      return false;
+    }
+  }
+  editbox.ondrop = function(e) {
+    if (active()) {
+      $('#addPhotoAction').attr({class: 'invalid'});
+      var file = e.dataTransfer.files[0];
+      if (file) {
+        createAlbumIfNotExisting(function(albumId) {
+          uploadImage(file, albumId);
+        });
+      }
+      e.preventDefault();
+    }
+  }
+}
+
 function onLoad() {
   var savedPostJson = localStorage['_tmp_post'];
   var savedPost;
@@ -1247,6 +1285,7 @@ function onLoad() {
   }
   localStorage.removeItem('_tmp_post');
   setListeners();
+  setDragAndDrop();
   addDraftEditBox(savedPost);
   refreshIfNeeded();
   window.setInterval(function() {
