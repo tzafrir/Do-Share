@@ -782,6 +782,14 @@ function setListeners() {
     }
   });
   $('#buttonDraft').click(function() {
+    if (document.getElementById('uploadProgress')) {
+      var jself = $(this);
+      animateButtonText(jself, 'uploading image', 300);
+      window.setTimeout(function() {
+        animateButtonText(jself, 'share now', 300);
+      }, 5000);
+      return;
+    }
     trackClick(this.id);
     post('draft');
     collapse();
@@ -806,6 +814,12 @@ function setListeners() {
         window.setTimeout(function() {
           animateButtonText(jself, 'schedule', 300);
         }, 5000);
+      } else if (document.getElementById('uploadProgress')) {
+        animateButtonText(jself, 'uploading image', 300);
+        $('#timeInput').timepicker('show');
+        window.setTimeout(function() {
+          animateButtonText(jself, 'schedule', 300);
+        }, 5000);
       } else {
         $('#time').val(date.getTime());
         post('scheduled');
@@ -824,6 +838,14 @@ function setListeners() {
     $('#buttonScheduleStepTwo').click();
   });
   $('#buttonPost').click(function() {
+    if (document.getElementById('uploadProgress')) {
+      var jself = $(this);
+      animateButtonText(jself, 'uploading image', 300);
+      window.setTimeout(function() {
+        animateButtonText(jself, 'share now', 300);
+      }, 5000);
+      return;
+    }
     trackClick(this.id);
     post('post');
     collapse();
