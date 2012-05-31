@@ -17,11 +17,10 @@ function addButton(button) {
 }
 
 function getPlusOneUrl() {
-  var fragments = document.location.toString().split('?')[1].split('&');
-  for (var i = 0; i < fragments.length; ++i) {
-    if (fragments[i].match(/^url=/)) {
-      return decodeURIComponent(fragments[i].split('=')[1]);
-    }
+  var l = document.location.toString();
+  var index = l.indexOf('url=');
+  if (index != -1) {
+    return decodeURIComponent(l.substring(index + 4).split('&')[0]);
   }
 }
 
