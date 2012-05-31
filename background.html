@@ -381,7 +381,7 @@ function processMediaItems(mediaArray) {
       result.images.push(image);
     }
     var type = media[24][3];
-    if (type.match("^text/") || type == "application/x-shockwave-flash") {
+    if (type && type.match("^text/") || type == "application/x-shockwave-flash") {
       result.link = {'url': media[24][1], 'title': media[3], 'description': media[21]};
     }
     if (type == "application/x-shockwave-flash") {
