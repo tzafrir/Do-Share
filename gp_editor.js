@@ -65,8 +65,8 @@ function GPEditor(div, text, id, profileAutocompleter, mentionMap, disableToolba
   }();
 
   var self = this;
-  container.onkeydown = function(event) {
-    self.onKeyDown(event, this);
+  container.onkeypress = function(event) {
+    self.onKeyPress(event, this);
   }
 }
 
@@ -202,14 +202,13 @@ GPEditor.prototype.visitNormalizedHtmlNode = function(element) {
   return s;
 }
 
-GPEditor.prototype.onKeyDown = function(event, element) {
+GPEditor.prototype.onKeyPress = function(event, element) {
   var KEY = {
-    PLUS: 187,
-    AT: 50
+    PLUS: 43,
+    AT: 64
   };
   var k = event.keyCode;
-  // TODO: @ bugs on AZERTY
-  if (!(/*(k == KEY.AT ||*/( k == KEY.PLUS) && event.shiftKey)) {
+  if (!(k == KEY.AT || k == KEY.PLUS)) {
     return;
   }
 
