@@ -1070,7 +1070,7 @@ function setListeners() {
   $('#editbox').bind('paste', function(evt) {
     var pasted = evt.originalEvent.clipboardData.getData('text/plain');
     if (pasted && pasted.match(/^http(|s):\/\/[^\s]*$/)) {
-      if (!(linked[pasted]) && !$('#addLinkAction').is('.loaded')) {
+      if (!(linked[pasted]) && $('#addLinkAction').is('.enabled')) {
         $('#attachments').addClass('notempty');
         $('#linkInput').val(pasted);
         $('#submitLink').click();
