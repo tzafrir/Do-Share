@@ -21,7 +21,7 @@ function onNodeInserted(e) {
 };
 
 function onNotificationNodeInserted(e) {
-  var update = e.target && e.target.querySelector(STREAM_UPDATE_SELECTOR);
+  var update = e.target && e.target.querySelector && e.target.querySelector(STREAM_UPDATE_SELECTOR);
   if (update) {
     processPost(update);
   }
