@@ -1,6 +1,8 @@
 IDBWrap = function(dbName, keyPath) {
   this._dbName = dbName;
   this._keyPath = keyPath;
+  this._cachedCount = 0;
+  this._cacheExpired = true;
   this.STORE_NAME = "IDBWrap.db";
   this.INTERVAL = 5000;
 };
@@ -24,6 +26,7 @@ IDBWrap.prototype.init = function(callback) {
 IDBWrap.prototype.put = function(item, callback) {
   var db = this._db;
   var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_WRITE);
+  this._cacheExpired = true;
   var store = trans.objectStore(this.STORE_NAME);
   var request = store.put(item);
 
@@ -37,15 +40,22 @@ IDBWrap.prototype.put = function(item, callback) {
  * @param {Function(Number)} callback.
  */
 IDBWrap.prototype.count = function(callback) {
-  var store = this._getItemStore();
-  var countRequest = store.count(IDBKeyRange.lowerBound(0));
-  countRequest.onsuccess = function(e) {
-    var result = e.target.result;
-    if (result != 0 && !result) {
-      return;
-    }
-    callback(result);
-  };
+  if (this._cacheExpired) {
+    var self = this;
+    var store = this._getItemStore();
+    var countRequest = store.count(IDBKeyRange.lowerBound(0));
+    countRequest.onsuccess = function(e) {
+      var result = e.target.result;
+      if (result != 0 && !result) {
+        return;
+      }
+      self._cacheExpired = false;
+      self._cachedCount = result;
+      callback(result);
+    };
+  } else {
+    callback(this._cachedCount);
+  }
 }
 
 IDBWrap.prototype.processItem = function(key, callback) {
@@ -124,6 +134,7 @@ IDBWrap.prototype._processAllItemsByRange = function(keyRange, callback) {
 IDBWrap.prototype._removeItem = function(key, callback) {
   var db = this._db;
   var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_WRITE);
+  this._cacheExpired = true;
   var store = trans.objectStore(this.STORE_NAME);
   var request = store.delete(key);
 
