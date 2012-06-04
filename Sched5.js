@@ -15,6 +15,8 @@ Sched5 = function(dbName, keyPath, scheduledCallback, missCallback) {
   this._scheduledCallback = scheduledCallback;
   this._missCallback = missCallback;
   this._expiredTasks = {};
+  this._cacheExpired = true;
+  this._cachedCount = 0;
   this.STORE_NAME = "scheduledItems";
   this.TIMESTAMP_INDEX = "timeStampIndex";
   this.TIMESTAMP_KEYPATH = "timeStamp";
@@ -48,6 +50,7 @@ Sched5.prototype.init = function(callback) {
 Sched5.prototype.schedule = function(item, timeStamp, callback) {
   var db = this._db;
   var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_WRITE);
+  this._cacheExpired = true;
   var store = trans.objectStore(this.STORE_NAME);
   var container = {"item": item};
   container[this.TIMESTAMP_KEYPATH] = timeStamp;
@@ -75,15 +78,22 @@ Sched5.prototype.processAllItems = function(callback) {
  * @param {Function(Number)} callback.
  */
 Sched5.prototype.count = function(callback) {
-  var store = this._getItemStore();
-  var countRequest = store.count(IDBKeyRange.lowerBound(0));
-  countRequest.onsuccess = function(e) {
-    var result = e.target.result;
-    if (result != 0 && !result) {
-      return;
-    }
-    callback(result);
-  };
+  var self = this;
+  if (this._cacheExpired) {
+    var store = this._getItemStore();
+    var countRequest = store.count(IDBKeyRange.lowerBound(0));
+    countRequest.onsuccess = function(e) {
+      var result = e.target.result;
+      if (result != 0 && !result) {
+        return;
+      }
+      self._cachedCount = result;
+      self._cacheExpired = false;
+      callback(result);
+    };
+  } else {
+    callback(this._cachedCount);
+  }
 }
 
 /**
@@ -180,6 +190,7 @@ Sched5.prototype._processAllContainersBefore = function(timeStamp, callback) {
 Sched5.prototype._removeItem = function(key, callback) {
   var db = this._db;
   var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_WRITE);
+  this._cacheExpired = true;
   var store = trans.objectStore(this.STORE_NAME);
   var request = store.delete(key);
 
