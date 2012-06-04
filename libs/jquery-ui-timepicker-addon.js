@@ -478,7 +478,6 @@ $.extend(Timepicker.prototype, {
 				}
 			});
 
-
 			// Updated by Peter Medeiros:
 			// - Pass in Event and UI instance into slide function
 			this.minute_slider = $tp.find('#ui_tpicker_minute_'+ dp_id).slider({
@@ -621,6 +620,15 @@ $.extend(Timepicker.prototype, {
 			}
 
 			var $buttonPanel = $dp.find('.ui-datepicker-buttonpane');
+
+			// HACK(tzafrir)
+      var wrapper = $('<div class="datePickerWrap">');
+      var dpTitle = $dp.children()[0];
+      var dpCalendar = $dp.children()[1];
+      wrapper.append(dpTitle);
+      wrapper.append(dpCalendar);
+      $dp.prepend(wrapper);
+
 			if ($buttonPanel.length) $buttonPanel.before($tp);
 			else $dp.append($tp);
 

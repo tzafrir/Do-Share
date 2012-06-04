@@ -196,10 +196,9 @@ function populateTimeFields(timeStamp) {
     }
     $('#time').val(timeStamp);
     var d = new Date(timeStamp);
-    $('#dateInput').val(f(d.getMonth() + 1) + '/' + f(d.getDate()) + '/' + d.getFullYear());
-    $('#timeInput').val(f(d.getHours()) + ':' + f(d.getMinutes()) + (d.getSeconds() ? ':' + f(d.getSeconds()) : ''));
+    $('#dateTimeInput').val(f(d.getMonth() + 1) + '/' + f(d.getDate()) + '/' + d.getFullYear() + ' ' + f(d.getHours()) + ':' + f(d.getMinutes()) + (d.getSeconds() ? ':' + f(d.getSeconds()) : ''));
   } else {
-    $('#dateInput').val('');
+    $('#dateTimeInput').val('');
     $('#timeInput').val('');
     $('#time').val('');
   }
@@ -629,6 +628,7 @@ function collapse(immediately) {
     resetDeleteButton();
     $('.gp-mention').remove();
     linked = {};
+    dateTimePickerSetup();
   }
 }
 
@@ -797,12 +797,11 @@ function setListeners() {
   $('#buttonScheduleStepTwo').click(function() {
     trackClick(this.id);
     if (localStorage['iUnderstand'] == "1") {
-      var timeInput = $('#timeInput').val();
-      var date = new Date($('#dateInput').val() + ' ' + timeInput);
+      var date = new Date($('#dateTimeInput').val());
       var jself = $(this);
       if (date.toString() == 'Invalid Date') {
         animateButtonText(jself, 'invalid time', 300);
-        $('#dateInput').timepicker('show');
+        $('#dateTimeInput').datetimepicker('show');
         window.setTimeout(function() {
           animateButtonText(jself, 'schedule', 300);
         }, 5000);
@@ -810,13 +809,12 @@ function setListeners() {
       }
       if (date < new Date()) {
         animateButtonText(jself, 'time too early', 300);
-        $('#timeInput').timepicker('show');
+        $('#dateTimeInput').datetimepicker('show');
         window.setTimeout(function() {
           animateButtonText(jself, 'schedule', 300);
         }, 5000);
       } else if (document.getElementById('uploadProgress')) {
         animateButtonText(jself, 'uploading image', 300);
-        $('#timeInput').timepicker('show');
         window.setTimeout(function() {
           animateButtonText(jself, 'schedule', 300);
         }, 5000);
@@ -1003,44 +1001,7 @@ function setListeners() {
       e.stopPropagation();
     });
   }
-  $('#dateInput').datepicker({
-    beforeShow: function(t, inst) {
-      if (!$('#dateInput').val()) {
-        $('#dateInput').datepicker('setDate', (new Date()));
-      }
-      window.setTimeout(function() {
-        inst.dpDiv.position({
-          my: 'center top',
-          at: 'center bottom',
-          of: '#dateInput',
-          collision: 'none'
-        });
-      }, 1);
-    },
-    onSelect: changeTimeIfDraft,
-    dayNamesMin: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
-    minDate: 0,
-    showButtonPanel: true,
-    showOtherMonths: true,
-		selectOtherMonths: true
-  });
-  $('#timeInput').timepicker({
-    currentText: '',
-    beforeShow: function(t, inst) {
-      if (!$('#timeInput').val()) {
-        $('#timeInput').timepicker('setDate', (new Date()));
-      }
-      window.setTimeout(function() {
-        inst.dpDiv.position({
-          my: 'center top',
-          at: 'center bottom',
-          of: '#timeInput',
-          collision: 'none'
-        });
-      }, 1);
-    },
-    onSelect: changeTimeIfDraft,
-  });
+  dateTimePickerSetup();
   $('#attachments').delegate('#imagePickPrev', 'click', function() {
     shiftChosenImage(-1);
   });
@@ -1113,6 +1074,35 @@ function setListeners() {
       });
     }
     this.value = '';
+  });
+}
+
+function dateTimePickerSetup() {
+  $('#dateTimeInput').datetimepicker('destroy');
+  $('#dateTimeInput').datetimepicker({
+    currentText: 'today',
+    closeText: 'done',
+    minDate: 0,
+    beforeShow: function(t, inst) {
+      if (!$('#dateTimeInput').val()) {
+        $('#dateTimeInput').datetimepicker('setDate', (new Date()));
+      }
+      window.setTimeout(function() {
+        inst.dpDiv.position({
+          my: 'center top',
+          at: 'center bottom',
+          of: '#scheduleBar',
+          collision: 'none',
+          offset: '0 -1'
+        });
+      }, 1);
+    },
+    onSelect: changeTimeIfDraft,
+    dayNamesMin: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+    minDate: 0,
+    showButtonPanel: true,
+    showOtherMonths: true,
+		selectOtherMonths: true
   });
 }
 
@@ -1389,8 +1379,7 @@ if (navigator.userAgent.match('Windows')) {
       <div class="clearFix"></div>
       <div id="scheduleBar">
         <p>
-          Share on <input id="dateInput" placeholder="mm/dd/yyyy" />
-          at <input id="timeInput" placeholder="HH:MM" />
+          <span>Share at <input id="dateTimeInput" placeholder="mm/dd/yyyy HH:MM" /></span>
           <button id="buttonScheduleStepTwo">schedule</button>
         </p>
       </div>

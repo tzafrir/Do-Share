@@ -557,11 +557,16 @@ meter::-webkit-meter-optimum-value {
   border: 1px solid #bebebe;
   background: #f6f9f3;
   margin-top: 10px;
-  margin-bottom: 120px;
+  margin-bottom: 210px;
   padding: 10px;
   display: none;
   font-size: 13px;
   color: #7b7c79;
+}
+
+#scheduleBar > p > span {
+  font-size: 15px;
+  margin-left: 185px;
 }
 
 #scheduleBar input {
@@ -814,6 +819,7 @@ body #ui-datepicker-div .ui-widget-header {
 body #ui-datepicker-div {
   background: #fff;
   font-family: Roboto, Helvetica, Arial, sans-serif;
+  width: 500px;
 }
 
 body .ui-datepicker th {
@@ -911,12 +917,42 @@ body .ui-datepicker-next-hover.ui-state-hover {
   background-position-x: -65px;
 }
 
+.ui-timepicker-div {
+  float: right;
+  margin-top: 41px;
+  margin-right: 20px;
+  width: 230px;
+}
+
+.datePickerWrap {
+  float: left;
+  margin-left: 20px;
+}
+
+.ui-datepicker-buttonpane {
+  clear: both;
+}
+
 .ui-timepicker-div dl dt,
 .ui-timepicker-div dl dd {
   margin-left: 5px;
   padding: 0 0 3px 5px;
   color: #121212;
   font-size: 15px;
+}
+
+.ui-timepicker-div .ui-slider {
+  margin-bottom: 10px;
+}
+
+.ui_tpicker_time {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-right: 20px;
+}
+
+.ui_tpicker_minute_label {
+  margin-top: 21px;
 }
 
 #circleChooserBar .ui-autocomplete.ui-menu,
