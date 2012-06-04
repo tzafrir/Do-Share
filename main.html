@@ -585,6 +585,9 @@ function populateEditorMediaArea(medias) {
 
 function uncollapse(force) {
   if ($('#editbox').is('.collapsed') || force === true) {
+    if ($('#shareUrlContainer').is(':visible')) {
+      $('#shareUrlContainer').hide('blind', 400);
+    }
     $('#titlePlaceholder').text('Title (optional)');
     $('#editbox').removeClass('collapsed');
     var pos = function() {
@@ -1298,6 +1301,19 @@ function setDragAndDrop() {
   }
 }
 
+function handleUrlHandoff() {
+  var tabJson = localStorage['_tmp_tab'];
+  localStorage.removeItem('_tmp_tab');
+  if (tabJson) {
+    var tab = JSON.parse(tabJson);
+    $('#shareUrlContainer')
+      .append($('<div class="savedUrlDiv">')
+        .append($('<p>Share <a href="' + tab.url + '">' + tab.title + '</a></p>')
+            .prepend($(tab.favIconUrl ? '<img src="' + tab.favIconUrl + '" width=16 height=16>' : ''))))
+      .show();
+  }
+}
+
 function onLoad() {
   var savedPostJson = localStorage['_tmp_post'];
   var savedPost;
@@ -1318,6 +1334,7 @@ function onLoad() {
   } else {
     collapse(true);
   }
+  handleUrlHandoff();
   (function() {
    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
    ga.src = 'https://ssl.google-analytics.com/ga.js';
@@ -1364,6 +1381,7 @@ if (navigator.userAgent.match('Windows')) {
         <input type="hidden" id="write_time_stamp" />
         <input type="file" id="photo_file" accept="image/*" style="opacity: 0; position: absolute; top: -1000px;" />
       </div>
+      <div id="shareUrlContainer"></div>
       <div id="barContainer" class="hideWhenCollapsed">
         <div id="circleChooserBar">
           <input id="circleChooser" placeholder="+ Add more people&hellip;">

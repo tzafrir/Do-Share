@@ -275,6 +275,40 @@ img {
   display: block;
 }
 
+#shareUrlContainer {
+  height: 50px;
+  padding: 15px 10px 0px 10px;
+  background: white;
+  margin-top: 10px;
+  border: 1px solid #DEDEDE;
+  cursor: pointer;
+  display: none;
+}
+
+#shareUrlContainer img {
+  position: relative;
+  right: 3px;
+  top: 2px;
+}
+
+#shareUrlContainer p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 3px;
+}
+
+#shareUrlContainer a {
+  width: 540px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  text-decoration: none;
+  color: #98224C;
+  padding-bottom: 2px;
+}
+
 #linkBar {
   display: none;
   height: 50px;
