@@ -52,6 +52,7 @@ var gpe;
 var title_gpe;
 var audienceChooser;
 var linked = {};
+var activeXhr;
 
 var postsCurrentlyDisplayed = [];
 
@@ -234,6 +235,10 @@ function addDraftEditBox(post) {
   }
   if (title_gpe) {
     title_gpe.destroy();
+  }
+  if (activeXhr) {
+    activeXhr.abort();
+    activeXhr = undefined;
   }
   gpe = new GPEditor(document.getElementById('content'),
       content, writeTimeStamp, profileAutocompleter, mentioned, false);
@@ -605,6 +610,10 @@ function uncollapse(force) {
 
 function collapse(immediately) {
   if (!$('#editbox').is('.collapsed')) {
+    if (activeXhr) {
+      activeXhr.abort();
+      activeXhr = undefined;
+    }
     $('#collapseEditbox').animate({opacity: 0}, 400);
     $('#postMedia').hide();
     $('#titlePlaceholder').text('Create new post...');
@@ -1153,6 +1162,7 @@ function uploadImage(file, albumId) {
     $('#uploadProgress').val(event.loaded / file.size);
   }.bind(this);
   xhr.onerror = function(){_gaq.push(['_trackEvent', 'Failure', 'imageUpload']);}
+  activeXhr = xhr;
   xhr.send(file);
 }
 
