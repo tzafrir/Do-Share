@@ -127,6 +127,10 @@ img {
   display: none;
 }
 
+.titleBar {
+  cursor: text;
+}
+
 .editbox .gp-e-container,
 .titleBar .gp-e-container {
   min-height: 70px;
