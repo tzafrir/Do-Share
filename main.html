@@ -1091,6 +1091,10 @@ function setListeners() {
     uncollapse();
     addLink($('#shareUrlContainer a').attr('href'));
   });
+  $('#attachments').delegate('a', 'dragstart', function(evt) {
+    evt.originalEvent.dataTransfer.setData('text/html',
+        '<a href=' + this.href + '>' + this.href + '</a>');
+  });
 }
 
 function addLink(url) {
