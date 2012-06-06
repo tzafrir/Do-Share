@@ -1157,54 +1157,55 @@ function uploadImage(file, albumId) {
 }
 
 function createAlbumIfNotExisting(callback) {
-  var ALBUM_TITLE = 'Photos from Do Share';
+  var ALBUM_TITLE = 'Photos from Do Share ';
   var oauth = chrome.extension.getBackgroundPage().oauth;
   var url = 'https://picasaweb.google.com/data/feed/api/user/default/';
   oauth.sendSignedRequest(url, function(data) {
-    var xml = $.parseXML(data);
-    var nodes = xml.querySelectorAll('entry');
-    var titleNodes = xml.querySelectorAll('entry > title');
-    var foundIndex = -1;
-    for (var i = 0; i < titleNodes.length; i++) {
-      if (titleNodes[i].childNodes[0].data == ALBUM_TITLE) {
-        foundIndex = i;
-        break;
-      }
-    }
-    if (foundIndex != -1) {
-      for (var i = 0; i < nodes[foundIndex].childNodes.length; i++) {
-        var child = nodes[foundIndex].childNodes[i];
-        if (child && child.tagName  == 'gphoto:id') {
-          callback(child.childNodes[0].data);
-          return;
-        }
-      }
-      console.error('Couldn\'t find gphoto:id');
+    var json;
+    try {
+      json = JSON.parse(data);
+    } catch(e) {
+      console.error(e);
       _gaq.push(['_trackEvent', 'Failure', 'albumFeedParseError']);
-    } else {
-      _gaq.push(['_trackEvent', 'NewAlbum', ALBUM_TITLE]);
-      oauth.sendSignedRequest(url, function(newAlbumData) {
-        var entry = $.parseXML(newAlbumData).querySelector('entry');
-        for (var i = 0; i < entry.childNodes.length; i++) {
-          var child = entry.childNodes[i];
-          if (child.tagName == 'gphoto:id') {
-            callback(child.childNodes[0].data);
-            return;
-          }
-        }
-        _gaq.push(['_trackEvent', 'Failure', 'newAlbumIdParseError']);
-      }, {
-        method: 'POST',
-        headers: {
-          'GData-Version': 3,
-          'Content-Type': 'application/atom+xml'
-        },
-        body: "<entry xmlns='http://www.w3.org/2005/Atom' xmlns:media='http://search.yahoo.com/mrss/' xmlns:gphoto='http://schemas.google.com/photos/2007'>\n" +
-              "<title type='text'>" + ALBUM_TITLE + "</title>\n" +
-              "<category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/photos/2007#album'></category></entry>"
-      });
     }
-  });
+    try {
+      var albums = json.feed.entry;
+      var album = albums.filter(function(album) {
+        return album.title && album.title.$t == ALBUM_TITLE;
+      })[0];
+      if (album) {
+        var id = album.gphoto$id.$t;
+        if (id) {
+          callback(id);
+        }
+      } else {
+        _gaq.push(['_trackEvent', 'NewAlbum', ALBUM_TITLE]);
+        oauth.sendSignedRequest(url, function(newAlbumData) {
+          var entry = $.parseXML(newAlbumData).querySelector('entry');
+          for (var i = 0; i < entry.childNodes.length; i++) {
+            var child = entry.childNodes[i];
+            if (child.tagName == 'gphoto:id') {
+              callback(child.childNodes[0].data);
+              return;
+            }
+          }
+          _gaq.push(['_trackEvent', 'Failure', 'newAlbumIdParseError']);
+        }, {
+          method: 'POST',
+          headers: {
+            'GData-Version': 3,
+            'Content-Type': 'application/atom+xml'
+          },
+          body: "<entry xmlns='http://www.w3.org/2005/Atom' xmlns:media='http://search.yahoo.com/mrss/' xmlns:gphoto='http://schemas.google.com/photos/2007'>\n" +
+                "<title type='text'>" + ALBUM_TITLE + "</title>\n" +
+                "<category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/photos/2007#album'></category></entry>"
+        });
+      }
+    } catch(e) {
+      console.error('Error visiting album objects', e);
+      _gaq.push(['_trackEvent', 'Failure', 'albumInternalError: ' + e.toString()]);
+    }
+  }, {parameters: {alt: 'json'}});
 }
 
 function autosave() {
