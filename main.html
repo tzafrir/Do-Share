@@ -1157,7 +1157,7 @@ function uploadImage(file, albumId) {
 }
 
 function createAlbumIfNotExisting(callback) {
-  var ALBUM_TITLE = 'Photos from Do Share ';
+  var ALBUM_TITLE = 'Photos from Do Share';
   var oauth = chrome.extension.getBackgroundPage().oauth;
   var url = 'https://picasaweb.google.com/data/feed/api/user/default/';
   oauth.sendSignedRequest(url, function(data) {
@@ -1177,21 +1177,25 @@ function createAlbumIfNotExisting(callback) {
         var id = album.gphoto$id.$t;
         if (id) {
           callback(id);
+        } else {
+          throw "No id in album";
         }
       } else {
         _gaq.push(['_trackEvent', 'NewAlbum', ALBUM_TITLE]);
         oauth.sendSignedRequest(url, function(newAlbumData) {
-          var entry = $.parseXML(newAlbumData).querySelector('entry');
-          for (var i = 0; i < entry.childNodes.length; i++) {
-            var child = entry.childNodes[i];
-            if (child.tagName == 'gphoto:id') {
-              callback(child.childNodes[0].data);
-              return;
+          try {
+            var id = JSON.parse(newAlbumData).entry.gphoto$id.$t;
+            if (id) {
+              callback(id);
+            } else {
+              throw "no id in newAlbumData";
             }
+          } catch (e) {
+            _gaq.push(['_trackEvent', 'Failure', 'new album error: ' + e.toString()]);
           }
-          _gaq.push(['_trackEvent', 'Failure', 'newAlbumIdParseError']);
         }, {
           method: 'POST',
+          parameters: {alt: 'json'},
           headers: {
             'GData-Version': 3,
             'Content-Type': 'application/atom+xml'
