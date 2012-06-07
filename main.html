@@ -1108,17 +1108,28 @@ function setListeners() {
     }
     var timeoutId = window.setTimeout(function() {
       $(this).data('timeoutId', null);
-      var dialog = $('<div>').addClass('circleNotifyDialog').appendTo(document.body).position({
+      var dialog = $('<div>').addClass('circleNotifyDialog').appendTo(document.body);
+      var sum = 0;
+      for (var key in circlesNotify) {
+        sum += circlesNotify[key];
+      }
+      if (sum + $(this).data('count') <= 100 || circlesNotify[$(this).data('id')]) {
+        dialog.append(
+          $('<input id="notify_' + $(this).data('id') + '" type="checkbox" ' +
+              (circlesNotify[$(this).data('id')] ? 'checked' : '') + '>' +
+              '<label for="notify_' + $(this).data('id') + '">' +
+              'notify ' + $(this).data('count') + ' people about this post</label>'));
+      } else {
+        dialog.addClass('notifyTooMany');
+        dialog.append($('<span>cannot notify ' + $(this).data('count') + ' people' +
+            '<br>only up to 100 people may be notified about a post</span>'));
+      }
+      dialog.position({
         my: 'center bottom',
         at: 'center top',
         of: this,
         offset: '0 1'
-      }).append(
-        $('<input id="notify_' + $(this).data('id') + '" type="checkbox" ' +
-            (circlesNotify[$(this).data('id')] ? 'checked' : '') + '>' +
-            '<label for="notify_' + $(this).data('id') + '">' +
-            'notify ' + $(this).data('count') + ' people about this post</label>')
-      ).hide()
+      }).hide()
         .fadeIn(300)
         .data('owner', this)
         .data('id', $(this).data('id'))
@@ -1321,6 +1332,7 @@ AudienceChooser.prototype.updateChooser = function() {
           $('<span>x</span>')
               .addClass('deleteEntityButton')
               .click(function(evt) {
+                $(this).trigger('mouseout');
                 self.removeEntity(entity);
                 evt.originalEvent.stopPropagation();
               })

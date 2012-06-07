@@ -512,6 +512,11 @@ meter::-webkit-meter-optimum-value {
   text-align: center;
 }
 
+.circleNotifyDialog.notifyTooMany {
+  width: 400px;
+  height: 50px;
+}
+
 .circleNotifyDialog input {
   float: left;
   margin: 1px;
