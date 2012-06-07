@@ -1095,6 +1095,37 @@ function setListeners() {
     evt.originalEvent.dataTransfer.setData('text/html',
         '<a href=' + this.href + '>' + this.href + '</a>');
   });
+  $('#circleChooserBar').delegate('.audienceChooserEntity', 'mouseover', function(){
+    if ($(this).data('dialog')) {
+      return;
+    }
+    var timeoutId = window.setTimeout(function() {
+      $(this).data('timeoutId', null);
+      var dialog = $('<div>').addClass('circleNotifyDialog').appendTo(document.body).position({
+        my: 'center bottom',
+        at: 'center top',
+        of: this,
+        offset: '0 1'
+      }).hide().fadeIn(300).data('owner', this);
+      $(this).data('dialog', dialog);
+    }.bind(this), 1000);
+    $(this).data('timeoutId', timeoutId);
+  }).delegate('.audienceChooserEntity', 'mouseout', function(evt) {
+    var timeoutId = $(this).data('timeoutId');
+    if (timeoutId) {
+      window.clearTimeout(timeoutId);
+    } else if (!$(evt.toElement).is('.circleNotifyDialog')) {
+      $(this).data('dialog').remove();
+      $(this).data('dialog', null);
+    }
+  });
+  $(document).delegate('.circleNotifyDialog', 'mouseout', function(evt) {
+    if ($(evt.toElement).is('.audienceChooserEntity')) {
+      return;
+    }
+    $($(this).data('owner')).data('dialog', null);
+    $(this).remove();
+  });
 }
 
 function addLink(url) {

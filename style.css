@@ -500,6 +500,14 @@ meter::-webkit-meter-optimum-value {
   cursor: pointer;
 }
 
+.circleNotifyDialog {
+  width: 200px;
+  height: 100px;
+  border-radius: 10px;
+  border: 1px solid #121212;
+  background: white;
+}
+
 #circleChooser {
   width: auto;
   height: 28px;
