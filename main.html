@@ -98,6 +98,10 @@ function getEditedPost(state, writeTimeStamp) {
   for (var id in title_gpe._mentioned) {
     mentioned[id] = title_gpe._mentioned[id];
   }
+  var circlesNotifyArray = [];
+  for (var key in circlesNotify) {
+    circlesNotifyArray.push(key);
+  }
   return {
     'state': state,
     'content': getContent(gpe) || '',
@@ -110,7 +114,9 @@ function getEditedPost(state, writeTimeStamp) {
     'link': val('link') || undefined,
     'touch': new Date().getTime(),
     'mentioned': mentioned,
-    'medias': currentMedias
+    'medias': currentMedias,
+    'circlesNotify': circlesNotify,
+    'circlesNotifyArray': circlesNotifyArray
   };
 }
 

@@ -483,7 +483,26 @@ function post(post, callback) {
     }
 
     function postThis() {
-      addPost(post, callback);
+      var a = post.circlesNotifyArray;
+      post.notify = [];
+      if (a && a.length > 0) {
+        var len = a.length;
+        a.forEach(function(id) {
+          plus.getPeople({circle_id: id}, function(result) {
+            if (result.data) {
+              result.data.forEach(function(person) {
+                post.notify.push(person.id);
+              });
+            }
+            len--;
+            if (len == 0) {
+              addPost(post, callback);
+            }
+          })
+        });
+      } else {
+        addPost(post, callback);
+      }
     }
 
     // If reshare, don't waste time on fetching media links.
