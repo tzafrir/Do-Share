@@ -47,7 +47,7 @@ function initialize() {
   try {
     plus.init(function(response) {
       if (response.status) {
-        plus.refreshCircles(c, true);
+        plus.refreshCircles(c);
 
         var uid = plus.getInfo().id;
         if (uid != localStorage['prev_uid']) {

@@ -52,6 +52,7 @@ var gpe;
 var title_gpe;
 var audienceChooser;
 var linked = {};
+var circlesNotify = {};
 var activeXhr;
 
 var postsCurrentlyDisplayed = [];
@@ -229,6 +230,7 @@ function addDraftEditBox(post) {
     link = medias.link && medias.link.url || '';
   }
   currentMedias = medias;
+  circlesNotify = post.circlesNotify || {};
 
   if (gpe) {
     gpe.destroy();
@@ -640,6 +642,7 @@ function collapse(immediately) {
     resetDeleteButton();
     $('.gp-mention').remove();
     linked = {};
+    circlesNotify = {};
     dateTimePickerSetup();
   }
 }
@@ -956,7 +959,8 @@ function setListeners() {
           return {
             name: circle.name,
             circleId: circle.circleId || circle.id,
-            photoUrl: circle.photoUrl || 'img/icon_circle.png'
+            photoUrl: circle.photoUrl || 'img/icon_circle.png',
+            count: circle.count
           };
         }).filter(function(circle) {
           // Drop circles that are already chosen.
@@ -1099,6 +1103,9 @@ function setListeners() {
     if ($(this).data('dialog')) {
       return;
     }
+    if (!$(this).data('count')) {
+      return;
+    }
     var timeoutId = window.setTimeout(function() {
       $(this).data('timeoutId', null);
       var dialog = $('<div>').addClass('circleNotifyDialog').appendTo(document.body).position({
@@ -1106,25 +1113,48 @@ function setListeners() {
         at: 'center top',
         of: this,
         offset: '0 1'
-      }).hide().fadeIn(300).data('owner', this);
+      }).append(
+        $('<input id="notify_' + $(this).data('id') + '" type="checkbox" ' +
+            (circlesNotify[$(this).data('id')] ? 'checked' : '') + '>' +
+            '<label for="notify_' + $(this).data('id') + '">' +
+            'notify ' + $(this).data('count') + ' people about this post</label>')
+      ).hide()
+        .fadeIn(300)
+        .data('owner', this)
+        .data('id', $(this).data('id'))
+        .data('count', $(this).data('count'));
       $(this).data('dialog', dialog);
-    }.bind(this), 1000);
+    }.bind(this), 666);
     $(this).data('timeoutId', timeoutId);
   }).delegate('.audienceChooserEntity', 'mouseout', function(evt) {
     var timeoutId = $(this).data('timeoutId');
     if (timeoutId) {
       window.clearTimeout(timeoutId);
-    } else if (!$(evt.toElement).is('.circleNotifyDialog')) {
+    } else if ($(this).data('dialog')) {
+      if ($(evt.toElement).is('.circleNotifyDialog, .audienceChooserEntity, .audienceChooserEntity *')) {
+        return;
+      }
       $(this).data('dialog').remove();
       $(this).data('dialog', null);
     }
   });
   $(document).delegate('.circleNotifyDialog', 'mouseout', function(evt) {
-    if ($(evt.toElement).is('.audienceChooserEntity')) {
+    if ($(evt.toElement).is('.circleNotifyDialog, .circleNotifyDialog *') ||
+        $(evt.toElement).is($(this).data('owner'))) {
       return;
     }
     $($(this).data('owner')).data('dialog', null);
     $(this).remove();
+  });
+  $(document).delegate('.circleNotifyDialog input[type=checkbox]', 'change', function(evt) {
+    var checked = evt.target.checked;
+    var p = $(this.parentNode);
+    var id = p.data('id');
+    if (checked) {
+      circlesNotify[id] = p.data('count');
+    } else {
+      delete circlesNotify[id];
+    }
   });
 }
 
@@ -1294,7 +1324,8 @@ AudienceChooser.prototype.updateChooser = function() {
                 self.removeEntity(entity);
                 evt.originalEvent.stopPropagation();
               })
-        )[0];
+        ).data('count', entity.count || null)
+        .data('id', entity.circleId || null)[0];
   })).prependTo($('#circleChooserBar'));
 }
 
