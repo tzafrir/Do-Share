@@ -130,7 +130,7 @@ function isEmptyPost(post) {
       if (post[key].length > 3) {
         return false;
       }
-    } else if (post[key] && key != 'touch') {
+    } else if (post[key] && key != 'touch' && key != 'notify' && key != 'circlesNotify' && key != 'circlesNotifyArray') {
       return false;
     }
   }
