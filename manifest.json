@@ -1,7 +1,7 @@
 {
   "name": "Do Share",
   "description": "Manage your posts on Google+™",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "background_page": "background.html",
   "options_page": "privacy.html",
   "icons": {

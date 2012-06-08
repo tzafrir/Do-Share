@@ -30,11 +30,6 @@ function addButton() {
     return
   }
 
-  var photoId = getPhotoId();
-  if (!photoId) {
-    return;
-  }
-
   var buttonArea = document.querySelector(PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR);
   if (!buttonArea) {
     console.error('no button area found');
@@ -45,6 +40,10 @@ function addButton() {
   newButton.id = "ds-send-photo";
   newButton.querySelector("span").innerText = "Send to Do Share";
   newButton.onclick = function() {
+    var photoId = getPhotoId();
+    if (!photoId) {
+      return;
+    }
     chrome.extension.sendRequest({type: 'newPost', image_id: photoId, source: 'photoSend'});
   };
   buttonArea.insertBefore(newButton, button1);
