@@ -30,6 +30,10 @@ function addButton() {
     return
   }
 
+  if (!getPhotoId()) {
+    return;
+  }
+
   var buttonArea = document.querySelector(PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR);
   if (!buttonArea) {
     console.error('no button area found');
