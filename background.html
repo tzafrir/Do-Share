@@ -47,7 +47,12 @@ function initialize() {
   try {
     plus.init(function(response) {
       if (response.status) {
-        plus.refreshCircles(c);
+        console._error = console.error;
+        console.error = console.warn;
+        plus.refreshCircles(function(e){
+          c(e);
+          console.error = console._error;
+        });
 
         var uid = plus.getInfo().id;
         if (uid != localStorage['prev_uid']) {
