@@ -600,7 +600,7 @@ function resharePost(url) {
                 share_id: data.update_id,
                 writeTimeStamp: new Date().getTime()};
     var lastUsed = localStorage['lastUsedCircles'];
-    if (lastUsed) {
+    if (lastUsed && data.isPublic) {
       post.entities = JSON.parse(lastUsed);
     } else {
       post.entities = [];
