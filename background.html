@@ -211,6 +211,7 @@ function fetchPostData(url, callback) {
     data.update_id = postData[8];
     data.url = 'https://plus.google.com/' + postData[21];
     data.timeStamp = postData[5];
+    data.isPublic = (postData[32] === 1);
 
     if (!reshare_person_data) {
       data.author_name = name;
