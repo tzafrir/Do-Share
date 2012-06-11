@@ -941,12 +941,18 @@ function setListeners() {
     },
     source: function(request, callback) {
       chrome.extension.sendRequest({type: 'getCircles'}, function(circles) {
-        var matchingCircles = [
-          {
+        var curTimeStamp = $('#write_time_stamp').val();
+        var matchingCircles = [];
+
+        // TODO: Can later change to check against true once backwards compatibility isn't an issue.
+        if (!(mem[curTimeStamp].reshare && mem[curTimeStamp].reshare.isPublic === false)) {
+          matchingCircles = matchingCircles.concat([{
             name: 'Public',
             circleId: 'PUBLIC',
             photoUrl: 'img/icon_public.png'
-          },
+          }]);
+        }
+        matchingCircles = matchingCircles.concat([
           {
             name: 'Extended Circles',
             circleId: 'EXTENDED_CIRCLES',
@@ -957,7 +963,7 @@ function setListeners() {
             circleId: 'YOUR_CIRCLES',
             photoUrl: 'img/icon_circles.png'
           }
-        ].concat(circles.filter(function(circle) {
+        ]).concat(circles.filter(function(circle) {
           return !(circle.id == '15' || circle.name == 'Blocked');
         })).filter(function(circle) {
           return !!circle.name.toLowerCase().match(request.term.toLowerCase());
