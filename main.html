@@ -935,6 +935,10 @@ function setListeners() {
       $('#closeCircleChooser').css({opacity: 0});
     },
     select: function(event, ui) {
+      if (ui.item.circleId == 'NO_PUBLIC') {
+        $('#circleChooser').autocomplete('search', '');
+        return false;
+      }
       needRefresh = true;
       audienceChooser.addEntity(ui.item);
       $('#circleChooser').autocomplete('search', '');
@@ -949,6 +953,12 @@ function setListeners() {
           matchingCircles = matchingCircles.concat([{
             name: 'Public',
             circleId: 'PUBLIC',
+            photoUrl: 'img/icon_public.png'
+          }]);
+        } else {
+          matchingCircles = matchingCircles.concat([{
+            name: 'P̶u̶b̶l̶i̶c̶ &nbsp;&nbsp; (Original post shared with a limited audience)',
+            circleId: 'NO_PUBLIC',
             photoUrl: 'img/icon_public.png'
           }]);
         }
