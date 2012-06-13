@@ -610,7 +610,7 @@ function newPost(post) {
 function resharePost(url, htmlContent, mentioned) {
   // HACKKKKKKKKKKK
   var div = document.createElement('div');
-  div.innerHTML = htmlContent;
+  div.innerHTML = htmlContent || '';
   var content = gpe.visitNormalizedHtmlNode(div);
   fetchPostData(url, function(data) {
     var post = {reshare: data,
