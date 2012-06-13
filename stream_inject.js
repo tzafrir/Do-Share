@@ -11,6 +11,9 @@ var BUTTON_CLASSNAME = 'Tj';
 var BUTTONS_SELECTOR = 'div.esw, div.' + BUTTON_CLASSNAME;
 var SPAN_CLASSNAME = 'iq';
 
+var SHARE_BUTTON_CLASSNAME = 'c-b-fa';
+var FADED_SHARE_BUTTON_CLASSNAME = 'c-b-D';
+
 function onNodeInserted(e) {
   // This happens when a new stream is selected
   if (e.target && e.target.id && e.target.id.indexOf('update') == 0) {
@@ -18,6 +21,7 @@ function onNodeInserted(e) {
   } else if (e.relatedNode && e.relatedNode.parentNode && e.relatedNode.parentNode.id == 'contentPane') {
     processAllItems();
   }
+  addDoShareButtonOnInsertion(e);
 };
 
 function onNotificationNodeInserted(e) {
@@ -25,6 +29,35 @@ function onNotificationNodeInserted(e) {
   if (update) {
     processPost(update);
   }
+  addDoShareButtonOnInsertion(e);
+}
+
+function addDoShareButtonOnInsertion(e) {
+  var ATTRIBUTE = 'ds_added';
+  var shareButton = e.relatedNode && e.relatedNode.querySelector &&
+      e.relatedNode.querySelector('.' + SHARE_BUTTON_CLASSNAME + '[role=button]');
+  if (shareButton && !shareButton.getAttribute(ATTRIBUTE)) {
+    shareButton.setAttribute(ATTRIBUTE, '1');
+    var clone = shareButton.cloneNode(true);
+    clone.className = clone.className.replace(FADED_SHARE_BUTTON_CLASSNAME, '');
+    clone.onclick = sendToDoShare;
+    clone.innerHTML = 'Send to Do Share';
+    shareButton.parentElement.appendChild(clone);
+  }
+}
+
+function sendToDoShare() {
+  var sharebox;
+  var c = this;
+  while (!sharebox && c) {
+    c = c.parentElement;
+    if (!c) {
+      return;
+    }
+    sharebox = c.querySelector('[contenteditable]');
+  }
+  var source = (document.location.toString().match('notifications/frame')) ? 'notificationShareBox' : 'gplusShareBox';
+  chrome.extension.sendRequest({type: 'newPost', content: sharebox.innerText, source: source}, function(){});
 }
 
 /**
