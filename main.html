@@ -305,7 +305,9 @@ function renderReshare(post) {
     return '';
   }
   var rs = post.reshare;
-  return '<div class="reshare"><h2>' + rs.author_name + ' originally shared this ' +
+  return '<div class="reshare">' +
+         '<div id="removeReshare"></div>' +
+         '<h2>' + rs.author_name + ' originally shared this ' +
          '<a href="' + rs.url + '">post</a> ' +
          (rs.via_name ? ' (via ' + rs.via_name + ')' : '') +
          ':</h2>' +
@@ -1121,6 +1123,15 @@ function setListeners() {
   $('#attachments').delegate('a', 'dragstart', function(evt) {
     evt.originalEvent.dataTransfer.setData('text/html',
         '<a href=' + this.href + '>' + this.href + '</a>');
+  }).delegate('#removeReshare', 'click', function(evt) {
+    trackClick(this.id);
+    delete mem[val('write_time_stamp')].reshare;
+    $('#attachments').hide('blind', '200', function() {
+      $(this).removeClass('notempty');
+      $('#reshare').html('');
+      $(this).show();
+      post('autosave');
+    });
   });
   $('#circleChooserBar').delegate('.audienceChooserEntity', 'mouseover', function(){
     if ($(this).data('dialog')) {

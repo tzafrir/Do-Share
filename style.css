@@ -70,7 +70,7 @@ img {
   margin: 0 auto;
 }
 
-#closeCircleChooser, #removeLink {
+#closeCircleChooser, #removeLink, #removeReshare {
   display: inline-block;
   opacity: 0;
   width: 18px;
@@ -83,7 +83,7 @@ img {
   -webkit-transition: opacity 0.2s ease-in-out;
 }
 
-#removeLink {
+#removeLink, #removeReshare {
   opacity: 1;
   position: relative;
   top: -12px;
