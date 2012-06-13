@@ -1131,7 +1131,8 @@ function setListeners() {
       $('#reshare').html('');
       $(this).show();
       $('#share_id').val('');
-      post('autosave');
+      needRefresh = true;
+      autosave();
     });
   });
   $('#circleChooserBar').delegate('.audienceChooserEntity', 'mouseover', function(){
