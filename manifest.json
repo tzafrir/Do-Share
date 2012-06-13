@@ -22,7 +22,7 @@
    },
    {
     "all_frames": true,
-    "js": [ "stream_inject.js" ],
+    "js": [ "stream_inject.js", "comment_inject.js" ],
     "matches": [ "http://plus.google.com/*", "https://plus.google.com/*" ],
     "run_at": "document_start"
    } ],
