@@ -68,9 +68,6 @@ function getCommentContent(element) {
     element = element.parentElement;
   }
   var content = element.querySelector('.' + COMMENT_CONTENT_CLASSNAME);
-  if (!content) {
-    debugger;
-  }
   return content && content.innerText;
 }
 
