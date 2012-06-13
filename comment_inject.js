@@ -17,29 +17,61 @@ var COMMENT_NAME_CLASSNAME = "gi ld qm";
 
 var DELETED_COMMENT_CLASSNAME = "re";
 
+var COMMENT_CONTENT_CLASSNAME = 'Si';
+
 // Major DRY violation here...
 var PROFILE_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".") + ", ." + COMMENT_NAME_CLASSNAME.replace(/ /g, ".");
 var POST_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".");
 
 // The flags container
-var PLUSONE_SELECTOR = "button.esw";
+var PLUSONE_SELECTOR = "button.esw.DC";
 
 function extractProfile(profile) {
-    return { profileLink: profile, profileName: profile.getAttribute('oid'), realName: profile.textContent };
+    return { profileLink: profile,
+             profileId: profile.getAttribute('oid'),
+             realName: profile.textContent};
 }
 
-function addClickListener(button, userId) {
+function addClickListener(button, profileDetails, content) {
   button.addEventListener("click", function(e) {
     e.stopPropagation();
-    console.log('TODO');
+    var mentioned = {};
+    mentioned[profileDetails.profileId] = profileDetails.realName;
+    chrome.extension.sendRequest({type: 'resharePost',
+        content: formatCommentPost(content, profileDetails.profileId),
+        mentioned: mentioned,
+        url: getPostUrl(button)});
   }, false);
 }
 
-function findCommentDiv(element) {
+function getPostUrl(button) {
+  var n = button;
+  while (!(n.id && n.id.match(/^update/))) {
+    n = n.parentElement;
+  }
+  return n.querySelector('[target=_blank]').href;
+}
+
+function formatCommentPost(content, profileId) {
+  var $ = '_A comment ';
+  if (profileId == selfId) {
+    $ += 'I ';
+  } else {
+    $ += ('@' + profileId + ' ');
+  }
+  $ += ('wrote on the original post:_\n\n' + content + '\n\n_(Shared using #DoShare)_');
+  return $;
+}
+
+function getCommentContent(element) {
   while (!(element.id && element.id.match(/.+#[0-9]+/))) {
     element = element.parentElement;
   }
-  return element;
+  var content = element.querySelector('.' + COMMENT_CONTENT_CLASSNAME);
+  if (!content) {
+    debugger;
+  }
+  return content && content.innerText;
 }
 
 function getPostOwnerUrl(button) {
@@ -110,11 +142,10 @@ function processFooters(first) {
 
     var newButton = document.createElement('a');
     newButton.setAttribute('role', 'button');
-    newButton.textContent = 'Send to Do Share';
+    newButton.textContent = 'Share Comment';
     button.parentElement.appendChild(document.createTextNode('\u00a0\u00a0-\u00a0\u00a0'));
     button.parentElement.appendChild(newButton, null);
-    addClickListener(newButton, profile.profileName);
-    //displayFirstWhenSecondIsHovered(newButton, findCommentDiv(button));
+    addClickListener(newButton, profile, getCommentContent(button.parentElement));
   }
   window.setTimeout(processFooters, RESCAN_PERIOD);
 }
