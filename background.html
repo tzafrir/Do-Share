@@ -24,6 +24,9 @@ function trackPost(post) {
     pub = true;
   }
   _gaq.push(['_trackEvent', 'Post', (pub ? 'public' : 'limited')]);
+  if (post.circlesNotifyArray && post.circlesNotifyArray.length) {
+    _gaq.push(['_trackEvent', 'NotifyCircles', (pub ? 'public' : 'limited'), 'NotifyCircles', post.circlesNotifyArray.length]);
+  }
 }
 
 var ACTION_UPDATE_INTERVAL = 666;
