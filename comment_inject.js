@@ -38,7 +38,7 @@ function addClickListener(button, profileDetails, content) {
     var mentioned = {};
     mentioned[profileDetails.profileId] = profileDetails.realName;
     chrome.extension.sendRequest({type: 'resharePost',
-        content: formatCommentPost(content, profileDetails.profileId),
+        htmlContent: formatCommentPost(content, profileDetails.profileId),
         mentioned: mentioned,
         url: getPostUrl(button)});
   }, false);
@@ -53,13 +53,14 @@ function getPostUrl(button) {
 }
 
 function formatCommentPost(content, profileId) {
-  var $ = '_A comment ';
+  content = content.replace(/class="proflink(|Prefix|Wrapper)"/g, '');
+  var $ = '<i>A comment ';
   if (profileId == selfId) {
     $ += 'I ';
   } else {
     $ += ('@' + profileId + ' ');
   }
-  $ += ('wrote on the original post:_\n\n' + content + '\n\n_(Shared using #DoShare)_');
+  $ += ('wrote on the original post:</i><br><br>' + content + '<br><br><i>(Shared using #DoShare)</i>');
   return $;
 }
 
@@ -68,7 +69,7 @@ function getCommentContent(element) {
     element = element.parentElement;
   }
   var content = element.querySelector('.' + COMMENT_CONTENT_CLASSNAME);
-  return content && content.innerText;
+  return content && content.innerHTML;
 }
 
 function getPostOwnerUrl(button) {

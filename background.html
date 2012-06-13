@@ -11,6 +11,12 @@
 
 <script src="IDBWrap/wrap.js"></script>
 <script src="/Sched5.js"></script>
+
+<script>
+// HACKKKKKKKKKKK
+function Editor(){};
+</script>
+<script src="gp_editor.js"></script>
 <script>
 
 var _gaq = _gaq || [];
@@ -103,6 +109,10 @@ var oauth = ChromeExOAuth.initBackgroundPage({
 });
 
 var actionController = new BrowserActionController();
+
+// HACKKKKK
+var fakeDiv = document.createElement('div');
+var gpe = new GPEditor(fakeDiv, '', 'fake', function(){}, {}, true);
 
 var previousTotal;
 var previousLogicBits;
@@ -597,7 +607,11 @@ function newPost(post) {
   }
 }
 
-function resharePost(url, content, mentioned) {
+function resharePost(url, htmlContent, mentioned) {
+  // HACKKKKKKKKKKK
+  var div = document.createElement('div');
+  div.innerHTML = htmlContent;
+  var content = gpe.visitNormalizedHtmlNode(div);
   fetchPostData(url, function(data) {
     var post = {reshare: data,
                 share_id: data.update_id,
@@ -659,7 +673,7 @@ function onRequest(request, sender, callback) {
              writeTimeStamp: new Date().getTime()});
     _gaq.push(['_trackEvent', 'Source', request.source || 'unknown']);
   } else if (type == "resharePost") {
-    resharePost(request.url, request.content, request.mentioned);
+    resharePost(request.url, request.htmlContent, request.mentioned);
     _gaq.push(['_trackEvent', 'Source', 'streamReshare']);
   } else if (type == 'getId') {
     if (!plus.isAuthenticated()) {
