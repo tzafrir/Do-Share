@@ -35,9 +35,10 @@ function onNotificationNodeInserted(e) {
 function addDoShareButtonOnInsertion(e) {
   var ATTRIBUTE = 'ds_added';
   var shareButton = e.relatedNode && e.relatedNode.querySelector &&
-      e.relatedNode.querySelector('.' + SHARE_BUTTON_CLASSNAME + '[role=button]');
+      e.relatedNode.querySelector('.' + SHARE_BUTTON_CLASSNAME + '[guidedhelpid=sharebutton]');
   if (shareButton && !shareButton.getAttribute(ATTRIBUTE)) {
     shareButton.setAttribute(ATTRIBUTE, '1');
+    var sharebox = getShareBox(shareButton);
     var clone = shareButton.cloneNode(true);
     clone.className = clone.className.replace(FADED_SHARE_BUTTON_CLASSNAME, '');
     clone.onclick = sendToDoShare;
@@ -46,15 +47,21 @@ function addDoShareButtonOnInsertion(e) {
   }
 }
 
-function sendToDoShare() {
-  var sharebox;
+function getShareBox() {
   var c = this;
-  while (!sharebox && c) {
-    c = c.parentElement;
-    if (!c) {
-      return;
+  while (c.parentElement) {
+    var sharebox = c.querySelector('[contenteditable]');
+    if (sharebox) {
+      return sharebox;
     }
-    sharebox = c.querySelector('[contenteditable]');
+    c = c.parentElement;
+  }
+}
+
+function sendToDoShare(sharebox) {
+  var sharebox = getShareBox(shareButton);
+  if (!sharebox) {
+    return;
   }
   var source = (document.location.toString().match('notifications/frame')) ? 'notificationShareBox' : 'gplusShareBox';
   chrome.extension.sendRequest({type: 'newPost', content: sharebox.innerText, source: source}, function(){});
