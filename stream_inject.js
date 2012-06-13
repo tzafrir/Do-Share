@@ -38,17 +38,18 @@ function addDoShareButtonOnInsertion(e) {
       e.relatedNode.querySelector('.' + SHARE_BUTTON_CLASSNAME + '[guidedhelpid=sharebutton]');
   if (shareButton && !shareButton.getAttribute(ATTRIBUTE)) {
     shareButton.setAttribute(ATTRIBUTE, '1');
-    var sharebox = getShareBox(shareButton);
     var clone = shareButton.cloneNode(true);
     clone.className = clone.className.replace(FADED_SHARE_BUTTON_CLASSNAME, '');
-    clone.onclick = sendToDoShare;
+    clone.onclick = function() {
+      sendToDoShare(shareButton);
+    }
     clone.innerHTML = 'Send to Do Share';
     shareButton.parentElement.appendChild(clone);
   }
 }
 
-function getShareBox() {
-  var c = this;
+function getShareBox(shareButton) {
+  var c = shareButton;
   while (c.parentElement) {
     var sharebox = c.querySelector('[contenteditable]');
     if (sharebox) {
@@ -58,7 +59,7 @@ function getShareBox() {
   }
 }
 
-function sendToDoShare(sharebox) {
+function sendToDoShare(shareButton) {
   var sharebox = getShareBox(shareButton);
   if (!sharebox) {
     return;
