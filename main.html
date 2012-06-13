@@ -1114,6 +1114,7 @@ function setListeners() {
   $('#shareUrlContainer').delegate('a', 'click', function(evt) {
     evt.originalEvent.preventDefault();
   }).click(function() {
+    trackClick(this.id);
     uncollapse();
     addLink($('#shareUrlContainer a').attr('href'));
   });
