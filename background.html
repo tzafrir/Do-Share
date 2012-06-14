@@ -613,14 +613,16 @@ function resharePost(url, htmlContent, mentioned) {
   div.innerHTML = htmlContent || '';
   var content = gpe.visitNormalizedHtmlNode(div);
   fetchPostData(url, function(data) {
-    var postIdentifier;
-    if (!data.via_id) {
-      postIdentifier = 'the original post';
-    } else {
-      mentioned[data.via_id] = data.via_name;
-      postIdentifier = '@' + data.via_id + '\'s reshare of the original post';
+    if (htmlContent && mentioned) {
+      var postIdentifier;
+      if (!data.via_id) {
+        postIdentifier = 'the original post';
+      } else {
+        mentioned[data.via_id] = data.via_name;
+        postIdentifier = '@' + data.via_id + '\'s reshare of the original post';
+      }
+      content = content.replace('${DS_POST_IDENTIFIER}', postIdentifier);
     }
-    content = content.replace('${DS_POST_IDENTIFIER}', postIdentifier);
     var post = {reshare: data,
                 share_id: data.update_id,
                 content: content,
