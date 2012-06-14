@@ -684,7 +684,7 @@ function onRequest(request, sender, callback) {
     _gaq.push(['_trackEvent', 'Source', request.source || 'unknown']);
   } else if (type == "resharePost") {
     resharePost(request.url, request.htmlContent, request.mentioned);
-    _gaq.push(['_trackEvent', 'Source', (request.htmlContent ? 'commentReshare' : 'streamReshare']);
+    _gaq.push(['_trackEvent', 'Source', (request.htmlContent ? 'commentReshare' : 'streamReshare')]);
   } else if (type == 'getId') {
     if (!plus.isAuthenticated()) {
       plus.init(c);
