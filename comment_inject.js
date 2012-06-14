@@ -23,7 +23,6 @@ var COMMENT_CONTENT_CLASSNAME = 'Si';
 var PROFILE_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".") + ", ." + COMMENT_NAME_CLASSNAME.replace(/ /g, ".");
 var POST_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".");
 
-// The flags container
 var PLUSONE_SELECTOR = "button.esw.DC";
 
 function extractProfile(profile) {

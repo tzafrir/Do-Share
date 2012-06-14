@@ -13,6 +13,7 @@ var SPAN_CLASSNAME = 'iq';
 
 var SHARE_BUTTON_CLASSNAME = 'c-b-fa';
 var FADED_SHARE_BUTTON_CLASSNAME = 'c-b-D';
+var EDIT_BUTTON_CLASSNAME = 'c-b-J';
 
 function onNodeInserted(e) {
   // This happens when a new stream is selected
@@ -45,6 +46,13 @@ function addDoShareButtonOnInsertion(e) {
     }
     clone.innerHTML = 'Send to Do Share';
     shareButton.parentElement.appendChild(clone);
+
+    // Workaround for Edit button
+    window.setTimeout(function() {
+      if (shareButton.className.match(EDIT_BUTTON_CLASSNAME)) {
+        shareButton.parentElement.removeChild(clone);
+      }
+    }, 10);
   }
 }
 
