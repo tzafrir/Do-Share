@@ -1131,6 +1131,7 @@ function setListeners() {
       $('#reshare').html('');
       $(this).show();
       $('#share_id').val('');
+      $('#postActions span').attr({'class': 'enabled'});
       needRefresh = true;
       autosave();
     });
