@@ -1074,9 +1074,9 @@ function setListeners() {
       if (!(linked[pasted]) && $('#addLinkAction').is('.enabled')) {
         addLink(pasted);
         linked[pasted] = true;
+        $('#addPhotoAction').removeClass('active').addClass('disabled');
       }
     }
-    $('#addPhotoAction').removeClass('active').addClass('disabled');
   });
   $('#addPhoto').delegate('.enabled', 'click', function() {
     trackClick('addPhoto');
