@@ -4,9 +4,6 @@
 <script type="text/javascript" src="/jsapi/jsapi_database.js"></script>
 <script type="text/javascript" src="/jsapi/jsapi_for_google_plus.js"></script>
 
-<script src="oauth/chrome_ex_oauth.js"></script>
-<script src="oauth/chrome_ex_oauthsimple.js"></script>
-
 <script src="/browser_action_controller.js"></script>
 
 <script src="IDBWrap/wrap.js"></script>
@@ -95,17 +92,6 @@ db.init(function(ok){
   dbInitCallback(ok);
   s = new Sched5("nightwatch", "writeTimeStamp", publishScheduled, handleMissedPost);
   s.init(dbInitCallback);
-});
-
-// Oauth setup
-var oauth = ChromeExOAuth.initBackgroundPage({
-  'request_url': 'https://www.google.com/accounts/OAuthGetRequestToken',
-  'authorize_url': 'https://www.google.com/accounts/OAuthAuthorizeToken',
-  'access_url': 'https://www.google.com/accounts/OAuthGetAccessToken',
-  'consumer_key': 'anonymous',
-  'consumer_secret': 'anonymous',
-  'scope': 'https://picasaweb.google.com/data/',
-  'app_name': 'Do Share'
 });
 
 var actionController = new BrowserActionController();
@@ -727,4 +713,18 @@ chrome.browserAction.onClicked.addListener(function(tab) {
  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 
+</script>
+<script src="oauth/chrome_ex_oauth.js"></script>
+<script src="oauth/chrome_ex_oauthsimple.js"></script>
+<script>
+// Oauth setup
+var oauth = ChromeExOAuth.initBackgroundPage({
+  'request_url': 'https://www.google.com/accounts/OAuthGetRequestToken',
+  'authorize_url': 'https://www.google.com/accounts/OAuthAuthorizeToken',
+  'access_url': 'https://www.google.com/accounts/OAuthGetAccessToken',
+  'consumer_key': 'anonymous',
+  'consumer_secret': 'anonymous',
+  'scope': 'https://picasaweb.google.com/data/',
+  'app_name': 'Do Share'
+});
 </script>
