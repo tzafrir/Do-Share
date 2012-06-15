@@ -841,6 +841,11 @@ function setListeners() {
         window.setTimeout(function() {
           animateButtonText(jself, 'schedule', 300);
         }, 5000);
+      } else if (getEditedPost().entities.length == 0) {
+        animateButtonText(jself, 'select circles', 300);
+        window.setTimeout(function() {
+          animateButtonText(jself, 'schedule', 300);
+        }, 5000);
       } else {
         $('#time').val(date.getTime());
         post('scheduled');
@@ -859,9 +864,15 @@ function setListeners() {
     $('#buttonScheduleStepTwo').click();
   });
   $('#buttonPost').click(function() {
+    var jself = $(this);
     if (document.getElementById('uploadProgress')) {
-      var jself = $(this);
       animateButtonText(jself, 'uploading image', 300);
+      window.setTimeout(function() {
+        animateButtonText(jself, 'share now', 300);
+      }, 5000);
+      return;
+    } else if (getEditedPost().entities.length == 0) {
+      animateButtonText(jself, 'select circles', 300);
       window.setTimeout(function() {
         animateButtonText(jself, 'share now', 300);
       }, 5000);
