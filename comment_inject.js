@@ -139,7 +139,7 @@ function processFooters(first) {
 
     var newButton = document.createElement('a');
     newButton.setAttribute('role', 'button');
-    newButton.textContent = 'Share Comment';
+    newButton.textContent = 'Share';
     button.parentElement.appendChild(document.createTextNode('\u00a0\u00a0-\u00a0\u00a0'));
     button.parentElement.appendChild(newButton, null);
     addClickListener(newButton, profile, getCommentContent(button.parentElement));
