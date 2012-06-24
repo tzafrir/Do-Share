@@ -64,7 +64,7 @@ function initialize() {
           console.error = console.warn;
           var count = result.length;
           result.forEach(function(api) {
-            if (!api.isAuthenticated()) {
+            if (!(api.getInfo() && api.getInfo().id == uid)) {
               api.init(function() {
                 apis[api.getInfo().id] = api;
               });
