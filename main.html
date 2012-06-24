@@ -606,7 +606,9 @@ function uncollapse(force) {
     $('#titlePlaceholder').text('Title (optional)');
     $('#editbox').removeClass('collapsed');
     var pos = function() {
-      $('#collapseEditbox').animate({opacity: 1}, 400);
+      $('#collapseEditbox').css({cursor: ''})
+          .attr({title: $('#collapseEditbox').data('title')})
+          .animate({opacity: 1}, 400);
     };
     if (force === true) {
       $('.hideWhenCollapsed').show();
@@ -624,7 +626,11 @@ function collapse(immediately) {
       activeXhr.abort();
       activeXhr = undefined;
     }
-    $('#collapseEditbox').animate({opacity: 0}, 400);
+    $('#collapseEditbox').animate({opacity: 0}, 400, function(){
+      $(this).css({cursor: 'default'})
+          .data('title', $(this).attr('title') || '')
+          .attr({title: ''});
+    });
     $('#postMedia').hide();
     $('#titlePlaceholder').text('Create new post...');
     $('#editbox').addClass('collapsed');
@@ -1507,15 +1513,15 @@ if (navigator.userAgent.match('Windows')) {
     <div id="top">
       <header><h1><img src="img/logo.png" /></h1></header>
     </div>
-    <div id="collapseEditbox"></div>
+    <div id="collapseEditbox" title="Hide editor"></div>
     <div id="writingArea">
       <div id="editbox">
         <div class="titleBar"><div id="titlePlaceholder" class="gp-e-container"></div><div id="title"></div></div>
         <div class="hideWhenCollapsed">
           <div id="content" class="editbox"></div>
           <div id="postActions">
-            <div class="postAction" id="addLink"><span id="addLinkAction" class="enabled"></span></div>
-            <div class="postAction" id="addPhoto"><span id="addPhotoAction" class="enabled"></span></div>
+            <div class="postAction" id="addLink"><span id="addLinkAction" class="enabled" title="Add URL"></span></div>
+            <div class="postAction" id="addPhoto"><span id="addPhotoAction" class="enabled" title="Upload photo"></span></div>
           </div>
           <div id="attachments">
             <div id="reshare"></div>
