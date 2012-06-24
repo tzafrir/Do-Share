@@ -48,23 +48,36 @@ function dbInitCallback(ok) {
 
 // Set up the API
 var plus = new GooglePlusAPI();
+var apis = {};
 
 function initialize() {
   try {
     plus.init(function(response) {
       if (response.status) {
-        console._error = console.error;
-        console.error = console.warn;
-        plus.refreshCircles(function(e){
-          c(e);
-          console.error = console._error;
-        });
-
         var uid = plus.getInfo().id;
         if (uid != localStorage['prev_uid']) {
           oauth.clearTokens();
         }
         localStorage['prev_uid'] = uid;
+        plus.getAllIdentitiesApis(function(result) {
+          console._error = console.error;
+          console.error = console.warn;
+          var count = result.length;
+          result.forEach(function(api) {
+            if (!api.isAuthenticated()) {
+              api.init(function() {
+                apis[api.getInfo().id] = api;
+              });
+            } else {
+              apis[api.getInfo().id] = api;
+            }
+            api.refreshCircles(function() {
+              if (--count == 0) {
+                console.error = console._error;
+              }
+            });
+          });
+        });
 
         window.setTimeout(initialize, INIT_REPEAT_INTERVAL);
       } else {
