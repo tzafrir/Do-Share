@@ -751,15 +751,15 @@ function setListeners() {
     trackClick('addLink.open');
     $('#linkBar').show('blind', 200);
     $('#attachments').addClass('notempty');
-    $('#postActions span').removeClass('enabled');
-    $('#postActions span').addClass('disabled');
+    $('#postActions .postAction span').removeClass('enabled');
+    $('#postActions .postAction span').addClass('disabled');
   });
   $('#addLink').delegate('.disabled', 'click', function() {
     trackClick('addLink.close');
     $('#linkBar').hide('blind', 200);
     $('#attachments').removeClass('notempty');
-    $('#postActions span').removeClass('disabled');
-    $('#postActions span').addClass('enabled');
+    $('#postActions .postAction span').removeClass('disabled');
+    $('#postActions .postAction span').addClass('enabled');
   });
   function removeLink() {
     // Remove Link
