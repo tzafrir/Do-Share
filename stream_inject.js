@@ -15,6 +15,8 @@ var SHARE_BUTTON_CLASSNAME = 'c-b-da';
 var FADED_SHARE_BUTTON_CLASSNAME = 'c-b-E';
 var EDIT_BUTTON_CLASSNAME = 'c-b-M';
 
+var NOTIFICATIONS_SELECTOR = '.P9a';
+
 function onNodeInserted(e) {
   // This happens when a new stream is selected
   if (e.target && e.target.id && e.target.id.indexOf('update') == 0) {
@@ -139,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function() {
     googlePlusContentPane.parentElement.addEventListener('DOMNodeInserted', onNodeInserted);
     processAllItems();
   } else if (document.location.toString().match('notifications/frame')) {
-    var notificationsContainer = document.querySelector('.jRa');
+    var notificationsContainer = document.querySelector(NOTIFICATIONS_SELECTOR);
     if (notificationsContainer) {
       notificationsContainer.addEventListener('DOMNodeInserted', onNotificationNodeInserted);
     }
