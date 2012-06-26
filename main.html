@@ -693,6 +693,9 @@ function collapse(immediately) {
     linked = {};
     circlesNotify = {};
     dateTimePickerSetup();
+    if ($('#identityChooserBar').is(':visible')) {
+      $('#identityChooserBar').hide('blind', 400);
+    }
   }
 }
 
