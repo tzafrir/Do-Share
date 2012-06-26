@@ -732,6 +732,10 @@ meter::-webkit-meter-optimum-value {
   -webkit-margin-after: 15px;
 }
 
+.postShareAsImage {
+  float: right;
+}
+
 .postError {
   font-size: 14px;
   color: #ca1732;
