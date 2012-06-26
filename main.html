@@ -109,6 +109,14 @@ function getEditedPost(state, writeTimeStamp) {
   for (var key in circlesNotify) {
     circlesNotifyArray.push(key);
   }
+  var shareAsId = val('share_as_id');
+  var shareAs;
+  if (shareAsId) {
+    shareAs = {
+      id: shareAsId,
+      image: val('share_as_image')
+    };
+  }
   return {
     'state': state,
     'content': getContent(gpe) || '',
@@ -123,7 +131,8 @@ function getEditedPost(state, writeTimeStamp) {
     'mentioned': mentioned,
     'medias': currentMedias,
     'circlesNotify': circlesNotify,
-    'circlesNotifyArray': circlesNotifyArray
+    'circlesNotifyArray': circlesNotifyArray,
+    'shareAs': shareAs
   };
 }
 
@@ -1547,6 +1556,8 @@ if (navigator.userAgent.match('Windows')) {
         <input type="hidden" id="image_id" />
         <input type="hidden" id="share_id" />
         <input type="hidden" id="write_time_stamp" />
+        <input type="hidden" id="share_as_id" />
+        <input type="hidden" id="share_as_image" />
         <input type="file" id="photo_file" accept="image/*" style="opacity: 0; position: absolute; top: -1000px;" />
       </div>
       <div id="shareUrlContainer"></div>
