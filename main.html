@@ -313,6 +313,13 @@ function addDraftEditBox(post) {
     populateEditorMediaArea(post.medias);
   }
 
+  var action = $('#postActions #postingAsAction');
+  if (post.image_id) {
+    action.attr({'class': 'disabled'});
+  } else {
+    action.attr({'class': 'enabled'});
+  }
+
   if (link || post.reshare || post.medias) {
     $('#attachments').addClass('notempty');
   } else {
@@ -598,7 +605,7 @@ function populateEditorMediaArea(medias) {
       $('#postMedia').show('blind', 500);
       $('#linkBar').hide('blind', 100);
     }
-    $('#postActions span').attr({'class': 'disabled'});
+    $('#postActions .postAction span').attr({'class': 'disabled'});
     $('#addLinkAction').attr({'class': 'loaded'});
   };
   if (link || mediasLink) {
@@ -1407,13 +1414,19 @@ function redrawIdentities() {
     }
   }
   var opacity = ($('#postingAsAction img').css('opacity') < 1) ? 0 : 1;
+  var title = $('#postingAsAction').is('.disabled') ?
+      'Do Share can\'t share your uploaded photo from a page\'s account' :
+      'Share as ' + current.name;
   $('#postingAsAction')
       .html('')
       .show()
       .append($('<img src="' + current.image_url + '?sz=20' + '"' +
-        ' title="Share as ' + current.name + '">').css({opacity: opacity}))
+        ' title="' + title + '">').css({opacity: opacity}))
       .unbind('click')
       .click(function() {
+        if (!$('#postingAsAction').is('.enabled')) {
+          return;
+        }
         var bar = $('#identityChooserBar');
         if (bar.is(':visible')) {
           bar.hide('blind', 300);
