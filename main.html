@@ -1333,6 +1333,8 @@ function uploadImage(file, albumId) {
   xhr.onerror = function(){_gaq.push(['_trackEvent', 'Failure', 'imageUpload']);}
   activeXhr = xhr;
   xhr.send(file);
+  $('#postingAsAction').attr({'class': 'disabled'});
+  redrawIdentities();
 }
 
 function createAlbumIfNotExisting(callback) {
