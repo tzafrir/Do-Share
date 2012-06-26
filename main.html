@@ -1437,6 +1437,7 @@ function redrawIdentities() {
           bar.hide('blind', 300);
         } else {
           bar.show('blind', 300);
+          $('body').animate({scrollTop: $('#circleChooserBar').position()['top'] - 500}, 450);
         }
       });
   var lines = identities.map(function (identity) {
