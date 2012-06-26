@@ -988,7 +988,7 @@ function setListeners() {
       $('#circleChooser').autocomplete('search', '');
     },
     source: function(request, callback) {
-      chrome.extension.sendRequest({type: 'getCircles'}, function(circles) {
+      chrome.extension.sendRequest({type: 'getCircles', identityId: val('share_as_id')}, function(circles) {
         var curTimeStamp = $('#write_time_stamp').val();
         var matchingCircles = [];
 

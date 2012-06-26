@@ -671,6 +671,14 @@ function parseEntities(entities) {
   });
 }
 
+function getApi(identityId) {
+  var api = apis[identityId];
+  if (!api) {
+    api = plus;
+  }
+  return api;
+}
+
 function onRequest(request, sender, callback) {
   var type = request.type;
   if (type == "post") {
@@ -707,7 +715,8 @@ function onRequest(request, sender, callback) {
       callback(processMediaItems(rawMedia));
     });
   } else if (type == 'getCircles') {
-    plus.getCircles(function(response) {
+    var api = getApi(request.identityId);
+    api.getCircles(function(response) {
       if (response.status) {
         callback(response.data);
       }
