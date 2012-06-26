@@ -7,13 +7,13 @@
 var CONTENT_PANE_ID = '#contentPane';
 var STREAM_UPDATE_SELECTOR = 'div[id^="update"]:not([tz_doshare])';
 
-var BUTTON_CLASSNAME = 'Tj';
+var BUTTON_CLASSNAME = 'dk';
 var BUTTONS_SELECTOR = 'div.esw, div.' + BUTTON_CLASSNAME;
-var SPAN_CLASSNAME = 'iq';
+var SPAN_CLASSNAME = 'sr';
 
-var SHARE_BUTTON_CLASSNAME = 'c-b-fa';
-var FADED_SHARE_BUTTON_CLASSNAME = 'c-b-D';
-var EDIT_BUTTON_CLASSNAME = 'c-b-J';
+var SHARE_BUTTON_CLASSNAME = 'c-b-da';
+var FADED_SHARE_BUTTON_CLASSNAME = 'c-b-E';
+var EDIT_BUTTON_CLASSNAME = 'c-b-M';
 
 function onNodeInserted(e) {
   // This happens when a new stream is selected
