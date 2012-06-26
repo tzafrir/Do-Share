@@ -322,7 +322,8 @@ function publish(post, callback) {
       callback(true);
     }
   };
-  plus.newPost(wrapCallback, post);
+  var api = getApi(post.shareAs && post.shareAs.id);
+  api.newPost(wrapCallback, post);
   console.log("Posting");
   console.log(post);
 }
