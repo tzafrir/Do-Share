@@ -1426,20 +1426,19 @@ function redrawIdentities() {
       .html('')
       .show()
       .append($('<img src="' + current.image_url + '?sz=20' + '"' +
-        ' title="' + title + '">').css({opacity: opacity}))
-      .unbind('click')
-      .click(function() {
-        if (!$('#postingAsAction').is('.enabled')) {
-          return;
-        }
-        var bar = $('#identityChooserBar');
-        if (bar.is(':visible')) {
-          bar.hide('blind', 300);
-        } else {
-          bar.show('blind', 300);
-          $('body').animate({scrollTop: $('#circleChooserBar').position()['top'] - 500}, 450);
-        }
-      });
+        ' title="' + title + '">').css({opacity: opacity}));
+  $('#postingAs').unbind('click').click(function() {
+    if (!$('#postingAsAction').is('.enabled')) {
+      return;
+    }
+    var bar = $('#identityChooserBar');
+    if (bar.is(':visible')) {
+      bar.hide('blind', 300);
+    } else {
+      bar.show('blind', 300);
+      $('body').animate({scrollTop: $('#circleChooserBar').position()['top'] - 500}, 450);
+    }
+  });
   var lines = identities.map(function (identity) {
     return $('<div class="identityLine' + ((identity.id == current.id) ? ' selected' : '') + '">' +
         '<span class="entityPhoto"><img src="' + identity.image_url + '?sz=20' + '"></span>' + identity.name + '</div>')
