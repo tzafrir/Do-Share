@@ -253,6 +253,7 @@ function addDraftEditBox(post) {
   }
   currentMedias = medias;
   circlesNotify = post.circlesNotify || {};
+  var shareAs = post.shareAs || {id: '', image: ''};
 
   if (gpe) {
     gpe.destroy();
@@ -295,6 +296,8 @@ function addDraftEditBox(post) {
   $('#link, #linkInput').val(link);
   $('#image_id').val(image_id);
   $('#write_time_stamp').val(writeTimeStamp);
+  $('#share_as_id').val(shareAs.id);
+  $('#share_as_image').val(shareAs.image);
 
   populateTimeFields(timeStamp);
 
