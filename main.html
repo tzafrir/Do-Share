@@ -1452,6 +1452,17 @@ function redrawIdentities() {
         $('#postingAsAction img').animate({opacity: 1}, 300);
         $('#identityChooserBar').hide('blind', 300);
       }, 150);
+      if (identity != identities[0]) {
+        $('#addPhotoAction').attr({
+          'class': 'disabled',
+          'title': 'Do Share can\'t upload an image to a page\'s album'
+        });
+      } else {
+        $('#addPhotoAction').attr({
+          'class': 'enabled',
+          'title': ''
+        });
+      }
     });
   });
   $('#identityChooserBar').html('');
