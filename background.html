@@ -63,19 +63,24 @@ function initialize() {
           console._error = console.error;
           console.error = console.warn;
           var count = result.length;
+          identities = [];
           result.forEach(function(api) {
+            function addApi() {
+              apis[api.getInfo().id] = api;
+              api.refreshCircles(function() {
+                if (--count == 0) {
+                  console.error = console._error;
+                }
+              });
+              identities.push(api.getInfo());
+            }
             if (!(api.getInfo() && api.getInfo().id == uid)) {
               api.init(function() {
-                apis[api.getInfo().id] = api;
+                addApi();
               });
             } else {
-              apis[api.getInfo().id] = api;
+              addApi();
             }
-            api.refreshCircles(function() {
-              if (--count == 0) {
-                console.error = console._error;
-              }
-            });
           });
         });
 
@@ -708,12 +713,6 @@ function onRequest(request, sender, callback) {
     });
   } else if (type == 'oauthAuthenticate') {
     oauth.authorize(callback);
-  } else if (type == 'getIdentities') {
-    var result = [];
-    for (var api in apis) {
-      result.push(apis[api].getInfo());
-    }
-    callback(result);
   }
 }
 

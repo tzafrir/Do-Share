@@ -61,6 +61,13 @@ var currentMedias;
 
 var lastUpdate = 0;
 
+var identities = [];
+
+function refreshIdentities() {
+  identities = chrome.extension.getBackgroundPage().identities;
+  window.setTimeout(refreshIdentities, identities.length ? 5000 : 250);
+}
+
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-27041781-6']);
 _gaq.push(['_trackPageview']);
@@ -1474,6 +1481,7 @@ function handleUrlHandoff() {
 }
 
 function onLoad() {
+  refreshIdentities();
   var savedPostJson = localStorage['_tmp_post'];
   var savedPost;
   if (savedPostJson) {
