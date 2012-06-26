@@ -660,7 +660,9 @@ function collapse(immediately) {
     if (isEmptyPost(getEditedPost())) {
       delPost();
     } else {
-      addDraftEditBox();
+      window.setTimeout(function() {
+        addDraftEditBox();
+      }, 40);
     }
     if (immediately === true) {
       $('.hideWhenCollapsed, #scheduleBar').hide();
@@ -1401,14 +1403,40 @@ function redrawIdentities() {
       image_url: val('share_as_image')
     }
   }
+  var opacity = ($('#postingAsAction img').css('opacity') < 1) ? 0 : 1;
   $('#postingAsAction')
       .html('')
       .append($('<img src="' + current.image_url + '?sz=20' + '"' +
-        ' title="Share as ' + current.name + '">'))
+        ' title="Share as ' + current.name + '">').css({opacity: opacity}))
       .unbind('click')
       .click(function() {
-        alert(current.name);
+        var bar = $('#identityChooserBar');
+        if (bar.is(':visible')) {
+          bar.hide('blind', 300);
+        } else {
+          bar.show('blind', 300);
+        }
       });
+  var lines = identities.map(function (identity) {
+    return $('<div class="identityLine' + ((identity.id == current.id) ? ' selected' : '') + '">' +
+        '<span class="entityPhoto"><img src="' + identity.image_url + '?sz=20' + '"></span>' + identity.name + '</div>')
+        .click(function(evt){
+      $('#share_as_id').val(identity.id);
+      $('#share_as_name').val(identity.name);
+      $('#share_as_image').val(identity.image_url);
+      $('#postingAsAction img').animate({opacity: 0}, 150);
+      $(evt.target).addClass('selected');
+      window.setTimeout(function() {
+        redrawIdentities();
+        $('#postingAsAction img').animate({opacity: 1}, 300);
+        $('#identityChooserBar').hide('blind', 300);
+      }, 150);
+    });
+  });
+  $('#identityChooserBar').html('');
+  lines.forEach(function(line) {
+    $('#identityChooserBar').append(line)
+  });
 }
 
 /**

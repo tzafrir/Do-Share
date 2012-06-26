@@ -292,8 +292,24 @@ img {
 }
 
 #identityChooserBar {
-  display: block;
+  display: none;
   width: 100%;
+  border: 1px solid #bebebe;
+  margin-top: 10px;
+}
+
+#identityChooserBar .identityLine {
+  width: 100%;
+  background: #fff;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: Helvetica, Arial, sans-serif;
+  -webkit-transition: all 0.1s ease-in-out;
+}
+
+#identityChooserBar .identityLine.selected {
+  background: #EFF6E9;
 }
 
 #shareUrlContainer {
@@ -481,7 +497,6 @@ meter::-webkit-meter-optimum-value {
   -webkit-appearance: meter;
   background: #BB1A51;
 }
-
 
 #circleChooserBar {
   display: inline-block;
@@ -1066,7 +1081,7 @@ body .ui-datepicker-next-hover.ui-state-hover {
   color: inherit;
 }
 
-#circleChooserBar .entityPhoto ,
+.entityPhoto,
 .gp-mention .gp-e-image {
   display: inline-block;
   width: 24px;
