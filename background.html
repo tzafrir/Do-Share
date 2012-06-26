@@ -323,6 +323,16 @@ function publish(post, callback) {
     }
   };
   var api = getApi(post.shareAs && post.shareAs.id);
+  if (post.shareAs && post.shareAs.id != api.getInfo().id) {
+    _gaq.push(['_trackEvent', 'Failure', 'noApiForPage']);
+    post = JSON.parse(postBackup);
+    post.state = 'draft';
+    post.error = "Could not log in as " + post.shareAs.name;
+    // Avoid UI races by upping the failed posts's id.
+    post.writeTimeStamp += 1;
+    addPost(post, callback);
+    return;
+  }
   api.newPost(wrapCallback, post);
   console.log("Posting");
   console.log(post);
