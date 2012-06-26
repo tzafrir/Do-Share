@@ -1,6 +1,6 @@
 (function() {
 
-var PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR = '.yL.a-f-e';
+var PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR = '.hQ.a-f-e';
 
 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
@@ -17,7 +17,7 @@ function getPhotoId() {
     return;
   }
   var property = url.split('photos/')[1].split('/')[0];
-  if (property == 'fromphone' || property == plusId) {
+  if (property == 'instantupload' || property == plusId) {
     return url.split('/').reverse()[0];
   }
 }
