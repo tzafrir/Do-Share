@@ -314,6 +314,20 @@ function addDraftEditBox(post) {
     populateEditorMediaArea(post.medias);
   }
 
+  if (shareAs.id) {
+    $('#addPhotoAction').attr({
+      'class': 'disabled',
+      'title': 'Do Share can\'t upload an image to a page\'s album'
+    });
+  } else {
+    $('#share_as_id, #share_as_name, #share_as_image').val('');
+    $('#addPhotoAction').attr({
+      'class': 'enabled',
+      'title': ''
+    });
+  }
+
+
   var action = $('#postActions #postingAsAction');
   if (post.image_id) {
     action.attr({'class': 'disabled'});
