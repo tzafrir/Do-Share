@@ -1422,6 +1422,7 @@ function redrawIdentities() {
     return $('<div class="identityLine' + ((identity.id == current.id) ? ' selected' : '') + '">' +
         '<span class="entityPhoto"><img src="' + identity.image_url + '?sz=20' + '"></span>' + identity.name + '</div>')
         .click(function(evt){
+      audienceChooser.keepOnlyPublic();
       $('#share_as_id').val(identity.id);
       $('#share_as_name').val(identity.name);
       $('#share_as_image').val(identity.image_url);
@@ -1492,6 +1493,13 @@ AudienceChooser.prototype.removeEntity = function(entity) {
 
 AudienceChooser.prototype.removeLastEntity = function() {
   this._entities.pop();
+  this.updateChooser();
+}
+
+AudienceChooser.prototype.keepOnlyPublic = function() {
+  this._entities = this._entities.filter(function(entity) {
+    return entity.circleId == 'PUBLIC';
+  });
   this.updateChooser();
 }
 
