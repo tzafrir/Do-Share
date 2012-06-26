@@ -208,11 +208,11 @@ img {
   cursor: pointer;
 }
 
-#postActions .disabled {
+.postAction .disabled {
   opacity: 0.4;
 }
 
-#postActions .invalid {
+.postAction .invalid {
   opacity: 0.3;
   cursor: default;
 }
@@ -234,7 +234,7 @@ img {
   padding: 0 5px 5px 0;
 }
 
-.postAction {
+.postAction, .postModifier {
   float: right;
   cursor: pointer;
   margin-left: 10px;
