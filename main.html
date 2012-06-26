@@ -114,6 +114,7 @@ function getEditedPost(state, writeTimeStamp) {
   if (shareAsId) {
     shareAs = {
       id: shareAsId,
+      name: val('share_as_name'),
       image: val('share_as_image')
     };
   }
@@ -253,7 +254,7 @@ function addDraftEditBox(post) {
   }
   currentMedias = medias;
   circlesNotify = post.circlesNotify || {};
-  var shareAs = post.shareAs || {id: '', image: ''};
+  var shareAs = post.shareAs || {id: '', name: '', image: ''};
 
   if (gpe) {
     gpe.destroy();
@@ -1560,6 +1561,7 @@ if (navigator.userAgent.match('Windows')) {
         <input type="hidden" id="share_id" />
         <input type="hidden" id="write_time_stamp" />
         <input type="hidden" id="share_as_id" />
+        <input type="hidden" id="share_as_name" />
         <input type="hidden" id="share_as_image" />
         <input type="file" id="photo_file" accept="image/*" style="opacity: 0; position: absolute; top: -1000px;" />
       </div>
