@@ -436,7 +436,7 @@ function renderPost(post) {
 
   // Don't look at this :(
   contentDiv.innerHTML = (error && "<div class='postError'>" + error + "</div>") +
-                  (identity && "<img class='postShareAsImage' src='" + identity.image + "?sz=16' title='" + "Share as " + identity.name + "'>") +
+                  ((identity && "<img class='postShareAsImage' src='" + identity.image + "?sz=16' title='" + "Share as " + identity.name + "'>") || '') +
                   (date && "<p class='postDate'>" + date + "</p>") +
                   (title && "<span class='postTitle'>" + title + "</span>") +
 
