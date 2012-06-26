@@ -1,6 +1,6 @@
 (function() {
 
-var PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR = '.yL.a-f-e';
+var PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR = '.hQ.a-f-e';
 
 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
