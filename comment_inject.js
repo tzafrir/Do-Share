@@ -12,18 +12,16 @@ var settings;
 var selfId;
 
 // Forgive us, gods of programming
-var POST_NAME_CLASSNAME = "gi ld md";
-var COMMENT_NAME_CLASSNAME = "gi ld qm";
+var POST_NAME_CLASSNAME = "Sg Ob Tc";
+var COMMENT_NAME_CLASSNAME = "Sg Ob qm";
 
-var DELETED_COMMENT_CLASSNAME = "re";
-
-var COMMENT_CONTENT_CLASSNAME = 'Si';
+var COMMENT_CONTENT_CLASSNAME = 'Mi';
 
 // Major DRY violation here...
 var PROFILE_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".") + ", ." + COMMENT_NAME_CLASSNAME.replace(/ /g, ".");
 var POST_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".");
 
-var PLUSONE_SELECTOR = "button.esw.DC";
+var PLUSONE_SELECTOR = "button.esw.kP";
 
 function extractProfile(profile) {
     return { profileLink: profile,
