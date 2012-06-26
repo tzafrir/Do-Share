@@ -244,6 +244,18 @@ img {
   -webkit-transition: all 0.2s ease-in-out;
 }
 
+#postingAs span:after {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 6px solid #121212;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  margin-left: 1px;
+  margin-bottom: 7px;
+}
+
 #attachments.notempty {
   border-top: 1px solid #aec693;
   background: #f6f9f3;
@@ -277,6 +289,11 @@ img {
   font-weight: 800;
   -webkit-margin-before: 1em;
   display: block;
+}
+
+#identityChooserBar {
+  display: block;
+  width: 100%;
 }
 
 #shareUrlContainer {

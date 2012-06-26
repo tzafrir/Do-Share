@@ -318,6 +318,8 @@ function addDraftEditBox(post) {
   } else {
     $('#attachments').removeClass('notempty');
   }
+
+  redrawIdentities();
 }
 
 function renderReshare(post) {
@@ -1386,6 +1388,29 @@ function autosave() {
   post('autosave');
 }
 
+function redrawIdentities() {
+  if (!(identities.length > 1)) {
+    $('#postingAsAction').html('');
+    return;
+  }
+  var current = identities[0];
+  if (val('share_as_id')) {
+    current = {
+      id: val('share_as_id'),
+      name: val('share_as_name'),
+      image_url: val('share_as_image')
+    }
+  }
+  $('#postingAsAction')
+      .html('')
+      .append($('<img src="' + current.image_url + '?sz=20' + '"' +
+        ' title="Share as ' + current.name + '">'))
+      .unbind('click')
+      .click(function() {
+        alert(current.name);
+      });
+}
+
 /**
  * Entity {
  *   circleId OR personId
@@ -1565,6 +1590,7 @@ if (navigator.userAgent.match('Windows')) {
         <input type="hidden" id="share_as_image" />
         <input type="file" id="photo_file" accept="image/*" style="opacity: 0; position: absolute; top: -1000px;" />
       </div>
+      <div id="identityChooserBar"></div>
       <div id="shareUrlContainer"></div>
       <div id="barContainer" class="hideWhenCollapsed">
         <div id="circleChooserBar">
