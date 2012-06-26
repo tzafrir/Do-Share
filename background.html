@@ -639,6 +639,7 @@ function resharePost(url, htmlContent, mentioned) {
       }
       content = content.replace('${DS_POST_IDENTIFIER}', postIdentifier);
     }
+    content += '\n\n_(Shared using #DoShare)_';
     var post = {reshare: data,
                 share_id: data.update_id,
                 content: content,

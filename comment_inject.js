@@ -57,7 +57,7 @@ function formatCommentPost(content, profileId) {
   } else {
     $ += ('@' + profileId + ' ');
   }
-  $ += ('wrote on ${DS_POST_IDENTIFIER}:</i><br><br>' + content + '<br><br><i>(Shared using #DoShare)</i>');
+  $ += ('wrote on ${DS_POST_IDENTIFIER}:</i><br><br>' + content);
   return $;
 }
 
