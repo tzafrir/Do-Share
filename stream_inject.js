@@ -23,6 +23,8 @@ function onNodeInserted(e) {
     processPost(e.target);
   } else if (e.relatedNode && e.relatedNode.parentNode && e.relatedNode.parentNode.id == 'contentPane') {
     processAllItems();
+  } else if (e.relatedNode && e.relatedNode.querySelectorAll && e.relatedNode.querySelectorAll(STREAM_UPDATE_SELECTOR)) {
+    [].forEach.call(e.relatedNode.querySelectorAll(STREAM_UPDATE_SELECTOR), function(post) {processPost(post)});
   }
   addDoShareButtonOnInsertion(e);
 };
@@ -145,6 +147,8 @@ document.addEventListener("DOMContentLoaded", function() {
     if (notificationsContainer) {
       notificationsContainer.addEventListener('DOMNodeInserted', onNotificationNodeInserted);
     }
+  } else if (document.location.toString().match('streamwidgets/canvas')) {
+    document.body.addEventListener('DOMNodeInserted', onNodeInserted);
   }
 });
 })();
