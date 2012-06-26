@@ -1392,7 +1392,7 @@ function autosave() {
 
 function redrawIdentities() {
   if (!(identities.length > 1)) {
-    $('#postingAsAction').html('');
+    $('#postingAsAction').html('').hide();
     return;
   }
   var current = identities[0];
@@ -1406,6 +1406,7 @@ function redrawIdentities() {
   var opacity = ($('#postingAsAction img').css('opacity') < 1) ? 0 : 1;
   $('#postingAsAction')
       .html('')
+      .show()
       .append($('<img src="' + current.image_url + '?sz=20' + '"' +
         ' title="Share as ' + current.name + '">').css({opacity: opacity}))
       .unbind('click')
