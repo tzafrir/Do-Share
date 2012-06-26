@@ -306,10 +306,10 @@ function addDraftEditBox(post) {
 
   if (post.reshare) {
     $('#reshare').html(renderReshare(post));
-    $('#postActions span').attr({'class': 'invalid'});
+    $('#postActions .postAction span').attr({'class': 'invalid'});
   } else {
     $('#reshare').html('');
-    $('#postActions span').attr({'class': 'enabled'});
+    $('#postActions .postAction span').attr({'class': 'enabled'});
     populateEditorMediaArea(post.medias);
   }
 

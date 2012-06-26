@@ -208,11 +208,11 @@ img {
   cursor: pointer;
 }
 
-.postAction .disabled {
+#postActions .disabled {
   opacity: 0.4;
 }
 
-.postAction .invalid {
+#postActions .invalid {
   opacity: 0.3;
   cursor: default;
 }
