@@ -17,7 +17,7 @@ function getPhotoId() {
     return;
   }
   var property = url.split('photos/')[1].split('/')[0];
-  if (property == 'fromphone' || property == plusId) {
+  if (property == 'instantupload' || property == plusId) {
     return url.split('/').reverse()[0];
   }
 }
