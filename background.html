@@ -211,7 +211,7 @@ function fetchPostData(url, callback) {
   }
 
   fetchOzData(url, function(dataMap) {
-    var postData = dataMap && dataMap[20];
+    var postData = dataMap && (dataMap[20] || dataMap[59][2]);
     if ((!dataMap) || (!postData)) {
       _gaq.push(['_trackEvent', 'Failure', 'fetchOzData']);
       console.error('Not a singleton post url');
