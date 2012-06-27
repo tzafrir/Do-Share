@@ -416,8 +416,12 @@ function processMediaItems(mediaArray) {
       result.images.push(image);
     }
     var type = media[24][3];
-    if (type && type.match("^text/") || type == "application/x-shockwave-flash") {
-      result.link = {'url': media[24][1], 'title': media[3], 'description': media[21]};
+    if (type && type.match("^text/") || type == "application/x-shockwave-flash" || type == "application/octet-stream") {
+      var url = media[24][1];
+      if (url && !url.match(/^http/)) {
+        url = 'https://plus.google.com/' + url;
+      }
+      result.link = {'url': url, 'title': media[3], 'description': media[21]};
     }
     if (type == "application/x-shockwave-flash") {
       result.video = {'embed': getVideoEmbed(media[5][1]), 'w': media[5][3], 'h': media[5][2]};
