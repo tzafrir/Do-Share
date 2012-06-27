@@ -528,7 +528,7 @@ function renderMediaItems(medias) {
   var video = medias.video;
   var link = medias.link;
 
-  return (link && link.title ?
+  return (link && link.title && link.url ?
       "<h3><a class='mediaLink' href='" + link.url + "'>" +
       link.title + "</a></h3>" : "") +
 
