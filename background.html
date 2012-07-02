@@ -364,8 +364,8 @@ function addPost(post, callback) {
   }
 }
 
-function fetchAll(callback) {
-  if (!dbInit) {
+function fetchAll(reqLastUpdate, callback) {
+  if (!dbInit || reqLastUpdate == lastUpdate) {
     return;
   }
   var result = {posts: [], lastUpdate: lastUpdate};
@@ -700,7 +700,7 @@ function onRequest(request, sender, callback) {
   if (type == "post") {
     post(request.post, callback);
   } else if (type == "fetchAll") {
-    fetchAll(callback);
+    fetchAll(request.lastUpdate, callback);
   } else if (type == "delPost") {
     delPost(request.writeTimeStamp, callback);
   } else if (type == "fetchPost") {

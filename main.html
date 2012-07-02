@@ -592,7 +592,7 @@ function showScheduleBar() {
 }
 
 function refreshPosts() {
-  chrome.extension.sendRequest({'type': 'fetchAll'}, function(result) {
+  chrome.extension.sendRequest({'type': 'fetchAll', 'lastUpdate': lastUpdate}, function(result) {
     if (result.lastUpdate == lastUpdate) {
       return;
     }
