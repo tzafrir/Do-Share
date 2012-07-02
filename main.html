@@ -371,7 +371,6 @@ function editDraft(writeTimeStamp) {
   chrome.extension.sendRequest({type: 'fetchPost', writeTimeStamp: writeTimeStamp},
       function(post) {
     $('body').animate({scrollTop: 0}, 450);
-    stopRefreshing = true;
     mem[post.writeTimeStamp] = post;
     addDraftEditBox(post);
     uncollapse();
@@ -592,11 +591,9 @@ function showScheduleBar() {
   $('#scheduleBar').show();
 }
 
-var stopRefreshing;
 function refreshPosts() {
-  stopRefreshing = false;
   chrome.extension.sendRequest({'type': 'fetchAll'}, function(result) {
-    if (stopRefreshing || result.lastUpdate == lastUpdate) {
+    if (result.lastUpdate == lastUpdate) {
       return;
     }
     result.posts && renderAllPosts(result.posts);
@@ -605,9 +602,7 @@ function refreshPosts() {
 }
 
 function refreshIfNeeded() {
-  if (!stopRefreshing) {
-    refreshPosts();
-  }
+  refreshPosts();
   window.setTimeout(refreshIfNeeded, 300);
 }
 
