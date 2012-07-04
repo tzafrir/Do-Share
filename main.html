@@ -1271,13 +1271,17 @@ function dateTimePickerSetup() {
         $('#dateTimeInput').datetimepicker('setDate', (new Date()));
       }
       window.setTimeout(function() {
-        inst.dpDiv.position({
+        var j = inst.dpDiv;
+        console.log(j);
+        j.position({
           my: 'center top',
           at: 'center bottom',
           of: '#scheduleBar',
           collision: 'none',
           offset: '0 -1'
         });
+        j.hide();
+        j.show('blind', 150);
       }, 1);
     },
     onSelect: changeTimeIfDraft,
