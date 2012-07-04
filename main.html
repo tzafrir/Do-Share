@@ -1525,7 +1525,7 @@ AudienceChooser.prototype.getEntities = function() {
 }
 
 AudienceChooser.prototype.addEntity = function(entity) {
-  if (!entity) {
+  if (!entity || document.querySelector('.p_' + entity.personId)) {
     return;
   }
   this._entities.push(entity);
