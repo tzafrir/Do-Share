@@ -26,11 +26,10 @@ IDBWrap.prototype.init = function(callback) {
 IDBWrap.prototype.put = function(item, callback) {
   var db = this._db;
   var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_WRITE);
-  this._cacheExpired = true;
   var store = trans.objectStore(this.STORE_NAME);
   var request = store.put(item);
 
-  request.onsuccess = this._onSuccess(callback);
+  request.onsuccess = this._onWriteSuccess(callback);
   request.onerror = this._onError(callback);
 }
 
@@ -134,17 +133,24 @@ IDBWrap.prototype._processAllItemsByRange = function(keyRange, callback) {
 IDBWrap.prototype._removeItem = function(key, callback) {
   var db = this._db;
   var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_WRITE);
-  this._cacheExpired = true;
   var store = trans.objectStore(this.STORE_NAME);
   var request = store.delete(key);
 
-  request.onsuccess = this._onSuccess(callback);
+  request.onsuccess = this._onWriteSuccess(callback);
   request.onerror = this._onError(callback);
 }
 
 IDBWrap.prototype._onSuccess = function(callback) {
   return function(event) {
     callback(true);
+  }
+}
+
+IDBWrap.prototype._onWriteSuccess = function(callback) {
+  var self = this;
+  return function(event) {
+    self._cacheExpired = true;
+    self._onSuccess(callback)();
   }
 }
 
