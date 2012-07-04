@@ -915,7 +915,7 @@ body #ui-datepicker-div .ui-widget-header {
 body #ui-datepicker-div {
   background: #fff;
   font-family: Roboto, Helvetica, Arial, sans-serif;
-  width: 500px;
+  width: 620px;
 }
 
 body .ui-datepicker th {
@@ -975,6 +975,8 @@ body .ui-datepicker button.ui-state-default {
 body #ui-datepicker-div.ui-widget-content {
   border: 1px solid #d27d4c;
   border-radius: 5px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
 }
 
 .ui-datepicker-month,
@@ -1017,7 +1019,7 @@ body .ui-datepicker-next-hover.ui-state-hover {
   float: right;
   margin-top: 41px;
   margin-right: 20px;
-  width: 230px;
+  width: 350px;
 }
 
 .datePickerWrap {
