@@ -1262,7 +1262,6 @@ function addLink(url) {
 }
 
 function dateTimePickerSetup() {
-  $('#dateTimeInput').datetimepicker('destroy');
   $('#dateTimeInput').datetimepicker({
     currentText: 'today',
     closeText: '',
@@ -1286,11 +1285,12 @@ function dateTimePickerSetup() {
     },
     onSelect: changeTimeIfDraft,
     dayNamesMin: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
-    minDate: 0,
+    minDateTime: new Date(),
     showButtonPanel: true,
     showOtherMonths: true,
 		selectOtherMonths: true
   });
+  $('#dateTimeInput').datetimepicker('option', {minDateTime: new Date()});
 }
 
 function uploadImage(file, albumId) {
