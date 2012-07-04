@@ -22,29 +22,6 @@
 
 <script>
 
-/**
- * jQuery setup.
- */
-
-// http://stackoverflow.com/questions/1818670/how-to-control-positioning-of-jqueryui-datepicker
-$.extend($.datepicker,{_checkOffset:function(inst,offset,isFixed){return offset}});
-
-/**
- * Don't hide the date picker when clicking a date
- * http://stackoverflow.com/a/1762378/153264
- */
-$.datepicker._selectDateOverload = $.datepicker._selectDate;
-$.datepicker._selectDate = function(id, dateStr) {
-    var target = $(id);
-    var inst = this._getInst(target[0]);
-    inst.inline = true;
-    $.datepicker._selectDateOverload(id, dateStr);
-    inst.inline = false;
-    this._updateDatepicker(inst);
-}
-
-/** **/
-
 var mem = {};
 var touch = {};
 var needRefresh = false;
