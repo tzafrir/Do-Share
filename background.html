@@ -27,6 +27,7 @@ function trackPost(post) {
     pub = true;
   }
   _gaq.push(['_trackEvent', 'Post', (pub ? 'public' : 'limited')]);
+  _gaq.push(['_trackEvent', 'PagePost', (post.shareAs ? 'yes' : 'no')]);
   if (post.circlesNotifyArray && post.circlesNotifyArray.length) {
     _gaq.push(['_trackEvent', 'NotifyCircles', (pub ? 'public' : 'limited'), 'NotifyCircles', post.circlesNotifyArray.length]);
   }
