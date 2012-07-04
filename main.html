@@ -266,10 +266,16 @@ function addDraftEditBox(post) {
     activeXhr.abort();
     activeXhr = undefined;
   }
+  function onMention(details) {
+    audienceChooser.addEntity({
+      personId: details.id,
+      name: details.name
+    })
+  };
   gpe = new GPEditor(document.getElementById('content'),
-      content, writeTimeStamp, profileAutocompleter, mentioned, false);
+      content, writeTimeStamp, profileAutocompleter, mentioned, false, onMention);
   title_gpe = new GPEditor(document.getElementById('title'),
-      title, 'Title', profileAutocompleter, mentioned, true);
+      title, 'Title', profileAutocompleter, mentioned, true, onMention);
   function onchange(e) {
     if (title_gpe.getText()) {
       $('#titlePlaceholder').hide();

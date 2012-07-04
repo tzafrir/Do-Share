@@ -7,7 +7,7 @@
  *
  * @param{function(string, function(person<Array>))} profileAutocompleter.
  */
-function GPEditor(div, text, id, profileAutocompleter, mentionMap, disableToolbar) {
+function GPEditor(div, text, id, profileAutocompleter, mentionMap, disableToolbar, mentionCallback) {
   var toolbar = document.createElement('div');
   toolbar.innerHTML = 
       ('<div class="toolbar">' +
@@ -24,6 +24,7 @@ function GPEditor(div, text, id, profileAutocompleter, mentionMap, disableToolba
 
   this.CONTAINER_CLASSNAME = 'gp-e-container';
   this._profileAutocompleter = profileAutocompleter;
+  this._mentionCallback = mentionCallback;
 
   var container = this._container = document.createElement('div');
   container.className = this.CONTAINER_CLASSNAME;
@@ -291,6 +292,12 @@ GPEditor.prototype.onKeyPress = function(event, element) {
       dummy.remove();
       $(element).focus();
       self._mentioned[item.id] = item.name;
+      if (self._mentionCallback) {
+        self._mentionCallback({
+          name: item.name,
+          id: item.id
+        });
+      }
     },
 
   })
