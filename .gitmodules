@@ -1,0 +1,3 @@
+[submodule "sched5"]
+	path = sched5
+	url = git://github.com/tzafrir/Sched5.git
