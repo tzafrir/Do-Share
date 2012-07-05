@@ -149,10 +149,12 @@ function post(state) {
   }
   if (state != 'autosave') {
     blinkPost(writeTimeStamp);
-    localStorage['lastUsedCircles'] = JSON.stringify(post.entities.filter(function(entity) {
-      // Save only circles.
-      return !!entity.circleId;
-    }));
+    if (!post.shareAs) {
+      localStorage['lastUsedCircles'] = JSON.stringify(post.entities.filter(function(entity) {
+        // Save only circles.
+        return !!entity.circleId;
+      }));
+    }
   }
 }
 
