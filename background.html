@@ -65,16 +65,17 @@ function initialize() {
           console._error = console.error;
           console.error = console.warn;
           var count = result.length;
-          identities = [];
+          var newIdentities = [];
           result.forEach(function(api) {
             function addApi() {
               apis[api.getInfo().id] = api;
+              newIdentities.push(api.getInfo());
               api.refreshCircles(function() {
                 if (--count == 0) {
                   console.error = console._error;
+                  identities = newIdentities;
                 }
               });
-              identities.push(api.getInfo());
             }
             if (!(api.getInfo() && api.getInfo().id == uid)) {
               api.init(function() {
