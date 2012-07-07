@@ -925,7 +925,7 @@ function setListeners() {
   $('#editbox').keyup(function() {
     needRefresh = true;
   });
-  $('input:not(#linkInput)').change(function(e) {
+  $('input:not(#linkInput):not(#dateTimeInput)').change(function(e) {
     needRefresh = true;
   });
   $('#sendFeedback').click(function(e) {
