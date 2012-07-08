@@ -738,7 +738,7 @@ function shiftChosenImage(n) {
 }
 
 function changeTimeIfDraft() {
-  var date = new Date($('#dateInput').val() + ' ' + $('#timeInput').val());
+  var date = new Date($('#dateTimeInput').val());
   if (date.toString() != 'Invalid Date' && document.querySelector('.drafts #post' + $('#write_time_stamp').val())) {
     $('#time').val(date.getTime());
   }
