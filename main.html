@@ -925,8 +925,11 @@ function setListeners() {
   $('#editbox').keyup(function() {
     needRefresh = true;
   });
-  $('input:not(#linkInput):not(#dateTimeInput)').change(function(e) {
-    needRefresh = true;
+  $('input:not(#linkInput)').change(function(e) {
+    // Avoid races
+    window.setTimeout(function() {
+      needRefresh = true;
+    }, 500);
   });
   $('#sendFeedback').click(function(e) {
     trackClick(this.id);
