@@ -367,10 +367,14 @@ function addPost(post, callback) {
 }
 
 function fetchAll(reqLastUpdate, callback) {
-  if (!dbInit || reqLastUpdate == lastUpdate) {
+  if (!dbInit) {
     return;
   }
   var result = {posts: [], lastUpdate: lastUpdate};
+  if (reqLastUpdate == lastUpdate) {
+    callback(result);
+    return;
+  }
   var wrapCallback = function() {
     s.count(function(count) {
       if (count == 0) {
