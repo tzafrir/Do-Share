@@ -260,27 +260,29 @@ function profileAutocomplete(prefix, callback) {
     callback([]);
     return;
   }
-  plus.profileAutocomplete(function(response) {
-    var results = response[1];
-    if (!results) {
-      callback([]);
-    }
-
-    var persons = [];
-    for (var i = 0; i < results.length; ++i) {
-      var personObject = results[i];
-      var personData = results[i][3][0];
-      var person = {
-        name: (personData['n'] ? personData['n'] : personObject[0]),
-        id: personData['g']
-      };
-      if (personData['p']) {
-        person.photoUrl = 'https:' + personData['p'] + '?sz=24';
+  plus.getPeople({'person.name': prefix + '%'}, function(getPeopleResponse) {
+    plus.profileAutocomplete(function(response) {
+      var results = response[1];
+      if (!results) {
+        callback([]);
       }
-      persons.push(person);
-    }
-    callback(persons);
-  }, prefix);
+
+      var persons = [];
+      for (var i = 0; i < results.length; ++i) {
+        var personObject = results[i];
+        var personData = results[i][3][0];
+        var person = {
+          name: (personData['n'] ? personData['n'] : personObject[0]),
+          id: personData['g']
+        };
+        if (personData['p']) {
+          person.photoUrl = 'https:' + personData['p'] + '?sz=24';
+        }
+        persons.push(person);
+      }
+      callback(persons);
+    }, prefix);
+  });
 }
 
 function handleMissedPost(post) {
