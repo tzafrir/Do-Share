@@ -119,7 +119,7 @@ AbstractEntity.prototype.getWhereObject = function(obj) {
   var values = [];
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
-      keys.push(key + ' = ?');
+      keys.push(key + ' LIKE ?');
       values.push(obj[key]);
     }
   }
