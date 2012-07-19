@@ -261,13 +261,19 @@ function profileAutocomplete(prefix, callback) {
     return;
   }
   plus.getPeople({'person.name': prefix + '%'}, function(getPeopleResponse) {
+    var persons = {};
+    if (getPeopleResponse.status) {
+      getPeopleResponse.data.forEach(function(person) {
+        person.photoUrl = person.photo;
+        persons[person.id] = person;
+      });
+    }
     plus.profileAutocomplete(function(response) {
       var results = response[1];
       if (!results) {
         callback([]);
       }
 
-      var persons = [];
       for (var i = 0; i < results.length; ++i) {
         var personObject = results[i];
         var personData = results[i][3][0];
@@ -278,9 +284,13 @@ function profileAutocomplete(prefix, callback) {
         if (personData['p']) {
           person.photoUrl = 'https:' + personData['p'] + '?sz=24';
         }
-        persons.push(person);
+        persons[person.id] = person;
       }
-      callback(persons);
+      var resultArray = [];
+      for (var key in persons) {
+        resultArray.push(persons[key]);
+      }
+      callback(resultArray);
     }, prefix);
   });
 }
