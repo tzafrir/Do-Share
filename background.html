@@ -618,6 +618,10 @@ function getLinkMedia(link, callback) {
 
 function newPost(post) {
   function openNewPost() {
+    if (Settings.get('promoText') == 'all') {
+      post.content = post.content || '';
+      post.content += '\n_(Shared using #DoShare)_';
+    }
     // Set temporary values and open the frontend. Expect frontend to clear these from LS.
     localStorage['_tmp_post'] = JSON.stringify(post);
     chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
@@ -663,7 +667,7 @@ function resharePost(url, htmlContent, mentioned) {
       }
       content = content.replace('${DS_POST_IDENTIFIER}', postIdentifier);
     }
-    if (Settings.get('promoText') != 'none') {
+    if (Settings.get('promoText') == 'shares') {
       content += '\n\n_(Shared using #DoShare)_';
     }
     var post = {reshare: data,
