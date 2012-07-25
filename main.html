@@ -647,7 +647,6 @@ function uncollapse(force) {
     }
     $('#posts').css({opacity: 0.7});
   }
-  chrome.extension.sendRequest({type: 'getIdentities'}, function(e){console.log(e)});
 }
 
 function collapse(immediately) {
