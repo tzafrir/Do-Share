@@ -82,6 +82,7 @@ img {
   padding: 10px;
   background: #fafafa;
   border-radius: 10px;
+  display: none;
 }
 
 #settings p {
@@ -857,6 +858,20 @@ meter::-webkit-meter-optimum-value {
   box-shadow: 0 2px 0 #dadada;
   padding: 10px 5px 10px 5px;
   cursor: pointer;
+}
+
+#openSettings {
+  position: absolute;
+  display: block;
+  top: -15px;
+  left: -9999px;
+  height: 60px;
+  width: 60px;
+  background: url('/img/gear.svg');
+  background-size: 60px 60px;
+  cursor: pointer;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  opacity: 0.7;
 }
 
 .clearFix {

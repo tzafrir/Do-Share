@@ -750,11 +750,14 @@ function changeTimeIfDraft() {
 }
 
 function setListeners() {
-  $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
-  $('#tellOthers').position({my: 'left', at: 'right', of: '#sendFeedback', offset: '20 0'});
+  function setPositions() {
+    $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
+    $('#tellOthers').position({my: 'left', at: 'right', of: '#sendFeedback', offset: '20 0'});
+    $('#openSettings').position({my: 'right top', at: 'left top', of: '#appWrap', offset: '-60 -30', collision: 'none'});
+  };
+  setPositions();
   $(window).resize(function() {
-    $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap', collision: 'none'});
-    $('#tellOthers').position({my: 'left', at: 'right', of: '#sendFeedback', offset: '20 0', collision: 'none'});
+    setPositions();
   });
   $('#addLink').delegate('.enabled', 'click', function() {
     trackClick('addLink.open');
@@ -1268,6 +1271,21 @@ function setListeners() {
         Settings.set('promoText', val);
         _gaq.push(['_trackEvent', 'settingPromoText', val]);
       });
+  $('#openSettings').click(function() {
+    trackClick(this.id);
+    var settings = $('#settings');
+    if (!settings.is(':visible')) {
+      settings.show('blind', 300);
+      $(this).css({
+        '-webkit-transform': 'rotate(180deg)'
+      });
+    } else {
+      settings.hide('blind', 300);
+      $(this).css({
+        '-webkit-transform': 'rotate(0)'
+      });
+    }
+  });
 }
 
 function addLink(url) {
@@ -1720,6 +1738,7 @@ if (navigator.userAgent.match('Windows')) {
   </div>
   <div id="sendFeedback" class="topTab">send feedback</div>
   <div id="tellOthers" class="topTab">tell others!</div>
+  <div id="openSettings"></div>
   <div id="information" style="display: none">
     <h2>IMMA LET YOU FINISH SCHEDULING, BUT</h2>
     <p>Do Share is a <span>Chrome application<span> that runs <span><strong>only on your computer</strong></span>.<br>
