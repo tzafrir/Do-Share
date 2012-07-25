@@ -1259,6 +1259,10 @@ function setListeners() {
       delete circlesNotify[id];
     }
   });
+  $('#settingPromoText').val(Settings.get('promoText'))
+      .change(function() {
+        Settings.set('promoText', $(this).val());
+      });
 }
 
 function addLink(url) {
