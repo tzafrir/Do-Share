@@ -9,6 +9,8 @@
 <script src="IDBWrap/wrap.js"></script>
 <script src="sched5/Sched5.js"></script>
 
+<script src="settings.js"></script>
+
 <script>
 // HACKKKKKKKKKKK
 function Editor(){};
@@ -661,7 +663,9 @@ function resharePost(url, htmlContent, mentioned) {
       }
       content = content.replace('${DS_POST_IDENTIFIER}', postIdentifier);
     }
-    content += '\n\n_(Shared using #DoShare)_';
+    if (Settings.get('promoText') != 'none') {
+      content += '\n\n_(Shared using #DoShare)_';
+    }
     var post = {reshare: data,
                 share_id: data.update_id,
                 content: content,
