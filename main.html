@@ -1264,7 +1264,9 @@ function setListeners() {
   });
   $('#settingPromoText').val(Settings.get('promoText'))
       .change(function() {
-        Settings.set('promoText', $(this).val());
+        var val = $(this).val();
+        Settings.set('promoText', val);
+        _gaq.push(['_trackEvent', 'settingPromoText', val]);
       });
 }
 
