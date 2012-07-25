@@ -1,10 +1,13 @@
 (function() {
   function _getName(name) {
     return '_setting_' + name;
+  };
+  var defaults = {
+    promoText: 'shares'
   }
   window.Settings = {
-    get: function(name, def) {
-      return localStorage[_getName(name)] || def;
+    get: function(name) {
+      return localStorage[_getName(name)] || defaults[name] || '';
     },
     set: function(name, value) {
       localStorage[_getName(name)] = value;
