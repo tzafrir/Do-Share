@@ -130,7 +130,7 @@ GPEditor.prototype.normalizedHtmlToPlusFormat = function(element) {
       .replace(/<b><\/b>/g, '')
       .replace(/<i><\/i>/g, '')
       .replace(/<(s|strike)><\/(s|strike)>/g, '')
-      .replace(/<p><br><\/p>/g, '<p></p>');
+      .replace(/<br><\/p>/g, '</p>');
   return this.visitNormalizedHtmlNode(clone);
 }
 
