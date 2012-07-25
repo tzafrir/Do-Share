@@ -77,7 +77,7 @@ function sendToDoShare(shareButton) {
     return;
   }
   var source = (document.location.toString().match('notifications/frame')) ? 'notificationShareBox' : 'gplusShareBox';
-  chrome.extension.sendRequest({type: 'newPost', content: sharebox.innerText, source: source}, function(){});
+  chrome.extension.sendRequest({type: 'newPost', content: sharebox.innerText.replace(/\n$/, ''), source: source}, function(){});
 }
 
 /**
