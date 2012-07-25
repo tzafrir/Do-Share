@@ -76,7 +76,7 @@ img {
 
 #settings {
   text-align: left;
-  width: 300px;
+  width: 400px;
   margin: 0 auto;
   border: 1px solid #ccc;
   padding: 10px;
@@ -86,7 +86,7 @@ img {
 }
 
 #settings p {
-  -webkit-margin-after: 5px;
+  clear: right;
 }
 
 #settings select {
@@ -95,6 +95,10 @@ img {
   background-color: #fff;
   font-family: Roboto, Helvetica, Arial, sans-serif;
   outline: 0;
+  float: right;
+  position: relative;
+  top: -5px;
+  margin-bottom: 10px;
 }
 
 #settings option {
@@ -124,6 +128,7 @@ img {
 #top {
   text-align: center;
   height: 92px;
+  clear: both;
 }
 
 #top img {
@@ -870,7 +875,7 @@ meter::-webkit-meter-optimum-value {
   background: url('/img/gear.svg');
   background-size: 60px 60px;
   cursor: pointer;
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  -webkit-transition: -webkit-transform 0.4s ease-in-out;
   opacity: 0.7;
 }
 
