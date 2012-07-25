@@ -70,6 +70,36 @@ img {
   margin: 0 auto;
 }
 
+#settingsWrap {
+  padding-top: 20px;
+}
+
+#settings {
+  text-align: left;
+  width: 300px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #fafafa;
+  border-radius: 10px;
+}
+
+#settings p {
+  -webkit-margin-after: 5px;
+}
+
+#settings select {
+  border-radius: 6px;
+  color: #121212;
+  background-color: #fff;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  outline: 0;
+}
+
+#settings option {
+  background-color: #fdfdfd;
+}
+
 #closeCircleChooser, #removeLink, #removeReshare {
   display: inline-block;
   opacity: 0;
