@@ -50,7 +50,7 @@ function dbInitCallback(ok) {
 }
 
 // Set up the API
-var plus = new GooglePlusAPI();
+var plus = new GooglePlusAPI({googleid: Settings.get('alternateAccount')});
 var apis = {};
 var identities = [];
 

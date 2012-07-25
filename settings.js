@@ -3,7 +3,8 @@
     return '_setting_' + name;
   };
   var defaults = {
-    promoText: 'shares'
+    promoText: 'shares',
+    alternateAccount: '0'
   }
   window.Settings = {
     get: function(name) {

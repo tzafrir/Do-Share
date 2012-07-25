@@ -1271,6 +1271,12 @@ function setListeners() {
         Settings.set('promoText', val);
         _gaq.push(['_trackEvent', 'settingPromoText', val]);
       });
+  $('#settingAlternateAccount').val(Settings.get('alternateAccount'))
+      .change(function() {
+        var val = $(this).val();
+        Settings.set('alternateAccount', val);
+        _gaq.push(['_trackEvent', 'alternateAccount', val]);
+      });
   $('#openSettings').click(function() {
     trackClick(this.id);
     var settings = $('#settings');
@@ -1662,6 +1668,9 @@ if (navigator.userAgent.match('Windows')) {
             <option value='shares'>Shares only</option>
             <option value='none'>No posts</option>
           </select></p>
+        <p>Use alternate Google account (advanced) <select id="settingAlternateAccount">
+          <option value='0'>No (default)</option>
+          <option value='1'>Yes (/u/1)</option></select></p>
       </div>
     </div>
     <div id="top">
