@@ -126,6 +126,8 @@ function isEmptyPost(post) {
       if (post[key].length > 3) {
         return false;
       }
+    } else if (key == 'content' && post[key] == '_(Shared using #DoShare)_') {
+      continue;
     } else if (post[key] && key != 'touch' && key != 'notify' && key != 'circlesNotify' && key != 'circlesNotifyArray') {
       return false;
     }
