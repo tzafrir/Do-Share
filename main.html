@@ -753,8 +753,8 @@ function changeTimeIfDraft() {
 
 function setListeners() {
   function setPositions() {
-    $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap'});
-    $('#tellOthers').position({my: 'left', at: 'right', of: '#sendFeedback', offset: '20 0'});
+    $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap', collision: 'none'});
+    $('#tellOthers').position({my: 'left', at: 'right', of: '#sendFeedback', offset: '20 0', collision: 'none'});
     $('#openSettings').position({my: 'right top', at: 'left top', of: '#appWrap', offset: '-60 -30', collision: 'none'});
   };
   setPositions();
