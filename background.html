@@ -53,6 +53,7 @@ function dbInitCallback(ok) {
 // Set up the API
 var plus = new GooglePlusAPI({googleid: Settings.get('alternateAccount')});
 var apis = {};
+var postTrackers = {};
 var identities = [];
 
 function initialize() {
@@ -79,6 +80,9 @@ function initialize() {
                   identities = newIdentities;
                 }
               });
+              if (!postTrackers[api.getInfo().id]) {
+                postTrackers[api.getInfo().id] = new PostTracker(api);
+              }
             }
             if (!(api.getInfo() && api.getInfo().id == uid)) {
               api.init(function() {

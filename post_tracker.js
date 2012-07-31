@@ -48,3 +48,7 @@ PostTracker.prototype._countPosts = function(callback) {
 PostTracker.prototype.getCount = function() {
   return this._count;
 }
+
+PostTracker.prototype.afterLocallyPosting = function() {
+  this._count++;
+}
