@@ -17,7 +17,11 @@ PostTracker.prototype._countPosts = function(callback) {
   var count = 0;
   var self = this;
   function work(response) {
-    if (!response.status || response.data.length == 0) {
+    if (!response.status) {
+      self._count = undefined;
+      callback(count);
+      return;
+    } else if (response.data.length == 0) {
       self._count = count;
       callback(count);
       return;
