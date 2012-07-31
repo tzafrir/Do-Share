@@ -354,6 +354,7 @@ function publish(post, callback) {
     addPost(post, callback);
     return;
   }
+  postTrackers[api.getInfo().id].afterLocallyPosting();
   api.newPost(wrapCallback, post);
   console.log("Posting");
   console.log(post);
