@@ -1,6 +1,7 @@
 (function() {
 
 var PHOTO_BUTTON_CONTAINER_RIGHT_SIDE_SELECTOR = '.hQ.a-f-e';
+var PHOTO_CONTAINER_SELECTOR = '.gQ';
 
 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
@@ -23,7 +24,7 @@ function getPhotoId() {
 }
 
 function addButton() {
-  var container = document.querySelector(".photo-container");
+  var container = document.querySelector(PHOTO_CONTAINER_SELECTOR);
   if (!container) {
     // Retry religiously
     window.setTimeout(addButton, 100);
@@ -39,9 +40,11 @@ function addButton() {
     console.error('no button area found');
     return;
   }
+
   var button1 = buttonArea.childNodes[0];
   var newButton = button1.cloneNode(true);
   newButton.id = "ds-send-photo";
+  newButton.querySelector('[role=button]').style.display = null;
   newButton.querySelector("span").innerText = "Send to Do Share";
   newButton.onclick = function() {
     var photoId = getPhotoId();
