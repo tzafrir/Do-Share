@@ -56,7 +56,9 @@ var apis = {};
 var postTrackers = {};
 var identities = [];
 
+var initTimeoutId;
 function initialize() {
+  window.clearTimeout(initTimeoutId);
   try {
     plus.init(function(response) {
       if (response.status) {
@@ -94,9 +96,9 @@ function initialize() {
           });
         });
 
-        window.setTimeout(initialize, INIT_REPEAT_INTERVAL);
+        initTimeoutId = window.setTimeout(initialize, INIT_REPEAT_INTERVAL);
       } else {
-        window.setTimeout(initialize, INIT_RETRY_INTERVAL);
+        initTimeoutId = window.setTimeout(initialize, INIT_RETRY_INTERVAL);
       }
     });
   } catch (e) {
