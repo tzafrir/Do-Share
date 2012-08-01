@@ -1383,6 +1383,7 @@ function createAlbumIfNotExisting(callback) {
     } catch(e) {
       console.error(e);
       _gaq.push(['_trackEvent', 'Failure', 'albumFeedParseError']);
+      return;
     }
     try {
       var albums = json.feed.entry;
