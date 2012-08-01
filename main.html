@@ -1278,6 +1278,7 @@ function setListeners() {
         var val = $(this).val();
         Settings.set('alternateAccount', val);
         _gaq.push(['_trackEvent', 'alternateAccount', val]);
+        chrome.extension.sendRequest({type: 'reInit'}, function() {});
       });
   $('#openSettings').click(function() {
     trackClick(this.id);
