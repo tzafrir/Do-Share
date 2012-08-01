@@ -1295,6 +1295,9 @@ function setListeners() {
       });
     }
   });
+  $('#refreshLogin').click(function() {
+    chrome.extension.sendRequest({type: 'refreshLogin'}, function() {});
+  });
 }
 
 function addLink(url) {
@@ -1675,6 +1678,7 @@ if (navigator.userAgent.match('Windows')) {
         <p>Use alternate Google account (advanced) <select id="settingAlternateAccount">
           <option value='0'>No (default)</option>
           <option value='1'>Yes (/u/1)</option></select></p>
+        <p>Log out and reconnect to Google<button id="refreshLogin">Refresh login</button></p>
       </div>
     </div>
     <div id="top">

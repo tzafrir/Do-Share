@@ -89,15 +89,27 @@ img {
   clear: right;
 }
 
-#settings select {
+#settings select, #settings button {
   color: #121212;
   background-color: #fff;
   font-family: Roboto, Helvetica, Arial, sans-serif;
   outline: 0;
+  border: 1px solid #121212;
   float: right;
   position: relative;
   top: -5px;
   margin-bottom: 10px;
+  width: 100px;
+  text-align: left;
+}
+
+#settings button {
+  box-shadow: 0 1px 0 #444;
+}
+
+#settings button:active {
+  box-shadow: none;
+  top: -4px;
 }
 
 #settings option {
