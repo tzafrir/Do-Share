@@ -22,4 +22,5 @@ a, a:active {
 <body>
 <p><a href='main.html'>Do Share</a></p>
 <p><a href='debug.html'>debug info</a></p>
+<p><script>document.write(chrome.extension.getBackgroundPage().postTrackers[chrome.extension.getBackgroundPage().plus.getInfo().id].getCount())</script></p>
 <iframe src='privacy.html' />
