@@ -57,9 +57,12 @@ var postTrackers = {};
 var identities = [];
 
 var initTimeoutId;
-function initialize() {
+function initialize(opts) {
   window.clearTimeout(initTimeoutId);
   try {
+    if (opts.clearPrevious) {
+      plus._db.clearAll(c);
+    }
     plus.init(function(response) {
       if (response.status) {
         var uid = plus.getInfo().id;
@@ -87,6 +90,9 @@ function initialize() {
               }
             }
             if (!(api.getInfo() && api.getInfo().id == uid)) {
+              if (opts.clearPrevious) {
+                api._db.clearAll(c);
+              }
               api.init(function() {
                 addApi();
               });
@@ -107,7 +113,7 @@ function initialize() {
     window.setTimeout(initialize, INIT_RETRY_INTERVAL);
   }
 };
-initialize();
+initialize({clearPrevious: true});
 
 var lastUpdate = -1;
 function update() {
@@ -773,6 +779,8 @@ function onRequest(request, sender, callback) {
     });
   } else if (type == 'oauthAuthenticate') {
     oauth.authorize(callback);
+  } else if (type == 'reInit') {
+    initialize({clearPrevious: true});
   }
 }
 
