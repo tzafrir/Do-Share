@@ -813,7 +813,7 @@ function onRequest(request, sender, callback) {
   } else if (type == 'reInit') {
     initialize({clearPrevious: true});
     callback();
-  } else if (type = 'refreshLogin') {
+  } else if (type == 'refreshLogin') {
     initialize({clearPrevious: true});
     callback();
     oauth.clearTokens();
