@@ -329,6 +329,14 @@ function publishScheduled(post) {
 function publish(post, callback) {
   var postBackup = JSON.stringify(post);
   trackPost(post);
+  if (Settings.get('autoNumberPosts')) {
+    var shareAs = post.shareAs.id || plus.getInfo().id;
+    if (post.title) {
+      post.title = getPostNumberingString(shareAs) + post.title;
+    } else {
+      post.content = getPostNumberingString(shareAs) + post.content;
+    }
+  }
   if (post.title) {
     post.content = '*' + post.title.replace(/(\s|&nbsp;)+$/, '') + '*\n\n' + post.content;
   }
@@ -737,6 +745,25 @@ function getApi(identityId) {
     api = plus;
   }
   return api;
+}
+
+function getPostNumberingString(shareAs) {
+  var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var pt = postTrackers[shareAs];
+  if (!pt) {
+    console.error('No postTracker for ' + shareAs);
+    return '';
+  }
+  var number = pt.getCount();
+  if (number == undefined || number == null) {
+    console.error('Post count not defined when posting');
+    return '';
+  }
+  number += 1;
+  if (number < 10) {
+    number = '0' + number;
+  }
+  return '(' + days[new Date().getDay()] + number + ') ';
 }
 
 function onRequest(request, sender, callback) {
