@@ -4,7 +4,8 @@
   };
   var defaults = {
     promoText: 'shares',
-    alternateAccount: '0'
+    alternateAccount: '0',
+    postNumbering: '0'
   }
   window.Settings = {
     get: function(name) {

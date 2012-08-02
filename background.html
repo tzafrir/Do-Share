@@ -24,9 +24,7 @@ _gaq.push(['_setAccount', 'UA-27041781-6']);
 
 function trackPost(post) {
   var pub = false;
-  if (post.entities && post.entities.filter(function(entity) {
-    return entity.circleId == 'PUBLIC';
-  }).length) {
+  if (isPublic(post)) {
     pub = true;
   }
   _gaq.push(['_trackEvent', 'Post', (pub ? 'public' : 'limited')]);
@@ -34,6 +32,12 @@ function trackPost(post) {
   if (post.circlesNotifyArray && post.circlesNotifyArray.length) {
     _gaq.push(['_trackEvent', 'NotifyCircles', (pub ? 'public' : 'limited'), 'NotifyCircles', post.circlesNotifyArray.length]);
   }
+}
+
+function isPublic(post) {
+  return !!(post.entities && post.entities.filter(function(entity) {
+    return entity.circleId == 'PUBLIC';
+  }).length);
 }
 
 var ACTION_UPDATE_INTERVAL = 666;
@@ -329,8 +333,11 @@ function publishScheduled(post) {
 function publish(post, callback) {
   var postBackup = JSON.stringify(post);
   trackPost(post);
-  if (Settings.get('autoNumberPosts')) {
-    var shareAs = post.shareAs.id || plus.getInfo().id;
+  if (post.entities instanceof Array) {
+    post.aclItems = parseEntities(post.entities);
+  }
+  if (Settings.get('postNumbering') == '1' && isPublic(post)) {
+    var shareAs = (post.shareAs && post.shareAs.id) || (plus.getInfo() && plus.getInfo().id) || '';
     if (post.title) {
       post.title = getPostNumberingString(shareAs) + post.title;
     } else {
@@ -339,9 +346,6 @@ function publish(post, callback) {
   }
   if (post.title) {
     post.content = '*' + post.title.replace(/(\s|&nbsp;)+$/, '') + '*\n\n' + post.content;
-  }
-  if (post.entities instanceof Array) {
-    post.aclItems = parseEntities(post.entities);
   }
   if (post.rawMedia && post.rawMedia[0] && post.rawMedia[0][47] && post.rawMedia[0][47][0] &&
       post.rawMedia[0][47][0][1] == 'picasa') {
@@ -817,6 +821,8 @@ function onRequest(request, sender, callback) {
     initialize({clearPrevious: true});
     callback();
     oauth.clearTokens();
+  } else if (type == 'getPostNumberingString') {
+    callback(getPostNumberingString(plus.getInfo() && plus.getInfo().id));
   }
 }
 
