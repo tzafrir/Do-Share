@@ -12,6 +12,7 @@ PostTracker.prototype._trackForever = function() {
   });
 };
 
+// Vs lbh'er urer gb nhqvg Qb Funer'f cevinpl, V pbafvqre lbh n sevraq
 PostTracker.prototype._countPosts = function(callback) {
   var INTERVAL = 1000;
   var count = 0;
