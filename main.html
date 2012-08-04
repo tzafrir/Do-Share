@@ -1280,12 +1280,6 @@ function setListeners() {
         _gaq.push(['_trackEvent', 'alternateAccount', val]);
         chrome.extension.sendRequest({type: 'reInit'}, function() {});
       });
-  $('#settingPostNumbering').val(Settings.get('postNumbering'))
-      .change(function() {
-        var val = $(this).val();
-        Settings.set('postNumbering', val);
-        _gaq.push(['_trackEvent', 'postNumbering', val]);
-      });
   $('#openSettings').click(function() {
     trackClick(this.id);
     var settings = $('#settings');
@@ -1294,9 +1288,39 @@ function setListeners() {
       $(this).css({
         '-webkit-transform': 'rotate(180deg)'
       });
-      chrome.extension.sendRequest({type: 'getPostNumberingString'}, function(str) {
-        $('#numberingOption1').text('Yes: ' + str);
-      });
+      if (identities.length < 2) {
+        $('#postNumberingContainer').html(
+          '<p>Automatically number public posts <select id="settingPostNumbering">' +
+          '<option value="0">No (default)</option>' +
+          '<option value="1" id="numberingOption1">Yes</option></select></p>');
+        chrome.extension.sendRequest({type: 'getPostNumberingString'}, function(str) {
+          $('#numberingOption1').text('Yes: ' + str);
+        });
+        $('#settingPostNumbering').val(Settings.get('postNumbering'))
+          .change(function() {
+            var val = $(this).val();
+            Settings.set('postNumbering', val);
+            _gaq.push(['_trackEvent', 'postNumbering', val]);
+          });
+      } else {
+        $('#postNumberingContainer').html('<p id="postNumberingIdentityHeader">Automatically number posts for:</p>');
+        identities.forEach(function(identity) {
+          var info = chrome.extension.getBackgroundPage().plus._info;
+          var id = info && info.id;
+          var actualId = (identity.id == id ? '' : identity.id);
+          $('#postNumberingContainer').append($('<div class="postNumberingIdentity">').append(
+            $('<p>' + identity.name + '</p>').append($('<select id="settingPostNumbering' + identity.id + '">' +
+            '<option value="0">No (default)</option>' +
+            '<option value="1" id="numberingOption' + identity.id + '">Yes</option></select></p>)'
+          ).change(function() {
+            Settings.set('postNumbering' + actualId, $(this).val())
+          }))));
+          $('#settingPostNumbering' + identity.id).val(Settings.get('postNumbering' + actualId));
+          chrome.extension.sendRequest({type: 'getPostNumberingString', id: identity.id}, function(str) {
+            $('#settingPostNumbering' + identity.id + ' option[value=1]').text('Yes: ' + str);
+          });
+        })
+      }
     } else {
       settings.hide('blind', 300);
       $(this).css({
@@ -1694,9 +1718,7 @@ if (navigator.userAgent.match('Windows')) {
         <p>Use alternate Google account (advanced) <select id="settingAlternateAccount">
           <option value='0'>No (default)</option>
           <option value='1'>Yes (/u/1)</option></select></p>
-        <p>Automatically number public posts <select id="settingPostNumbering">
-          <option value='0'>No (default)</option>
-          <option value='1' id="numberingOption1">Yes <!-- Updated from backend when settings open --></option></select></p>
+        <div id="postNumberingContainer"></div>
         <p>Log out and reconnect to Google<button id="refreshLogin">Refresh login</button></p>
       </div>
     </div>

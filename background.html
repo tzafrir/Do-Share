@@ -336,7 +336,8 @@ function publish(post, callback) {
   if (post.entities instanceof Array) {
     post.aclItems = parseEntities(post.entities);
   }
-  if (Settings.get('postNumbering') == '1' && isPublic(post)) {
+  var idForSettings = (post.shareAs && post.shareAs.id) || '';
+  if (Settings.get('postNumbering' + idForSettings) == '1' && isPublic(post)) {
     var shareAs = (post.shareAs && post.shareAs.id) || (plus.getInfo() && plus.getInfo().id) || '';
     if (post.title) {
       post.title = getPostNumberingString(shareAs) + post.title;
@@ -822,7 +823,8 @@ function onRequest(request, sender, callback) {
     callback();
     oauth.clearTokens();
   } else if (type == 'getPostNumberingString') {
-    callback(getPostNumberingString(plus.getInfo() && plus.getInfo().id));
+    var id = request.id || (plus.getInfo() && plus.getInfo().id);
+    callback(getPostNumberingString(id));
   }
 }
 

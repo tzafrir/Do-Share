@@ -116,6 +116,14 @@ img {
   background-color: #fdfdfd;
 }
 
+#postNumberingIdentityHeader {
+  margin-bottom: 10px;
+}
+
+.postNumberingIdentity {
+  margin-left: 20px;
+}
+
 #closeCircleChooser, #removeLink, #removeReshare {
   display: inline-block;
   opacity: 0;
