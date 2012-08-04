@@ -25,7 +25,7 @@ IDBWrap.prototype.init = function(callback) {
  */
 IDBWrap.prototype.put = function(item, callback) {
   var db = this._db;
-  var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_WRITE);
+  var trans = db.transaction([this.STORE_NAME], 'readwrite');
   var store = trans.objectStore(this.STORE_NAME);
   var request = store.put(item);
 
@@ -108,9 +108,11 @@ IDBWrap.prototype._fail = function(callback, message) {
 }
 
 IDBWrap.prototype._getItemStore = function() {
+  try {
   var db = this._db;
-  var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_ONLY);
+  var trans = db.transaction([this.STORE_NAME], 'readonly');
   return trans.objectStore(this.STORE_NAME);
+  } catch(e){console.log(e)}
 }
 
 IDBWrap.prototype._processAllItemsByRange = function(keyRange, callback) {
@@ -132,7 +134,7 @@ IDBWrap.prototype._processAllItemsByRange = function(keyRange, callback) {
 
 IDBWrap.prototype._removeItem = function(key, callback) {
   var db = this._db;
-  var trans = db.transaction([this.STORE_NAME], IDBTransaction.READ_WRITE);
+  var trans = db.transaction([this.STORE_NAME], 'readwrite');
   var store = trans.objectStore(this.STORE_NAME);
   var request = store.delete(key);
 
