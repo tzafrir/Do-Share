@@ -90,7 +90,12 @@ GPEditor.prototype.getText = function() {
   this.normalizeHtml(clone);
   return this.normalizedHtmlToPlusFormat(clone)
       .replace(/^\s*/, '')
-      .replace(/\s*$/, '');
+      .replace(/\s*$/, '')
+      .split('\n')
+      .map(function(line) {
+        return line.replace(/\s*$/, '');
+      })
+      .join('\n');
 }
 
 GPEditor.prototype.setText = function(text) {
