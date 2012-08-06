@@ -1547,7 +1547,7 @@ function redrawIdentities() {
   });
   $('#content').bind('keydown', function(e) {
     var KEY_TAB = 9;
-    if (e.keyCode == 9) {
+    if (e.keyCode == 9 && !e.shiftKey) {
       $('#buttonPost').focus();
       e.preventDefault();
     }
