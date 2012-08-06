@@ -791,11 +791,8 @@ function onRequest(request, sender, callback) {
     resharePost(request.url, request.htmlContent, request.mentioned);
     _gaq.push(['_trackEvent', 'Source', (request.htmlContent ? 'commentReshare' : 'streamReshare')]);
   } else if (type == 'getId') {
-    if (!plus.isAuthenticated()) {
-      plus.init(c);
-    }
-    var info = plus.getInfo();
-    if (plus.isAuthenticated() && info) {
+    var info = plus && plus.getInfo();
+    if (plus && plus.isAuthenticated() && info) {
       callback({'id': plus.getInfo().id});
     } else {
       callback({})
