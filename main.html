@@ -809,7 +809,7 @@ function setListeners() {
   $('#buttonSchedule').click(function() {
     trackClick(this.id);
     var jself = $(this);
-    var muteWhenScheduling = '#editbox, #circleChooserBar, .buttonNotSchedule';
+    var muteWhenScheduling = '#editbox, .buttonNotSchedule';
     if (jself.data('active')) {
       $('#scheduleBar').hide('blind', 400);
       jself.removeClass('opened');
