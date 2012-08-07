@@ -412,11 +412,8 @@ function addPost(post, callback) {
 }
 
 function fetchAll(reqLastUpdate, callback) {
-  if (!dbInit) {
-    return;
-  }
   var result = {posts: [], lastUpdate: lastUpdate};
-  if (reqLastUpdate == lastUpdate) {
+  if (!dbInit || reqLastUpdate == lastUpdate) {
     callback(result);
     return;
   }
