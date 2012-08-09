@@ -612,6 +612,10 @@ function populateEditorMediaArea(medias) {
       $('#linkBar').hide('blind', 100);
     }
     $('#postActions .postAction span').attr({'class': 'disabled'});
+    $('#addPhotoAction').attr({
+      'class': 'override',
+      'title': 'Remove link and add photo'
+    });
     $('#addLinkAction').attr({'class': 'loaded'});
   };
   if (link || mediasLink) {
@@ -1143,7 +1147,10 @@ function setListeners() {
       }
     }
   });
-  $('#addPhoto').delegate('.enabled', 'click', function() {
+  $('#addPhoto').delegate('.enabled, .override', 'click', function() {
+    if ($(this).is('.override')) {
+      removeLink();
+    }
     trackClick('addPhoto');
     var authed = false;
     function file_click() {
