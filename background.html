@@ -130,13 +130,17 @@ function update() {
 
 function c(e){console.log(e)}
 
-var s;
-var db = new IDBWrap("nightwatchDb", "writeTimeStamp");
-db.init(function(ok){
-  dbInitCallback(ok);
-  s = new Sched5("nightwatch", "writeTimeStamp", publishScheduled, handleMissedPost);
-  s.init(dbInitCallback);
-});
+try {
+  var s;
+  var db = new IDBWrap("nightwatchDb", "writeTimeStamp");
+  db.init(function(ok){
+    dbInitCallback(ok);
+    s = new Sched5("nightwatch", "writeTimeStamp", publishScheduled, handleMissedPost);
+    s.init(dbInitCallback);
+  });
+} catch(e) {
+  console.error('Error initializing database', e);
+}
 
 var actionController = new BrowserActionController();
 
