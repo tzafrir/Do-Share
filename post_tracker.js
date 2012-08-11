@@ -7,7 +7,9 @@ function PostTracker(plus) {
 PostTracker.prototype._trackForever = function() {
   var INTERVAL = 30000;
   var self = this;
-  this._countPosts(function() {});
+  this._countPosts(function(count) {
+    self._count = count;
+  });
   window.setTimeout(function(){self._trackForever();}, INTERVAL);
 };
 
@@ -18,11 +20,9 @@ PostTracker.prototype._countPosts = function(callback) {
   var self = this;
   function work(response) {
     if (!response.status) {
-      self._count = undefined;
-      callback(count);
+      callback(undefined);
       return;
     } else if (response.data.length == 0) {
-      self._count = count;
       callback(count);
       return;
     }
@@ -33,7 +33,6 @@ PostTracker.prototype._countPosts = function(callback) {
     for (var i = 0; i < response.data.length; ++i) {
       var post = response.data[i];
       if (post.time < startOfDay) {
-        self._count = count;
         callback(count);
         return;
       }
