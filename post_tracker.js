@@ -7,9 +7,8 @@ function PostTracker(plus) {
 PostTracker.prototype._trackForever = function() {
   var INTERVAL = 30000;
   var self = this;
-  this._countPosts(function(count) {
-    window.setTimeout(function(){self._trackForever();}, INTERVAL);
-  });
+  this._countPosts(function() {});
+  window.setTimeout(function(){self._trackForever();}, INTERVAL);
 };
 
 // Vs lbh'er urer gb nhqvg Qb Funer'f cevinpl, V pbafvqre lbh n sevraq
