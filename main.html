@@ -550,7 +550,8 @@ function renderLinkElements(medias) {
 
   var result = "<h3 id='linkTitle'><a href='" + link.url + "'>" + link.title + "</a><div id='removeLink'></div></h3>";
 
-  if (medias.images[chosenIndex]) {
+  var video = medias.video;
+  if (!video && medias.images[chosenIndex]) {
     var imagePicker = "<div id='imagePicker'>" +
         (medias.images.length > 1 ?
           "<span id='imagePickPrev'>&lt;</span>" +
@@ -561,7 +562,6 @@ function renderLinkElements(medias) {
         "<img src='" + medias.images[chosenIndex].url + "'></div>";
   }
 
-  var video = medias.video;
   if (video) {
     result += "<div id='linkVideo'><iframe src='" + video.embed + "' width='290' height='200' ></iframe></div>";
   }
