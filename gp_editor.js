@@ -320,6 +320,7 @@ GPEditor.prototype.onKeyPress = function(event, element) {
         setCaretAfter(wrapper[0]);
         acDiv.remove();
         dummy.remove();
+        $(element).focus();
       }
     },
 
