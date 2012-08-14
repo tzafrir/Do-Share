@@ -7,7 +7,7 @@
  *
  * @param{function(string, function(person<Array>))} profileAutocompleter.
  */
-function GPEditor(div, text, id, profileAutocompleter, mentionMap, disableToolbar, mentionCallback) {
+function GPEditor(div, text, id, profileAutocompleter, mentionMap, disableToolbar, mentionCallback, hashtagAutoCompleter) {
   var toolbar = document.createElement('div');
   toolbar.innerHTML = 
       ('<div class="toolbar">' +
@@ -25,6 +25,7 @@ function GPEditor(div, text, id, profileAutocompleter, mentionMap, disableToolba
   this.CONTAINER_CLASSNAME = 'gp-e-container';
   this._profileAutocompleter = profileAutocompleter;
   this._mentionCallback = mentionCallback;
+  this._hashtagAutocompleter = hashtagAutoCompleter;
 
   var container = this._container = document.createElement('div');
   container.className = this.CONTAINER_CLASSNAME;
@@ -211,10 +212,11 @@ GPEditor.prototype.visitNormalizedHtmlNode = function(element) {
 GPEditor.prototype.onKeyPress = function(event, element) {
   var KEY = {
     PLUS: 43,
-    AT: 64
+    AT: 64,
+    HASH: 35
   };
   var k = event.keyCode;
-  if (!(k == KEY.AT || k == KEY.PLUS)) {
+  if (!(k == KEY.AT || k == KEY.PLUS || k == KEY.HASH)) {
     return;
   }
 
@@ -240,12 +242,16 @@ GPEditor.prototype.onKeyPress = function(event, element) {
   }
 
   event.preventDefault();
+  var chars = {};
+  chars[KEY.AT] = '@';
+  chars[KEY.PLUS] = '+';
+  chars[KEY.HASH] = '#';
   var wrapper = $('<span>'),
       proflinkWrapper = $('<span class="proflinkWrapper"></span>')
         .css({'white-space': 'nowrap'})
         .attr({contenteditable: false})
         .appendTo(wrapper),
-      plusSpan = $('<span></span>').addClass('proflinkPrefix').text((k == KEY.AT ? '@' : '+')).appendTo(proflinkWrapper),
+      plusSpan = $('<span></span>').addClass('proflinkPrefix').text(chars[k]).appendTo(proflinkWrapper),
       a = $('<a></a>').addClass('proflink').appendTo(proflinkWrapper),
       dummy = $('<pre>').css({
         display: 'inline-block',
@@ -278,30 +284,42 @@ GPEditor.prototype.onKeyPress = function(event, element) {
     minLength: 0,
     autoFocus: true,
     source: function(request, callback) {
-      self._profileAutocompleter(request.term, callback);
+      if (!(k == KEY.HASH)) {
+        self._profileAutocompleter(request.term, callback);
+      } else {
+        self._hashtagAutocompleter(request.term, callback);
+      }
     },
     focus: function() {return false;},
     open: function() {
       $('.ui-autocomplete').css('width', '');
-    },
+    }.bind(this),
     select: function(event, ui) {
-      plusSpan.text('+');
+      var char = (k == KEY.HASH ? '#' : '+');
+      plusSpan.text(char);
       var item = ui.item;
-      a.attr({
-            oid: item.id,
-            href: 'https://plus.google.com/' + item.id
-          }).text(item.name);
-      wrapper[0].appendChild(document.createTextNode(' '));
-      setCaretAfter(wrapper[0]);
-      acDiv.remove();
-      dummy.remove();
-      $(element).focus();
-      self._mentioned[item.id] = item.name;
-      if (self._mentionCallback) {
-        self._mentionCallback({
-          name: item.name,
-          id: item.id
-        });
+      if (!(k == KEY.HASH)) {
+        a.attr({
+              oid: item.id,
+              href: 'https://plus.google.com/' + item.id
+            }).text(item.name);
+        wrapper[0].appendChild(document.createTextNode(' '));
+        setCaretAfter(wrapper[0]);
+        acDiv.remove();
+        dummy.remove();
+        $(element).focus();
+        self._mentioned[item.id] = item.name;
+        if (self._mentionCallback) {
+          self._mentionCallback({
+            name: item.name,
+            id: item.id
+          });
+        }
+      } else {
+        wrapper.text('#' + item.label + ' ');
+        setCaretAfter(wrapper[0]);
+        acDiv.remove();
+        dummy.remove();
       }
     },
 
@@ -325,10 +343,17 @@ GPEditor.prototype.onKeyPress = function(event, element) {
     }
   })
   .data('autocomplete')._renderItem = function(ul, item) {
-    return $('<li></li>')
-      .data('item.autocomplete', item)
-      .append('<a><span class="gp-e-image"><img src="' + item.photoUrl + '" /></span>' + item.name + '</a>' )
-      .appendTo(ul);
+    if (!(k == KEY.HASH)) {
+      return $('<li></li>')
+        .data('item.autocomplete', item)
+        .append('<a><span class="gp-e-image"><img src="' + item.photoUrl + '" /></span>' + item.name + '</a>' )
+        .appendTo(ul);
+    } else {
+      return $('<li></li>')
+        .data('item.autocomplete', item)
+        .append('<a>&nbsp;&nbsp;&nbsp;#' + item.label + '</a>')
+        .appendTo(ul);
+    }
   }
   input.css({
     position: 'absolute',

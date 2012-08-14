@@ -1178,13 +1178,13 @@ body .ui-datepicker-next-hover.ui-state-hover {
   max-height: 222px;
 }
 
-#circleChooserBar a,
-.gp-mention a {
+#circleChooserBar .ui-menu .ui-menu-item a,
+.gp-mention .ui-menu .ui-menu-item a {
   font-size: 13px;
   font-family: Helvetica, Arial, sans-serif;
   display: inline-block;
   width: 100%;
-  height: 44px;
+  line-height: 44px;
   border-radius: 0;
   color: #000;
 }

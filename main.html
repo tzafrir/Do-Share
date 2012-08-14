@@ -193,6 +193,10 @@ function profileAutocompleter(prefix, callback) {
   chrome.extension.sendRequest({type: 'profileAutocomplete', prefix: prefix}, callback);
 }
 
+function hashtagAutocompleter(prefix, callback) {
+  chrome.extension.sendRequest({type: 'hashtagAutocomplete', prefix: prefix}, callback);
+}
+
 function populateTimeFields(timeStamp) {
   if (timeStamp) {
     function f(t) {
@@ -260,9 +264,9 @@ function addDraftEditBox(post) {
   };
 
   gpe = new GPEditor(document.getElementById('content'),
-      content, writeTimeStamp, profileAutocompleter, mentioned, false, onMention);
+      content, writeTimeStamp, profileAutocompleter, mentioned, false, onMention, hashtagAutocompleter);
   title_gpe = new GPEditor(document.getElementById('title'),
-      title, 'Title', profileAutocompleter, mentioned, true, onMention);
+      title, 'Title', profileAutocompleter, mentioned, true, onMention, hashtagAutocompleter);
   function onchange(e) {
     if (title_gpe.getText()) {
       $('#titlePlaceholder').hide();

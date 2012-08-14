@@ -299,6 +299,7 @@ function profileAutocomplete(prefix, callback) {
       var results = response[1];
       if (!results) {
         callback([]);
+        return;
       }
 
       for (var i = 0; i < results.length; ++i) {
@@ -320,6 +321,23 @@ function profileAutocomplete(prefix, callback) {
       callback(resultArray);
     }, prefix);
   });
+}
+
+function hashtagAutocomplete(prefix, callback) {
+  if (!prefix) {
+    return;
+  }
+  plus.hashtagAutocomplete(function(response) {
+    var results = response[1];
+    if (!results) {
+      callback([]);
+      return;
+    }
+
+    callback(results.map(function(result) {
+      return result[0];
+    }));
+  }, prefix);
 }
 
 function handleMissedPost(post) {
@@ -800,6 +818,8 @@ function onRequest(request, sender, callback) {
     }
   } else if (type == 'profileAutocomplete') {
     profileAutocomplete(request.prefix, callback);
+  } else if (type == 'hashtagAutocomplete') {
+    hashtagAutocomplete(request.prefix, callback);
   } else if (type == 'getLinkMedia') {
     getLinkMedia(request.link, function(rawMedia) {
       callback(processMediaItems(rawMedia));
