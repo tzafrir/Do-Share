@@ -287,6 +287,14 @@ GPEditor.prototype.onKeyPress = function(event, element) {
       if (!(k == KEY.HASH)) {
         self._profileAutocompleter(request.term, callback);
       } else {
+        if (request.term.indexOf(' ') != -1) {
+          wrapper.text('#' + request.term);
+          setCaretAfter(wrapper[0]);
+          acDiv.remove();
+          dummy.remove();
+          $(element).focus();
+          return false;
+        }
         self._hashtagAutocompleter(request.term, callback);
       }
     },
