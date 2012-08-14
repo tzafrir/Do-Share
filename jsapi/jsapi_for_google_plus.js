@@ -149,7 +149,7 @@ GooglePlusAPI.prototype._requestService = function(callback, urlTemplate, postDa
       if (self._isPhotoJson(text)) {
         results = self._parsePhotosJSON(text);
       } else {
-        var uglyResults = data.responseText.substring(4);
+        var uglyResults = text.substring(4);
         results = self._parseJSON(uglyResults);
       }
       callback(Array.isArray(results) ? results[0] : results);
@@ -1574,8 +1574,23 @@ GooglePlusAPI.prototype.fetchPhotoMetadata = function(callback, photoId) {
 }
 
 GooglePlusAPI.prototype.profileAutocomplete = function(callback, prefix) {
+  if (!this._verifySession('profileAutocomplete', arguments)) {
+    return;
+  }
   var params = "?ds=es_profiles&client=es-sharebox&partnerid=es-profiles" +
                '&tok=' + this._suggestToken + '&authuser=0&q=' + prefix;
+  var self = this;
+  this._requestService(function(response) {
+    self._fireCallback(callback, response);
+  }, this.COMPLETE_API + params);
+}
+
+GooglePlusAPI.prototype.hashtagAutocomplete = function(callback, prefix) {
+  if (!this._verifySession('hashtagAutocomplete', arguments)) {
+    return;
+  }
+  var params = "?client=es-hashtags" +
+               '&tok=' + this._suggestToken + '&q=' + prefix;
   var self = this;
   this._requestService(function(response) {
     self._fireCallback(callback, response);
