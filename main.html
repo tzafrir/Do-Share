@@ -1027,7 +1027,7 @@ function setListeners() {
         // TODO: Can later change to check against true once backwards compatibility isn't an issue.
         var memPost = mem[curTimeStamp];
         var allowPublic = true;
-        if (memPost && memPost.reshare) {
+        if (memPost && memPost.reshare && (memPost.reshare.isPublic === false)) {
           if (!(identities[0] && identities[0].id == memPost.reshare.author_id)) {
             allowPublic = false;
           }
