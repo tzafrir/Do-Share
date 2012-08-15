@@ -1025,7 +1025,14 @@ function setListeners() {
         var matchingCircles = [];
 
         // TODO: Can later change to check against true once backwards compatibility isn't an issue.
-        if (!(mem[curTimeStamp] && mem[curTimeStamp].reshare && mem[curTimeStamp].reshare.isPublic === false)) {
+        var memPost = mem[curTimeStamp];
+        var allowPublic = true;
+        if (memPost && memPost.reshare) {
+          if (!(identities[0] && identities[0].id == memPost.reshare.author_id)) {
+            allowPublic = false;
+          }
+        }
+        if (allowPublic) {
           matchingCircles = matchingCircles.concat([{
             name: 'Public',
             circleId: 'PUBLIC',
