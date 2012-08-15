@@ -1234,7 +1234,8 @@ function setListeners() {
       for (var key in circlesNotify) {
         sum += circlesNotify[key];
       }
-      if (sum + count <= 100 || circlesNotify[$(this).data('id')]) {
+      var MAX_NOTIFY = 50;
+      if (sum + count <= MAX_NOTIFY || circlesNotify[$(this).data('id')]) {
         dialog.append(
           $('<input id="notify_' + $(this).data('id') + '" type="checkbox" ' +
               (circlesNotify[$(this).data('id')] ? 'checked' : '') + '>' +
@@ -1243,7 +1244,7 @@ function setListeners() {
       } else {
         dialog.addClass('notifyTooMany');
         dialog.append($('<span>cannot notify ' + $(this).data('count') + ' ' + (count == 1 ? 'person' : 'people') +
-            '<br>only up to 100 people may be notified about a post</span>'));
+            '<br>only up to ' + MAX_NOTIFY + ' people may be notified about a post</span>'));
       }
       dialog.position({
         my: 'center bottom',
