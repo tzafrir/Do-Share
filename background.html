@@ -352,6 +352,9 @@ function publishScheduled(post) {
 }
 
 function publish(post, callback) {
+  if (!callback) {
+    callback = c;
+  }
   var postBackup = JSON.stringify(post);
   trackPost(post);
   if (post.entities instanceof Array) {
@@ -373,10 +376,18 @@ function publish(post, callback) {
       post.rawMedia[0][47][0][1] == 'picasa') {
     post.isPicasaImage = true;
   }
-  var wrapCallback = function(response) {
-    if (!callback) {
-      callback = c;
+  var published = false;
+  var TIMEOUT_LENGTH = 30 * 1000;
+  window.setTimeout(function() {
+    if (!published) {
+      post = JSON.parse(postBackup);
+      post.state = 'draft';
+      post.error = "Timed out sending post to Google+";
+      post.writeTimeStamp += 1;
+      addPost(post, callback);
     }
+  }, TIMEOUT_LENGTH);
+  var wrapCallback = function(response) {
     if (response.status == false) {
       _gaq.push(['_trackEvent', 'Failure', 'newPost']);
       post = JSON.parse(postBackup);
@@ -386,6 +397,8 @@ function publish(post, callback) {
       post.writeTimeStamp += 1;
       addPost(post, callback);
     } else {
+      published = true;
+      delPost(post.writeTimeStamp, function(){});
       callback(true);
     }
   };
