@@ -121,7 +121,6 @@ function initialize(opts) {
     window.setTimeout(initialize, INIT_RETRY_INTERVAL);
   }
 };
-initialize({clearPrevious: true});
 
 var lastUpdate = -1;
 function update() {
@@ -854,6 +853,8 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.tabs.create({url: chrome.extension.getURL('main.html'),
                       index: tab.index + 1}, c);
 });
+
+initialize({clearPrevious: true});
 
 (function() {
  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
