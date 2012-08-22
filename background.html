@@ -355,6 +355,14 @@ function publish(post, callback) {
   if (!callback) {
     callback = c;
   }
+  function restorePost(errorMessage) {
+    var post = JSON.parse(postBackup);
+    post.state = 'draft';
+    post.error = errorMessage || '';
+    // Avoid UI races by upping the failed posts's id.
+    post.writeTimeStamp += 1;
+    addPost(post, callback);
+  };
   var postBackup = JSON.stringify(post);
   trackPost(post);
   if (post.entities instanceof Array) {
@@ -380,22 +388,13 @@ function publish(post, callback) {
   var TIMEOUT_LENGTH = 30 * 1000;
   window.setTimeout(function() {
     if (!published) {
-      post = JSON.parse(postBackup);
-      post.state = 'draft';
-      post.error = "Timed out sending post to Google+";
-      post.writeTimeStamp += 1;
-      addPost(post, callback);
+      restorePost("Timed out sending post to Google+");
     }
   }, TIMEOUT_LENGTH);
   var wrapCallback = function(response) {
     if (response.status == false) {
       _gaq.push(['_trackEvent', 'Failure', 'newPost']);
-      post = JSON.parse(postBackup);
-      post.state = 'draft';
-      post.error = "Could not send post to Google+";
-      // Avoid UI races by upping the failed posts's id.
-      post.writeTimeStamp += 1;
-      addPost(post, callback);
+      restorePost("Could not send post to Google+");
     } else {
       published = true;
       delPost(post.writeTimeStamp, function(){});
@@ -405,12 +404,7 @@ function publish(post, callback) {
   var api = getApi(post.shareAs && post.shareAs.id);
   if (post.shareAs && post.shareAs.id != api.getInfo().id) {
     _gaq.push(['_trackEvent', 'Failure', 'noApiForPage']);
-    post = JSON.parse(postBackup);
-    post.state = 'draft';
-    post.error = "Could not log in as " + post.shareAs.name;
-    // Avoid UI races by upping the failed posts's id.
-    post.writeTimeStamp += 1;
-    addPost(post, callback);
+    restorePost("Could not log in as " + post.shareAs.name);
     return;
   }
   postTrackers[api.getInfo().id].afterLocallyPosting();
