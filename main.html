@@ -1148,10 +1148,10 @@ function setListeners() {
   $('#closeCircleChooser').click(function() {
     trackClick(this.id);
   });
-  $('#editbox').bind('paste', function(evt) {
+  $('#editbox, #linkInput').bind('paste', function(evt) {
     var pasted = evt.originalEvent.clipboardData.getData('text/plain');
     if (pasted && pasted.match(/^http(|s):\/\/[^\s]*$/)) {
-      if (!(linked[pasted]) && $('#addLinkAction').is('.enabled')) {
+      if (!(linked[pasted]) && ($('#addLinkAction').is('.enabled') || $(this).is('input'))) {
         addLink(pasted);
         linked[pasted] = true;
         $('#addPhotoAction').removeClass('active').addClass('disabled');
