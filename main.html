@@ -1234,7 +1234,7 @@ function setListeners() {
       for (var key in circlesNotify) {
         sum += circlesNotify[key];
       }
-      var MAX_NOTIFY = 50;
+      var MAX_NOTIFY = 100;
       if (sum + count <= MAX_NOTIFY || circlesNotify[$(this).data('id')]) {
         dialog.append(
           $('<input id="notify_' + $(this).data('id') + '" type="checkbox" ' +
