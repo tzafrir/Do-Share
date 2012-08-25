@@ -5,7 +5,10 @@
   "background_page": "background.html",
   "options_page": "options.html",
   "icons": {
-    "128": "icon128.png"
+    "128": "icon128.png",
+    "16": "icon128.png",
+    "32": "icon128.png",
+    "64": "icon128.png"
   },
    "content_scripts": [ {
       "all_frames": true,
