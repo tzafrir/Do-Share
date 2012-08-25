@@ -18,11 +18,13 @@
     <script type="text/javascript" src="chrome_ex_oauth.js"></script>
     <script type="text/javascript">
       function onLoad() {
-        ChromeExOAuth.initCallbackPage(window.close);
+        ChromeExOAuth.initCallbackPage(function() {
+          document.getElementById('text').innerText = 'Authenticated!';
+        });
       };
     </script>
   </head>
   <body onload="onLoad();">
-    Authenticating...
+    <span id="text">Authenticating...</span>
   </body>
 </html>
