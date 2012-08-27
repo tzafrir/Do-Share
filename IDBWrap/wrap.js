@@ -157,7 +157,8 @@ IDBWrap.prototype._onWriteSuccess = function(callback) {
 }
 
 IDBWrap.prototype._onError =  function(callback) {
+  var self = this;
   return function(event) {
-    this._fail(callback, 'Failed with errorCode ' + event.target.errorCode);
+    self._fail(callback, 'Failed with errorCode ' + event.target.errorCode);
   };
 }
