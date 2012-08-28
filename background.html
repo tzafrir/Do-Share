@@ -232,6 +232,12 @@ function fetchOzData(url, callback) {
   });
 }
 
+function getActiveIdentity(url) {
+  if (url) {
+    return url.match(/u\/[0-9]\/b\/([0-9]+)/)[1];
+  }
+}
+
 function fetchPostData(url, callback) {
   if (!url > '') {
     console.error('Url is not a string');
@@ -252,12 +258,16 @@ function fetchPostData(url, callback) {
     var data = {};
     var name = postData[3];
     var id = postData[16];
+    var activeIdentity = getActiveIdentity(url);
 
     data.content = postData[4];
     data.update_id = postData[8];
     data.url = 'https://plus.google.com/' + postData[21];
     data.timeStamp = postData[5];
     data.isPublic = (postData[32] === 1);
+    if (!data.isPublic && activeIdentity) {
+      data.activeIdentity = activeIdentity;
+    }
 
     if (!reshare_person_data) {
       data.author_name = name;
