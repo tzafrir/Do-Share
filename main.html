@@ -684,6 +684,7 @@ function collapse(immediately) {
       delPost();
     } else {
       window.setTimeout(function() {
+        needRefresh = false;
         addDraftEditBox();
       }, 40);
     }
@@ -947,10 +948,7 @@ function setListeners() {
     needRefresh = true;
   });
   $('input:not(#linkInput)').change(function(e) {
-    // Avoid races
-    window.setTimeout(function() {
-      needRefresh = true;
-    }, 500);
+    needRefresh = true;
   });
   $('#sendFeedback').click(function(e) {
     trackClick(this.id);
