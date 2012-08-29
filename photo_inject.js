@@ -12,13 +12,19 @@ var plusId;
   });
 })();
 
+function getActiveIdentity() {
+  var url = document.location.toString();
+  var match = url.match(/u\/[0-9]\/b\/([0-9]+)/);
+  return match && match[1];
+}
+
 function getPhotoId() {
   var url = window.location.toString().split('?')[0];
   if (!url.match(/photos\/.*\/.+/)) {
     return;
   }
   var property = url.split('photos/')[1].split('/')[0];
-  if (property == 'instantupload' || property == plusId) {
+  if (property == 'instantupload' || property == (getActiveIdentity() || plusId)) {
     return url.split('/').reverse()[0];
   }
 }
@@ -51,7 +57,7 @@ function addButton() {
     if (!photoId) {
       return;
     }
-    chrome.extension.sendRequest({type: 'newPost', image_id: photoId, source: 'photoSend'});
+    chrome.extension.sendRequest({type: 'newPost', image_id: photoId, source: 'photoSend', activeIdentity: getActiveIdentity()});
   };
   buttonArea.insertBefore(newButton, button1);
 }
