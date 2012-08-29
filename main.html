@@ -1026,7 +1026,8 @@ function setListeners() {
         var memPost = mem[curTimeStamp];
         var allowPublic = true;
         if (memPost && memPost.reshare && (memPost.reshare.isPublic === false)) {
-          if (!(identities[0] && identities[0].id == memPost.reshare.author_id)) {
+          var selfIdentity = memPost.reshare.activeIdentity || (identities[0] && identities[0].id);
+          if (!(selfIdentity == memPost.reshare.author_id)) {
             allowPublic = false;
           }
         }
