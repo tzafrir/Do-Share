@@ -398,10 +398,10 @@ function publish(post, callback) {
       post.rawMedia[0][47][0][1] == 'picasa') {
     post.isPicasaImage = true;
   }
-  var published = false;
+  var publishResolved = false;
   var TIMEOUT_LENGTH = 30 * 1000;
   window.setTimeout(function() {
-    if (!published) {
+    if (!publisheResolved) {
       restorePost("Timed out sending post to Google+");
     }
   }, TIMEOUT_LENGTH);
@@ -409,8 +409,9 @@ function publish(post, callback) {
     if (response.status == false) {
       _gaq.push(['_trackEvent', 'Failure', 'newPost']);
       restorePost("Could not send post to Google+");
+      publishResolved = true;
     } else {
-      published = true;
+      publishResolved = true;
       delPost(post.writeTimeStamp, function(){});
       callback(true);
     }
