@@ -702,13 +702,14 @@ function newPost(post) {
     }
   }
   if (post.image_id) {
-    plus.fetchPhotoMetadata(function(response) {
+    var api = getApi(post.activeIdentity);
+    api.fetchPhotoMetadata(function(response) {
       if (response.error || !response.data) {
         _gaq.push(['_trackEvent', 'Failure', 'fetchPhotoMetadata']);
         console.error(response);
         callback(false);
       } else {
-        post.rawMedia = [plus._createPicasaImageItem(response.data)];
+        post.rawMedia = [api._createPicasaImageItem(response.data)];
         post.medias = processMediaItems(post.rawMedia);
         openNewPost();
       }
@@ -822,7 +823,8 @@ function onRequest(request, sender, callback) {
     newPost({content: request.content || '',
              link: request.link || '',
              image_id: request.image_id || '',
-             writeTimeStamp: new Date().getTime()});
+             writeTimeStamp: new Date().getTime(),
+             activeIdentity: request.activeIdentity});
     _gaq.push(['_trackEvent', 'Source', request.source || 'unknown']);
   } else if (type == "resharePost") {
     resharePost(request.url, request.htmlContent, request.mentioned);
