@@ -120,7 +120,7 @@ function initialize(opts) {
     });
   } catch (e) {
     _gaq.push(['_trackEvent', 'Failure', 'plus.init']);
-    console.error(e);
+    console.error(e, e.message);
     window.setTimeout(initialize, INIT_RETRY_INTERVAL);
   }
 };
@@ -516,6 +516,9 @@ function processMediaItems(mediaArray) {
     if (type == "application/x-shockwave-flash") {
       result.video = {'embed': getVideoEmbed(media[5][1]), 'w': media[5][3], 'h': media[5][2]};
     }
+    if (media.isPlaceholder) {
+      result.isPlaceholder = true;
+    }
   });
   return result;
 }
@@ -640,7 +643,7 @@ function post(post, callback) {
         post.reshare.medias = processMediaItems(post.reshare.rawMedia);
       }
       postThis();
-    } else if (post.medias) {
+    } else if (post.medias && !post.medias.isPlaceholder) {
       // Dance for me.
       post.rawMedia = processFrontendMedias(post.medias);
       post.medias = processMediaItems(post.rawMedia);
@@ -684,7 +687,7 @@ function getLinkMedia(link, callback) {
       if (!link.match(/^http/)) {
         link = 'http://' + link;
       }
-      callback([{24: {1: link, 3: 'text/html'}, 3: link}]);
+      callback([{24: {1: link, 3: 'text/html'}, 3: link, isPlaceholder: true}]);
     } else if (response.data) {
       callback(response.data);
     }

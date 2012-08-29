@@ -44,6 +44,9 @@ var identities = [];
 
 function refreshIdentities() {
   identities = chrome.extension.getBackgroundPage().identities;
+  if (!identities) {
+    identities = [];
+  }
   window.setTimeout(refreshIdentities, identities.length ? 5000 : 250);
 }
 
