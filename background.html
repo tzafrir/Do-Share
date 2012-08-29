@@ -234,7 +234,8 @@ function fetchOzData(url, callback) {
 
 function getActiveIdentity(url) {
   if (url) {
-    return url.match(/u\/[0-9]\/b\/([0-9]+)/)[1];
+    var match = url.match(/u\/[0-9]\/b\/([0-9]+)/g);
+    return match && match[1];
   }
 }
 
