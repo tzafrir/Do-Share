@@ -741,7 +741,8 @@ function resharePost(url, htmlContent, mentioned) {
                 share_id: data.update_id,
                 content: content,
                 mentioned: mentioned,
-                writeTimeStamp: new Date().getTime()};
+                writeTimeStamp: new Date().getTime(),
+                activeIdentity: data.activeIdentity};
     var lastUsed = localStorage['lastUsedCircles'];
     if (lastUsed && data.isPublic) {
       post.entities = JSON.parse(lastUsed);

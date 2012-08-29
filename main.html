@@ -1026,7 +1026,7 @@ function setListeners() {
         var memPost = mem[curTimeStamp];
         var allowPublic = true;
         if (memPost && memPost.reshare && (memPost.reshare.isPublic === false)) {
-          var selfIdentity = memPost.reshare.activeIdentity || (identities[0] && identities[0].id);
+          var selfIdentity = memPost.activeIdentity || (identities[0] && identities[0].id);
           if (!(selfIdentity == memPost.reshare.author_id)) {
             allowPublic = false;
           }
@@ -1513,8 +1513,7 @@ function redrawIdentities() {
     return;
   }
   var current = identities[0];
-  var activeIdentity = mem[val('write_time_stamp')] && mem[val('write_time_stamp')].reshare &&
-      mem[val('write_time_stamp')].reshare.activeIdentity;
+  var activeIdentity = mem[val('write_time_stamp')] && mem[val('write_time_stamp')].activeIdentity;
   if (activeIdentity) {
     var activeIdentityDetails = identities.filter(
       function(identity) {
