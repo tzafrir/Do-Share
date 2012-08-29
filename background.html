@@ -63,6 +63,9 @@ var identities = [];
 var initTimeoutId;
 function initialize(opts) {
   var newPlus = new GooglePlusAPI({googleid: Settings.get('alternateAccount')});
+  if (!plus) {
+    plus = newPlus;
+  }
   opts = opts || {};
   window.clearTimeout(initTimeoutId);
   try {
@@ -674,10 +677,15 @@ function getLinkMedia(link, callback) {
   }
   plus.fetchLinkMedia(function(response) {
     if (!response.status) {
-      _gaq.push(['_trackEvent', 'Failure', 'fetchLinkMedia']);
+      if (plus.isAuthenticated()) {
+        _gaq.push(['_trackEvent', 'Failure', 'fetchLinkMedia']);
+      }
       console.error('Error fetching media for ' + link);
-    }
-    if (response.data) {
+      if (!link.match(/^http/)) {
+        link = 'http://' + link;
+      }
+      callback([{24: {1: link, 3: 'text/html'}, 3: link}]);
+    } else if (response.data) {
       callback(response.data);
     }
   }, link);
