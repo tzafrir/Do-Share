@@ -1,7 +1,7 @@
 {
   "name": "Do Share",
   "description": "Control your posts on Google+™",
-  "version": "4.5.2",
+  "version": "4.6.0",
   "background_page": "background.html",
   "options_page": "options.html",
   "icons": {
@@ -40,5 +40,6 @@
    ],
    "optional_permissions": [ "https://picasaweb.google.com/",
                              "https://www.google.com/" ],
+   "offline_enabled": true,
    "minimum_chrome_version": "21"
 }
