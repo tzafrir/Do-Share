@@ -1351,6 +1351,13 @@ function setListeners() {
   $('#refreshLogin').click(function() {
     chrome.extension.sendRequest({type: 'refreshLogin'}, function() {});
   });
+  $('#content').bind('keydown', function(e) {
+    var KEY_TAB = 9;
+    if (e.keyCode == 9 && !e.shiftKey) {
+      $('#buttonPost').focus();
+      e.preventDefault();
+    }
+  });
 }
 
 function addLink(url) {
@@ -1564,13 +1571,6 @@ function redrawIdentities() {
   $('#identityChooserBar').html('');
   lines.forEach(function(line) {
     $('#identityChooserBar').append(line)
-  });
-  $('#content').bind('keydown', function(e) {
-    var KEY_TAB = 9;
-    if (e.keyCode == 9 && !e.shiftKey) {
-      $('#buttonPost').focus();
-      e.preventDefault();
-    }
   });
 }
 
