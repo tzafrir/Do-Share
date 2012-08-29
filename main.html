@@ -1523,6 +1523,9 @@ function redrawIdentities() {
     if (activeIdentityDetails) {
       current = activeIdentityDetails;
       identities = [activeIdentityDetails];
+      $('#share_as_id').val(current.id);
+      $('#share_as_name').val(current.name);
+      $('#share_as_image').val(current.image_url);
     }
   } else if (val('share_as_id')) {
     current = {
