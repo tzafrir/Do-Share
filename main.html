@@ -1506,12 +1506,25 @@ function autosave() {
 }
 
 function redrawIdentities() {
+  var identities = window.identities;
   if (!(identities.length > 1)) {
     $('#postingAsAction').html('').hide();
     return;
   }
   var current = identities[0];
-  if (val('share_as_id')) {
+  var activeIdentity = mem[val('write_time_stamp')] && mem[val('write_time_stamp')].reshare &&
+      mem[val('write_time_stamp')].reshare.activeIdentity;
+  if (activeIdentity) {
+    var activeIdentityDetails = identities.filter(
+      function(identity) {
+        return identity.id == activeIdentity;
+      }
+    )[0];
+    if (activeIdentityDetails) {
+      current = activeIdentityDetails;
+      identities = [activeIdentityDetails];
+    }
+  } else if (val('share_as_id')) {
     current = {
       id: val('share_as_id'),
       name: val('share_as_name'),
