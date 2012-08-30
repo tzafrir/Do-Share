@@ -2,7 +2,8 @@
   function complicatedDefaults(str) {
     var defaults = {
       promoText: 'shares',
-      alternateAccount: '0'
+      alternateAccount: '0',
+      alwaysShare: '0'
     }
     if (str.indexOf('postNumbering') == 0) {
       return '0';
