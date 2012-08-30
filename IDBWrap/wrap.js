@@ -84,7 +84,7 @@ IDBWrap.prototype._initDb = function(callback) {
       console.error(event.target.errorCode);
     };
 
-    var v = "1.1";
+    var v = 2;
     if (v != db.version) {
       var setVrequest = db.setVersion(v);
 
