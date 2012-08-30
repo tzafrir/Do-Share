@@ -1304,6 +1304,12 @@ function setListeners() {
         _gaq.push(['_trackEvent', 'alternateAccount', val]);
         chrome.extension.sendRequest({type: 'reInit'}, function() {});
       });
+  $('#settingAlwaysShare').val(Settings.get('alwaysShare'))
+      .change(function() {
+        var val = $(this).val();
+        Settings.set('alwaysShare', val);
+        _gaq.push(['_trackEvent', 'alwaysShare', val]);
+      });
   $('#openSettings').click(function() {
     trackClick(this.id);
     var settings = $('#settings');
@@ -1758,6 +1764,9 @@ if (navigator.userAgent.match('Windows')) {
           <option value='0'>No (default)</option>
           <option value='1'>Yes (/u/1)</option></select></p>
         <div id="postNumberingContainer"></div>
+        <p>Share current tab when clicking Do Share<select id="settingAlwaysShare">
+          <option value='0'>Offer me</option>
+          <option value='1'>Always share</option></select></p>
         <p>Log out and reconnect to Google<button id="refreshLogin">Refresh login</button></p>
       </div>
     </div>
