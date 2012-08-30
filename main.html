@@ -1704,11 +1704,17 @@ function handleUrlHandoff() {
   localStorage.removeItem('_tmp_tab');
   if (tabJson) {
     var tab = JSON.parse(tabJson);
-    $('#shareUrlContainer')
-      .append($('<div class="savedUrlDiv">')
-        .append($('<p>Share <a href="' + tab.url + '">' + tab.title + '</a></p>')
-            .prepend($(tab.favIconUrl ? '<img src="' + tab.favIconUrl + '" width=16 height=16>' : ''))))
-      .show();
+    if (!(Settings.get('alwaysShare') == '1')) {
+      $('#shareUrlContainer')
+        .append($('<div class="savedUrlDiv">')
+          .append($('<p>Share <a href="' + tab.url + '">' + tab.title + '</a></p>')
+              .prepend($(tab.favIconUrl ? '<img src="' + tab.favIconUrl + '" width=16 height=16>' : ''))))
+        .show();
+    } else {
+      uncollapse();
+      addLink(tab.url);
+      needRefresh = false;
+    }
   }
 }
 
