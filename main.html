@@ -911,9 +911,11 @@ function setListeners() {
           animateButtonText(jself, 'schedule', 300);
         }, 5000);
       } else {
-        $('#time').val(date.getTime());
-        post('scheduled');
-        collapse();
+        window.setTimeout(function() {
+          $('#time').val(date.getTime());
+          post('scheduled');
+          collapse();
+        }, 10);
       }
     } else {
       animateBlur($('#appWrap, .topTab'), 5, 200, 0, 0.4);
