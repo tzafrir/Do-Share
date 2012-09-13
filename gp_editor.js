@@ -271,10 +271,9 @@ GPEditor.prototype.onKeyPress = function(event, element) {
       .appendTo(acDiv)
       .attr({id: 'acInput' + this._id});
   input.position({
-          my: 'left top',
-          at: 'left bottom',
-          of: a,
-          offset: '0 -1'
+          my: 'left center',
+          at: 'left center',
+          of: a
           })
       .keydown(function() {
         window.setTimeout(function(){dummy.text(input.val());}, 1);
