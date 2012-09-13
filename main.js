@@ -1708,6 +1708,11 @@ function onLoad() {
   if (savedPostJson) {
     savedPost = JSON.parse(savedPostJson);
     mem[savedPost.writeTimeStamp] = savedPost;
+  } else if (webkitIntent) {
+    var intent = webkitIntent;
+    if (intent.type == 'text/uri-list') {
+      savedPost = {link: intent.data};
+    }
   }
   localStorage.removeItem('_tmp_post');
   setListeners();
@@ -1717,7 +1722,7 @@ function onLoad() {
   window.setInterval(function() {
     autosave();
   }, 400);
-  if (savedPostJson) {
+  if (savedPost) {
     uncollapse(true);
   } else {
     collapse(true);
