@@ -841,7 +841,7 @@ function onRequest(request, sender, callback) {
 
 chrome.extension.onRequest.addListener(onRequest);
 chrome.browserAction.onClicked.addListener(function(tab) {
-  if (tab.url.match(/^http/) && !tab.url.match(/http(|s):\/\/(plus|mail).google.com/)) {
+  if (tab.url && tab.url.match(/^http/) && !tab.url.match(/http(|s):\/\/(plus|mail).google.com/)) {
     localStorage['_tmp_tab'] = JSON.stringify(tab);
   }
   chrome.tabs.create({url: chrome.extension.getURL('main.html'),
