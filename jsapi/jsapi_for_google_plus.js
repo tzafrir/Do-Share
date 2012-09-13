@@ -96,11 +96,9 @@ GooglePlusAPI.prototype._parseJSON = function(input) {
  * Handle a JSONp response.
  */
 GooglePlusAPI.prototype._parseJSONp = function(input) {
-  var result;
-  function handleJsonp(object) {
-    result = object;
-  }
-  eval(input.replace(/^[a-z\.]+\(/, 'handleJsonp('));
+  var processedInput = input.replace(/^[a-z\.]+\(/, '');
+  processedInput = processedInput.substring(0, processedInput.length - 1);
+  var result = JSON.parse(processedInput);
   return [result];
 }
 
