@@ -1,8 +1,10 @@
 {
   "name": "Do Share",
   "description": "Control your posts on Google+™",
-  "version": "4.7.1",
-  "background_page": "background.html",
+  "version": "4.7.2",
+  "background": {
+    "page": "background.html"
+  },
   "options_page": "options.html",
   "icons": {
     "128": "icon128.png",
@@ -32,6 +34,18 @@
    "browser_action": {
      "default_title": "Do Share"
    },
+   "intents": {
+     "http://webintents.org/share": [
+       {
+         "type" : ["text/uri-list"],
+         "title" : "Send to Do Share",
+         "href" : "/main.html"
+       }
+     ]
+   },
+   "sandbox": {
+     "pages": ["sandbox.html"]
+   },
    "permissions": [ "notifications",
                     "unlimitedStorage",
                     "https://plus.google.com/*",
@@ -41,5 +55,7 @@
    "optional_permissions": [ "https://picasaweb.google.com/",
                              "https://www.google.com/" ],
    "offline_enabled": true,
-   "minimum_chrome_version": "21"
+   "minimum_chrome_version": "21",
+   "manifest_version": 2,
+   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }
