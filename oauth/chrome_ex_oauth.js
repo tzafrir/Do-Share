@@ -590,8 +590,10 @@ ChromeExOAuth.prototype.onAccessToken = function(callback, xhr) {
   }
 };
 
-document.addEventListener("DOMContentLoaded", function() {
-  ChromeExOAuth.initCallbackPage(function() {
-    document.getElementById('text').innerText = 'Authenticated!';
+if (document.location.toString().match('chrome_ex_oauth.html')) {
+  document.addEventListener("DOMContentLoaded", function() {
+    ChromeExOAuth.initCallbackPage(function() {
+      document.getElementById('text').innerText = 'Authenticated!';
+    });
   });
-});
+}
