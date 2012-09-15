@@ -589,3 +589,9 @@ ChromeExOAuth.prototype.onAccessToken = function(callback, xhr) {
     }
   }
 };
+
+document.addEventListener("DOMContentLoaded", function() {
+  ChromeExOAuth.initCallbackPage(function() {
+    document.getElementById('text').innerText = 'Authenticated!';
+  });
+});
