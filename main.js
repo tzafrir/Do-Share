@@ -1712,6 +1712,7 @@ function onLoad() {
     var intent = webkitIntent;
     if (intent.type == 'text/uri-list') {
       savedPost = {link: intent.data};
+      _gaq.push(['_trackEvent', 'Source', 'webIntent']);
     }
   }
   localStorage.removeItem('_tmp_post');
