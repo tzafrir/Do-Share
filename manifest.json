@@ -1,7 +1,7 @@
 {
   "name": "Do Share",
   "description": "Control your posts on Google+™",
-  "version": "4.8.3",
+  "version": "4.8.4",
   "background": {
     "page": "background.html"
   },
@@ -17,7 +17,8 @@
       "js": [ "plusone.js" ],
       "matches": [ "https://plusone.google.com/*",
                    "https://plus.google.com/_/+1/*",
-                   "https://plus.google.com/share*" ],
+                   "https://plus.google.com/share*",
+                   "https://plus.google.com/u/*/share*" ],
       "run_at": "document_start"
    },
    {
@@ -57,6 +58,6 @@
    "offline_enabled": true,
    "minimum_chrome_version": "21",
    "manifest_version": 2,
-   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://apis.google.com; object-src 'self'",
    "web_accessible_resources": ["img/stream_icon.png"]
 }
