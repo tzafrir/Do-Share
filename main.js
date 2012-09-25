@@ -207,7 +207,9 @@ function addDraftEditBox(post) {
   var writeTimeStamp = post.writeTimeStamp || '';
   var content = post.content;
   if (!content && content != '') {
-    content = (Settings.get('promoText') == 'all') ? '\n\n_(Shared using #DoShare)_' : '';
+    content = (Settings.get('promoText') == 'all') ? '\n\n_(Shared using #DoShare)_' : 
+      (Settings.get('promoText') == 'kapara' ?
+      '\n\n_(Shared using #YomKippur)_' : '');
   }
   var share_id = post.share_id || '';
   var link = (!post.reshare && post.link) || '';

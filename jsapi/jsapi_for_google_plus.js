@@ -1509,9 +1509,7 @@ GooglePlusAPI.prototype.newPost = function(callback, postObj) {
     return [null, userId];
   });
   data[11] = false;
-  data[12] = false;
   data[14] = [];
-  data[15] = null;
   data[16] = false;
   data[27] = false;
   data[28] = false;

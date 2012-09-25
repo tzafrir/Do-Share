@@ -658,9 +658,12 @@ function getLinkMedia(link, callback) {
 
 function newPost(post) {
   function openNewPost() {
+    post.content = post.content || '';
     if (Settings.get('promoText') == 'all') {
-      post.content = post.content || '';
       post.content += '\n\n_(Shared using #DoShare)_';
+    }
+    if (Settings.get('promoText') == 'kapara') {
+      post.content += '\n\n_(Shared using #YomKippur)_';
     }
     // Set temporary values and open the frontend. Expect frontend to clear these from LS.
     localStorage['_tmp_post'] = JSON.stringify(post);
