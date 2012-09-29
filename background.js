@@ -24,14 +24,6 @@ var INIT_RETRY_INTERVAL = 5 * 1000;
 var INIT_REPEAT_INTERVAL = 20 * 60 * 1000;
 
 var dbInit = false;
-var dbInitCounter = 2;
-function dbInitCallback(ok) {
-  if (ok) {
-    if (--dbInitCounter == 0) {
-      dbInit = true;
-    }
-  }
-}
 
 // Set up the API
 var plus;
@@ -114,10 +106,11 @@ function c(e){console.log(e)}
 try {
   var s;
   var db = new IDBWrap("nightwatchDb", "writeTimeStamp");
-  db.init(function(ok){
-    dbInitCallback(ok);
+  db.init(function(ok) {
     s = new Sched5("nightwatch", "writeTimeStamp", publishScheduled, handleMissedPost);
-    s.init(dbInitCallback);
+    s.init(function() {
+      dbInit = true;
+    });
   });
 } catch(e) {
   console.error('Error initializing database', e);
