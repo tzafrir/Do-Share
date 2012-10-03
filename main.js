@@ -784,10 +784,10 @@ function setListeners() {
   });
   $('#submitLink').click(function() {
     trackClick(this.id);
-    $('#link').val($('#linkInput').val());
     if ($('#linkBar').is(':visible')) {
       $('#linkBar').hide('blind', 100);
     }
+    $('#link').val($('#linkInput').val());
     populateEditorMediaArea();
   });
   $('#linkInput').keydown(function(e) {
@@ -1130,6 +1130,7 @@ function setListeners() {
     var pasted = evt.originalEvent.clipboardData.getData('text/plain');
     if (pasted && pasted.match(/^http(|s):\/\/[^\s]*$/)) {
       if (!(linked[pasted]) && ($('#addLinkAction').is('.enabled') || $(this).is('input'))) {
+        evt.preventDefault();
         addLink(pasted);
         linked[pasted] = true;
         $('#addPhotoAction').removeClass('active').addClass('disabled');
