@@ -444,49 +444,51 @@ function fetchAll(reqLastUpdate, callback) {
 
 function processMediaItems(mediaArray) {
   var result = {images: [], rawMedia: mediaArray};
-  mediaArray.forEach(function(media) {
+  mediaArray.forEach(function(media, index) {
+    var type = media[24] && media[24][3];
     if (!media[24]) {
-      // Hack for September objects, abuses backwards compatibility, fix soon.
-      // TODO(tzafrir): FIX THIS SOON!
       // TODO(tzafrir): Find a better way to classify old/new objects
-      if (media[2]) {
+      if (media[2] instanceof Object) {
         for (var i in media[2]) {
           var m = media[2][i];
-          result.link = {'url': m[2], 'title': m[0], 'description': m[1]};
-          if (m[5]) {
+          if (!result.link) {
+            result.link = {'url': m[2], 'title': m[0], 'description': m[1]};
+          }
+          if (m[5] && !(result.images.length > 0)) {
             result.images.push({'url': m[5]});
           }
           break;
         }
       }
-    } else if (media[24][4] == "image" || media[24][4] == "photo") {
-      var url;
-      if (media[5]) {
-        url = media[5][1];
-      } else if (media[41]) {
-        url = media[41][0][1];
-      } else {
-        url = media[24][1];
-      }
-      if (!url.match(/http/)) {
-        url = 'https:' + url;
-      }
-      var image = {'url': url};
-      result.images.push(image);
-      var type = media[24][3];
-      if (type && type.match("^text/") || type == "application/x-shockwave-flash" || type == "application/octet-stream") {
-        var url = media[24][1];
-        if (url && !url.match(/^http/)) {
-          url = 'https://plus.google.com/' + url;
+    } else {
+      if (media[24][4] == "image" || media[24][4] == "photo") {
+        var url;
+        if (media[5]) {
+          url = media[5][1];
+        } else if (media[41]) {
+          url = media[41][0][1];
+        } else {
+          url = media[24][1];
         }
-        result.link = {'url': url, 'title': media[3], 'description': media[21]};
+        if (!url.match(/http/)) {
+          url = 'https:' + url;
+        }
+        var image = {'url': url};
+        result.images.push(image);
       }
-      if (type == "application/x-shockwave-flash") {
-        result.video = {'embed': getVideoEmbed(media[5][1]), 'w': media[5][3], 'h': media[5][2]};
+    }
+    if (type && type.match(/^text/) || type == "application/x-shockwave-flash" || type == "application/octet-stream") {
+      var url = media[24][1];
+      if (url && !url.match(/^http/)) {
+        url = 'https://plus.google.com/' + url;
       }
-      if (media.isPlaceholder) {
-        result.isPlaceholder = true;
-      }
+      result.link = {'url': url, 'title': media[3], 'description': media[21]};
+    }
+    if (type == "application/x-shockwave-flash") {
+      result.video = {'embed': getVideoEmbed(media[5][1]), 'w': media[5][3], 'h': media[5][2]};
+    }
+    if (media.isPlaceholder) {
+      result.isPlaceholder = true;
     }
   });
   return result;
@@ -507,7 +509,7 @@ function processFrontendMedias(medias) {
 
 function removeDescription(rawMedia) {
   rawMedia.forEach(function(media) {
-    var type = media[24][3];
+    var type = media[24] && media[24][3];
     if (type == "text/html" || type == "application/x-shockwave-flash") {
       media[21] = '';
     }
@@ -519,7 +521,7 @@ function keepNthImage(rawMedia, n) {
   var result = [];
   for (var i = 0, j = 0; i < rawMedia.length; ++i) {
     var media = rawMedia[i];
-    if (media[24][4] == "image" || media[24][4] == "photo") {
+    if (media[24] && (media[24][4] == "image" || media[24][4] == "photo")) {
       if (j++ == n) {
         result.push(media);
       }
