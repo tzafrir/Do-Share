@@ -1346,7 +1346,7 @@ function setListeners() {
   });
   $('#newsBulletin').click(function() {
     $(this).hide(500);
-    localStorage['_news_0001'] = '1';
+    localStorage['_news_0002'] = '1';
   });
 }
 
@@ -1733,7 +1733,7 @@ function onLoad() {
     collapse(true);
   }
   handleUrlHandoff();
-  if (localStorage['_news_0001'] != '1') {
+  if (localStorage['_news_0001'] == '1') {
     $('#newsBulletin').show();
   }
   (function() {
