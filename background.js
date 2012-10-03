@@ -445,7 +445,21 @@ function fetchAll(reqLastUpdate, callback) {
 function processMediaItems(mediaArray) {
   var result = {images: [], rawMedia: mediaArray};
   mediaArray.forEach(function(media) {
-    if (media[24][4] == "image" || media[24][4] == "photo") {
+    if (!media[24]) {
+      // Hack for September objects, abuses backwards compatibility, fix soon.
+      // TODO(tzafrir): FIX THIS SOON!
+      // TODO(tzafrir): Find a better way to classify old/new objects
+      if (media[2]) {
+        for (var i in media[2]) {
+          var m = media[2][i];
+          result.link = {'url': m[2], 'title': m[0], 'description': m[1]};
+          if (m[5]) {
+            result.images.push({'url': m[5]});
+          }
+          break;
+        }
+      }
+    } else if (media[24][4] == "image" || media[24][4] == "photo") {
       var url;
       if (media[5]) {
         url = media[5][1];
@@ -459,20 +473,20 @@ function processMediaItems(mediaArray) {
       }
       var image = {'url': url};
       result.images.push(image);
-    }
-    var type = media[24][3];
-    if (type && type.match("^text/") || type == "application/x-shockwave-flash" || type == "application/octet-stream") {
-      var url = media[24][1];
-      if (url && !url.match(/^http/)) {
-        url = 'https://plus.google.com/' + url;
+      var type = media[24][3];
+      if (type && type.match("^text/") || type == "application/x-shockwave-flash" || type == "application/octet-stream") {
+        var url = media[24][1];
+        if (url && !url.match(/^http/)) {
+          url = 'https://plus.google.com/' + url;
+        }
+        result.link = {'url': url, 'title': media[3], 'description': media[21]};
       }
-      result.link = {'url': url, 'title': media[3], 'description': media[21]};
-    }
-    if (type == "application/x-shockwave-flash") {
-      result.video = {'embed': getVideoEmbed(media[5][1]), 'w': media[5][3], 'h': media[5][2]};
-    }
-    if (media.isPlaceholder) {
-      result.isPlaceholder = true;
+      if (type == "application/x-shockwave-flash") {
+        result.video = {'embed': getVideoEmbed(media[5][1]), 'w': media[5][3], 'h': media[5][2]};
+      }
+      if (media.isPlaceholder) {
+        result.isPlaceholder = true;
+      }
     }
   });
   return result;
