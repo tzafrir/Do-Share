@@ -655,9 +655,6 @@ function newPost(post) {
     if (Settings.get('promoText') == 'all') {
       post.content += '\n\n_(Shared using #DoShare)_';
     }
-    if (Settings.get('promoText') == 'kapara') {
-      post.content += '\n\n_(Shared using #YomKippur)_';
-    }
     // Set temporary values and open the frontend. Expect frontend to clear these from LS.
     localStorage['_tmp_post'] = JSON.stringify(post);
     chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
