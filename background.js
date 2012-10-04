@@ -30,6 +30,7 @@ var plus;
 var apis = {};
 var postTrackers = {};
 var identities = [];
+var sentPosts = {};
 
 var initTimeoutId;
 function initialize(opts) {
@@ -323,6 +324,11 @@ function publish(post, callback) {
   if (!callback) {
     callback = c;
   }
+
+  if (sentPosts[post.writeTimeStamp]) {
+    return;
+  }
+
   function restorePost(errorMessage) {
     var post = JSON.parse(postBackup);
     post.state = 'draft';
@@ -377,6 +383,7 @@ function publish(post, callback) {
     return;
   }
   postTrackers[api.getInfo().id].afterLocallyPosting();
+  sentPosts[post.writeTimeStamp] = true;
   api.newPost(wrapCallback, post);
   console.log("Posting");
   console.log(post);
