@@ -1734,7 +1734,7 @@ function onLoad() {
     collapse(true);
   }
   handleUrlHandoff();
-  if (localStorage['_news_0001'] == '1') {
+  if (localStorage['_news_0001'] == '1' && localStorage['_news_0002'] != '1') {
     $('#newsBulletin').show();
   }
   (function() {

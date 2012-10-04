@@ -553,9 +553,10 @@ GooglePlusAPI.prototype._parseAclItems = function(aclItems) {
 };
 
 GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
-  var albumData = imageMetadata.proto[1][0][2];
-  var imageData = imageMetadata.proto[1][0][3][0];
-  var albumLink = albumData[5] + "#" + imageData[0];
+  var imageData = imageMetadata[1];
+  var albumId = imageData[11][5];
+  var imageId = imageData[5];
+  var albumLink = imageData[0];
   var mediaItem = this._createMediaBase({
     href: albumLink,
     mediaProvider: 'picasa',
@@ -564,16 +565,12 @@ GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
   });
 
   // Use image caption as title.
-  mediaItem[3] = imageData[2];
+  mediaItem[3] = imageData[4];
 
-  var imageData1600 = imageData[4];
-  var imageLink1600 = imageData1600[0];
-  mediaItem[5] = [null,
-                  imageLink1600.replace('s1600', 's0-d'),
-                  imageData1600[2],
-                  imageData1600[1]]
+  var imageLinkS0 = imageData[2][0];
+  mediaItem[5] = [null].concat(imageData[2]);
 
-  var imageLink128 = imageLink1600.replace('s1600', 'w128-h96');
+  var imageLink128 = imageLinkS0.replace('s0-d', 'w128-h96');
   mediaItem[41] = [[null,
                     imageLink128,
                     96,
@@ -587,7 +584,7 @@ GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
   ]);
   mediaItem[47].push([
     null,
-    'albumid=' + albumData[0] + '&photoid=' + imageData[0],
+    'albumid=' + albumId + '&photoid=' + imageId,
     'http://google.com/profiles/media/onepick_media_id',
     ''
   ]);
@@ -1561,13 +1558,9 @@ GooglePlusAPI.prototype.fetchPhotoMetadata = function(callback, photoId) {
     return;
   }
   var self = this;
-  var params = "?uname=" + this.getInfo().id + "&photoid=" + photoId +
-      "&returnmeta=true&view=PPQ&returnexif=true&returntts=true" +
-      "&returnshapes=true&returnsuggestions=true&returncomments=true" +
-      "&filter=true&returnalbum=true";
   this._requestService(function(response) {
     self._fireCallback(callback, {status: !response.error, data: response});
-  }, this.PHOTOS_LIGHTBOX_API + params);
+  }, this.PHOTOS_LIGHTBOX_API + 'photo/' + this.getInfo().id + '/' + photoId);
 }
 
 GooglePlusAPI.prototype.profileAutocomplete = function(callback, prefix) {
