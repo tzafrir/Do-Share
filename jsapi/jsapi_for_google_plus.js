@@ -17,6 +17,7 @@ GooglePlusAPI = function(opt) {
   this.DELETE_MUTATE_API       = 'https://plus.google.com/${pagetoken}/_/socialgraph/mutate/delete/';
   this.SORT_MUTATE_API         = 'https://plus.google.com/${pagetoken}/_/socialgraph/mutate/sortorder/';
   this.BLOCK_MUTATE_API        = 'https://plus.google.com/${pagetoken}/_/socialgraph/mutate/block_user/';
+  this.COMMENT_API             = 'https://plus.google.com/${pagetoken}/_/stream/comment/';
   this.DELETE_COMMENT_API      = 'https://plus.google.com/${pagetoken}/_/stream/deletecomment/';
   this.INITIAL_DATA_API        = 'https://plus.google.com/${pagetoken}/_/initialdata?key=14';
   this.PROFILE_GET_API         = 'https://plus.google.com/${pagetoken}/_/profiles/get/';
@@ -27,6 +28,8 @@ GooglePlusAPI = function(opt) {
   this.ACTIVITY_API            = 'https://plus.google.com/${pagetoken}/_/stream/getactivity/';
   this.ACTIVITIES_API          = 'https://plus.google.com/${pagetoken}/_/stream/getactivities/';
   this.MUTE_ACTIVITY_API       = 'https://plus.google.com/${pagetoken}/_/stream/muteactivity/';
+  this.LOCK_POST_API           = 'https://plus.google.com/${pagetoken}/_/stream/disableshare/';
+  this.DISABLE_COMMENTS_API    = 'https://plus.google.com/${pagetoken}/_/stream/disablecomments/';
   this.POST_API                = 'https://plus.google.com/${pagetoken}/_/sharebox/post/?spam=20&rt=j';
   this.LINK_DETAILS_API        = 'https://plus.google.com/${pagetoken}/_/sharebox/linkpreview/';
   this.PAGES_API               = 'https://plus.google.com/${pagetoken}/_/pages/get/';
@@ -1032,17 +1035,51 @@ GooglePlusAPI.prototype.modifyBlocked = function(callback, users, opt_block) {
 };
 
 /**
+ * Adds a comment.
+ * @param {function(Object)} callback
+ * @param {string} postId The post onto which the comment should be added.
+ * @param {string} content The comment to be added.
+ */
+GooglePlusAPI.prototype.addComment = function(callback, postId, content) {
+  if (!this._verifySession('addComment', arguments)) {
+    return;
+  }
+  var self = this;
+  if (!postId) {
+    self._fireCallback(callback, {status: false, data: 'Missing parameter: postId'});
+    return;
+  }
+  if (!content) {
+    self._fireCallback(callback, {status: false, data: 'Missing parameter: content'});
+    return;
+  }
+  var data = 'f.req=' + JSON.stringify([
+    postId,
+    'os:' + postId + ':' + new Date().getTime(),
+    content,
+    new Date().getTime(),
+    null,
+    null,
+    1
+  ]) + '&at=' + this._getSession();
+  this._requestService(function(response) {
+    self._fireCallback(callback, {status: !response.error});
+  }, this.COMMENT_API + '?rt=j', data);
+};
+
+/**
  * Deletes a comment.
  * @param {function(boolean)} callback
  * @param {string} commentId The comment id.
  */
 GooglePlusAPI.prototype.deleteComment = function(callback, commentId) {
-  if (!this._verifySession('commentId', arguments)) {
+  if (!this._verifySession('deleteComment', arguments)) {
     return;
   }
   var self = this;
   if (!commentId) {
     self._fireCallback(callback, {status: false, data: 'Missing parameter: commentId'});
+    return;
   }
   var data = 'commentId=' + commentId + '&at=' + this._getSession();
   this._requestService(function(response) {
@@ -1249,12 +1286,58 @@ GooglePlusAPI.prototype.modifyMute = function(callback, itemId, muteStatus) {
   var self = this;
   if (!itemId) {
     self._fireCallback(callback, {status: false, data: 'Missing parameter: itemId'});
+    return;
   }
   var mute = muteStatus || false;
   var data = 'itemId=' + itemId + '&mute=' + mute + '&at=' + this._getSession();
   this._requestService(function(response) {
     self._fireCallback(callback, {status: !response.error});
   }, this.DELETE_COMMENT_API, data);
+};
+
+/**
+ * Locks the post (A locked post cannot be reshared).
+ *
+ * @param {function(Object)} callback
+ * @param {string} postId The id of the post to be locked.
+ * @param {boolean} toLock When true, the post will be locked, when false, the post
+ *                         will be unlocked.
+ */
+GooglePlusAPI.prototype.modifyLockPost = function(callback, postId, toLock) {
+  if (!this._verifySession('modifyLockPost', arguments)) {
+    return;
+  }
+  var self = this;
+  if (!postId) {
+    self._fireCallback(callback, {status: false, data: 'Missing parameter: postId'});
+    return;
+  }
+  var data = 'itemId=' + postId + '&disable=' + !!toLock + '&at=' + this._getSession();
+  this._requestService(function(response) {
+    self._fireCallback(callback, {status: !response.error});
+  }, this.LOCK_POST_API, data);
+};
+
+/**
+ * Disables comments on the post.
+ *
+ * @param {function(Object)} callback
+ * @param {string} postId The id of the post to modify.
+ * @param {boolean} toDisable When true, the post will be closed for comments.
+ */
+GooglePlusAPI.prototype.modifyDisableComments = function(callback, postId, toDisable) {
+  if (!this._verifySession('modifyDisableComments', arguments)) {
+    return;
+  }
+  var self = this;
+  if (!postId) {
+    self._fireCallback(callback, {status: false, data: 'Missing parameter: postId'});
+    return;
+  }
+  var data = 'itemId=' + postId + '&disable=' + !!toDisable + '&at=' + this._getSession();
+  this._requestService(function(response) {
+    self._fireCallback(callback, {status: !response.error});
+  }, this.DISABLE_COMMENTS_API, data);
 };
 
 /**
@@ -1298,6 +1381,7 @@ GooglePlusAPI.prototype.reportProfile = function(callback, userId, opt_abuseReas
   var self = this;
   if (!userId) {
     self._fireCallback(callback, {status: false, data: 'Missing parameter: userId'});
+    return;
   }
 
   var reason = opt_abuseReason || GooglePlusAPI.AbuseReason.SPAM;
@@ -1446,7 +1530,7 @@ GooglePlusAPI.prototype.search = function(callback, query, opt_extra) {
 };
 
 /**
- * Creates a new Google+ Public post on the existing users stream.
+ * Creates a new Google+ post on the existing users stream.
  *
  * @param {function(Object)} callback The post has been shared.
  * @param {Object} postObj the object that we are about to post that contains:
@@ -1481,6 +1565,7 @@ GooglePlusAPI.prototype.newPost = function(callback, postObj) {
       status: false,
       data: 'Incomplete parameters: Must pass in content and sharedPostId'
     });
+    return;
   }
 
   var sMedia = [];
@@ -1518,7 +1603,20 @@ GooglePlusAPI.prototype.newPost = function(callback, postObj) {
       '&at=' + encodeURIComponent(this._getSession());
 
   this._requestService(function(response) {
-    self._fireCallback(callback, {status: !response.error});
+    if (response.error) {
+      self._fireCallback(callback, {status: false});
+      return;
+    }
+
+    var postData = response[1][1][0][0];
+    var data = {
+      id: postData[8],
+      content: postData[14],
+      htmlContent: postData[4],
+      url: 'https://plus.google.com/' + postData[21]
+    };
+
+    self._fireCallback(callback, {status: true, data: data});
   }, this.POST_API, params);
 };
 
