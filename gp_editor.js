@@ -281,7 +281,7 @@ GPEditor.prototype.onKeyPress = function(event, element) {
       .autocomplete({
     appendTo: acDiv,
     minLength: 0,
-    autoFocus: true,
+    autoFocus: !(k == KEY.HASH),
     source: function(request, callback) {
       if (!(k == KEY.HASH)) {
         self._profileAutocompleter(request.term, callback);
