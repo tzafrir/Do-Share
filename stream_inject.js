@@ -37,6 +37,10 @@ function onNotificationNodeInserted(e) {
   addDoShareButtonOnInsertion(e);
 }
 
+function sendToDSClickHandler() {
+  sendToDoShare(this);
+}
+
 function addDoShareButtonOnInsertion(e) {
   var ATTRIBUTE = 'ds_added';
   var shareButton = e.relatedNode && e.relatedNode.querySelector &&
@@ -45,9 +49,7 @@ function addDoShareButtonOnInsertion(e) {
     shareButton.setAttribute(ATTRIBUTE, '1');
     var clone = shareButton.cloneNode(true);
     clone.className = clone.className.replace(FADED_SHARE_BUTTON_CLASSNAME, '');
-    clone.onclick = function() {
-      sendToDoShare(shareButton);
-    }
+    clone.onclick = sendToDSClickHandler;
     clone.innerHTML = 'Send to Do Share';
     shareButton.parentElement.appendChild(clone);
 
@@ -96,6 +98,16 @@ function processPost(itemDOM) {
   }
 }
 
+function sharePostClickHandler() {
+  var link;
+  var itemDOM = this;
+  while (!(link = itemDOM.querySelector('[target=_blank]'))) {
+    itemDOM = itemDOM.parentElement;
+  }
+  var url = link.href;
+  sendReshare(url);
+}
+
 function addButtonToPost(itemDOM) {
   itemDOM.setAttribute('tz_doshare', true);
   var plusOne = itemDOM.querySelector('[g\\:entity]');
@@ -114,12 +126,7 @@ function addButtonToPost(itemDOM) {
   shareNode.appendChild(innerSpan);
 
   shareNode.className = BUTTON_CLASSNAME;
-  shareNode.onclick = function(){
-    var url = itemDOM.querySelector('[target=_blank]').href;
-    if (url) {
-      sendReshare(url);
-    }
-  };
+  shareNode.onclick = sharePostClickHandler;
 
   shareNode.setAttribute('data-tooltip', 'Send to Do Share');
 
