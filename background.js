@@ -372,6 +372,11 @@ function publish(post, callback) {
       publishResolved = true;
     } else {
       publishResolved = true;
+      if (post.pollOptions) {
+        window.setTimeout(function() {
+          handlePoll(response.data, post.pollOptions, api);
+        }, 1);
+      }
       delPost(post.writeTimeStamp, function(){});
       callback(true);
     }
@@ -387,6 +392,25 @@ function publish(post, callback) {
   api.newPost(wrapCallback, post);
   console.log("Posting");
   console.log(post);
+}
+
+function handlePoll(postData, pollOptions, api) {
+  function sendComments(postId, optionsReversed) {
+    if (optionsReversed.length == 0) {
+      api.modifyDisableComments(c, postId, true);
+      return;
+    }
+    var optionText = optionsReversed.pop();
+    if (optionText) {
+      api.addComment(c, postId, optionText);
+    }
+    window.setTimeout(function() {
+      sendComments(postId, optionsReversed);
+    }, 800);
+  }
+  if (pollOptions.isActive) {
+    sendComments(postData.id, pollOptions.options.reverse());
+  }
 }
 
 function schedule(post, callback) {
