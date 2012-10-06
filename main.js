@@ -5,6 +5,7 @@ var needRefresh = false;
 var gpe;
 var title_gpe;
 var audienceChooser;
+var pollManager;
 var linked = {};
 var circlesNotify = {};
 var activeXhr;
@@ -75,6 +76,13 @@ function getEditedPost(state, writeTimeStamp) {
       image: val('share_as_image')
     };
   }
+
+  var pollOptions = {};
+  if (pollManager && pollManager.isActive()) {
+    pollOptions.isActive = true;
+    pollOptions.options = pollManager.getOptions();
+  }
+
   return {
     'state': state,
     'content': getContent(gpe) || '',
@@ -90,7 +98,8 @@ function getEditedPost(state, writeTimeStamp) {
     'medias': currentMedias,
     'circlesNotify': circlesNotify,
     'circlesNotifyArray': circlesNotifyArray,
-    'shareAs': shareAs
+    'shareAs': shareAs,
+    'pollOptions': pollOptions
   };
 }
 
@@ -105,6 +114,11 @@ function isEmptyPost(post) {
         return false;
       }
     } else if (key == 'content' && post[key] == '_(Shared using #DoShare)_') {
+      continue;
+    } else if (key == 'pollOptions') {
+       if (post[key].isActive) {
+        return false;
+      }
       continue;
     } else if (post[key] && key != 'touch' && key != 'notify' && key != 'circlesNotify' && key != 'circlesNotifyArray') {
       return false;
@@ -216,6 +230,7 @@ function addDraftEditBox(post) {
   var timeStamp = post.timeStamp;
   var entities = post.entities || [];
   var mentioned = post.mentioned || {};
+  var pollOptions = post.pollOptions || {};
   var medias = post.medias;
   if (medias) {
     link = medias.link && medias.link.url || '';
@@ -233,6 +248,9 @@ function addDraftEditBox(post) {
   if (activeXhr) {
     activeXhr.abort();
     activeXhr = undefined;
+  }
+  if (pollManager) {
+    pollManager.destroy();
   }
   function onMention(details) {
     audienceChooser.addEntity({
@@ -252,6 +270,12 @@ function addDraftEditBox(post) {
       $('#titlePlaceholder').show().css({display: ''});
     }
   };
+
+  pollManager = new PollManager();
+  if (pollOptions.isActive && pollOptions.options) {
+    pollManager.fromSaved(pollOptions.options);
+  }
+
   var t = document.getElementById('title');
   t.addEventListener('DOMCharacterDataModified', onchange);
   t.addEventListener('keyup', onchange);
@@ -302,6 +326,9 @@ function addDraftEditBox(post) {
     });
   }
 
+  if (pollManager.isActive()) {
+    $('#addPollAction').click();
+  }
 
   var action = $('#postActions #postingAsAction');
   if (post.image_id) {
@@ -685,6 +712,10 @@ function collapse(immediately) {
     circlesNotify = {};
     if ($('#identityChooserBar').is(':visible')) {
       $('#identityChooserBar').hide('blind', 400);
+    }
+    if (pollManager) {
+      $('#addPollAction').removeClass('disabled').addClass('enabled');
+      $('#pollBox').hide();
     }
   }
 }
@@ -1349,7 +1380,35 @@ function setListeners() {
     $(this).hide(500);
     localStorage['_news_0002'] = '1';
   });
+  $('#addPollOption').click(function() {
+    pollManager.addOption();
+    needRefresh = true;
+  });
+  $('#pollBox').delegate('.removeOption', 'click', function(evt) {
+    var index = this.id.replace(/^removeOption/, '');
+    pollManager.removeOption(index);
+  });
+  $('#pollBox').delegate('input', 'keyup', function(evt) {
+    pollManager.readChanges();
+    needRefresh = true;
+  });
+  $('#addPoll').delegate('.enabled', 'click', function() {
+    if (!pollManager || !pollManager.isActive()) {
+      pollManager = new PollManager();  
+      pollManager.init();
+    }
+    $(this).removeClass('enabled').addClass('disabled');
+    $('#pollBox').show('blind', 300);
+  });
+  $('#buttonCancelPoll').click(function() {
+    $('#addPollAction').removeClass('disabled').addClass('enabled');
+    $('#pollBox').hide('blind', 300, function() {
+      pollManager.destroy();
+    });
+  });
 }
+
+// END LISTENERS
 
 function addLink(url) {
   $('#attachments').addClass('notempty');
@@ -1646,6 +1705,71 @@ AudienceChooser.prototype.keepOnlyPublic = function() {
     return entity.circleId == 'PUBLIC';
   });
   this.updateChooser();
+}
+
+function PollManager() {
+  this._options = [];
+  this._isActive = false;
+}
+
+PollManager.prototype.init = function() {
+  this._options = ['No', 'Maybe', 'Yes'];
+  this._writeToPage();
+  this._isActive = true;
+}
+
+PollManager.prototype.isActive = function() {
+  return !!this._isActive;
+}
+
+PollManager.prototype.destroy = function() {
+  this._isActive = false;
+  this._options = [];
+}
+
+PollManager.prototype.fromSaved = function(optionList) {
+  if (!optionList.forEach) {
+    return;
+  }
+  var self = this;
+  optionList.forEach(function(option) {
+    self._options.push(option);
+  });
+  self._writeToPage();
+  self._isActive = true;
+}
+
+PollManager.prototype._writeToPage = function() {
+  $('#pollOptions > div').remove();
+  var div = $('<div>');
+  this._options.forEach(function(option, i) {
+    $('<div><input value="' + option + '" />' +
+        '<div class="removeOption" id="removeOption' + i + '"></div></div>').appendTo(div);
+  });
+  div.appendTo('#pollOptions');
+}
+
+PollManager.prototype.addOption = function() {
+  this._options.push('');
+  this._writeToPage();
+}
+
+PollManager.prototype.removeOption = function(i) {
+  this._options = this._options.filter(function(a,j) {return j != i;});
+  this._writeToPage();
+}
+
+PollManager.prototype.readChanges = function() {
+  var inputs = $('#pollBox input');
+  var newOpts = [];
+  for (var i = 0; i < inputs.length; ++i) {
+    newOpts.push(inputs[i].value);
+  }
+  this._options = newOpts;
+};
+
+PollManager.prototype.getOptions = function() {
+  return [].concat(this._options);
 }
 
 function setDragAndDrop() {

@@ -469,6 +469,14 @@ img {
   cursor: default;
 }
 
+#addPollAction {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: url(img/checkmark_icon.png);
+  margin-right: 4px;
+}
+
 #postMedia {
   display: none;
   padding: 20px;
@@ -564,7 +572,52 @@ meter::-webkit-meter-optimum-value {
   background: #BB1A51;
 }
 
-#circleChooserBar {
+#pollContainer #pollBox {
+  width: 100%;
+  background: #E5F1D9;
+  cursor: default;
+  display: none;
+}
+
+#pollWhatsThis {
+  text-align: right;
+}
+
+#pollBox input {
+  outline: 0;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  background: #f5f5f5;
+  padding: 5px;
+  border: 1px solid #767686;
+  box-shadow: #336033 2px -2px;
+  float: left;
+  clear: both;
+  width: 165px;
+}
+
+#pollBox .removeOption , #addPollOption {
+  display: block;
+  float: left;
+  width: 18px;
+  height: 18px;
+  background: url(img/closepost.png);
+  cursor: pointer;
+}
+
+#pollBox .removeOption {
+  position: relative;
+  left: 10px;
+  top: 5px;
+}
+
+#addPollOption {
+  background: url(img/plus_icon.png);
+  clear: both;
+  margin-left: 174px;
+}
+
+#circleChooserBar, #pollBox {
   display: inline-block;
   height: auto;
   padding: 10px;
@@ -646,7 +699,7 @@ meter::-webkit-meter-optimum-value {
   height: 40px;
 }
 
-#buttonBar button, #buttonScheduleStepTwo {
+#buttonBar button, #buttonScheduleStepTwo, #buttonCancelPoll {
   width: 140px;
   margin-left: 20px;
   height: 34px;
@@ -671,16 +724,27 @@ meter::-webkit-meter-optimum-value {
   top: -2px;
 }
 
+#cancelPollWrapper {
+  height: 40px;
+  width: auto;
+}
+
+#buttonCancelPoll:active {
+  position: relative;
+  top: 2px;
+}
+
 #buttonBar #buttonDelete:active,
 #buttonBar #buttonDraft:active,
 #buttonBar #buttonSchedule:active,
 #buttonBar #buttonPost:active,
-#buttonScheduleStepTwo:active {
+#buttonScheduleStepTwo:active,
+#buttonCancelPoll:active {
   margin-top: 2px;
   box-shadow: none;
 }
 
-#buttonBar #buttonDelete {
+#buttonBar #buttonDelete, #buttonCancelPoll {
   background-image: -webkit-linear-gradient(top, #cac9c9, #d6d5d5);
   border-color: #cac9c9;
   box-shadow: 0px 2px 0 #e2e2e2;
@@ -708,6 +772,13 @@ meter::-webkit-meter-optimum-value {
   background-image: -webkit-linear-gradient(top, #bb1a51, #d92671);
   border-color: #bb1a51;
   box-shadow: 0px 2px 0 #cfcfcf;
+}
+
+#buttonCancelPoll {
+  margin-top: 2px;
+  float: right;
+  text-align: center;
+  box-shadow: 0px 2px 0 #afafaf;
 }
 
 #scheduleBar {

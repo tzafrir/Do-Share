@@ -60,6 +60,7 @@
             <div class="postModifier" id="postingAs"><span id="postingAsAction" class="enabled"></span></div>
             <div class="postAction" id="addLink"><span id="addLinkAction" class="enabled"></span></div>
             <div class="postAction" id="addPhoto"><span id="addPhotoAction" class="enabled"></span></div>
+            <div class="postModifier" id="addPoll"><span id="addPollAction" class="enabled"></span></div>
           </div>
           <div id="attachments">
             <div id="reshare"></div>
@@ -82,6 +83,15 @@
       </div>
       <div id="identityChooserBar"></div>
       <div id="shareUrlContainer"></div>
+      <div id="pollContainer" class="hideWhenCollapsed">
+        <div id="pollBox">
+          <p id="pollWhatsThis"><em><small>What's this?</small></em></p>
+          <div id="pollOptions"><div></div></div>
+          <div id="addPollOption"></div>
+          <div id="cancelPollWrapper"><button id="buttonCancelPoll">remove poll</button></div>
+          <div class="clearFix"></div>
+        </div>
+      </div>
       <div id="barContainer" class="hideWhenCollapsed">
         <div id="circleChooserBar">
           <input tabindex=6 id="circleChooser" placeholder="+ Add more people&hellip;">
