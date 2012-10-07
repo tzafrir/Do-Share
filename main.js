@@ -916,6 +916,11 @@ function setListeners() {
         window.setTimeout(function() {
           animateButtonText(jself, 'schedule', 300);
         }, 5000);
+        if (!_notSelected) {
+          _notSelected = 1;
+        } else {
+          $('#circleChooser').focus();
+        }
       } else {
         window.setTimeout(function() {
           $('#time').val(date.getTime());
@@ -948,6 +953,11 @@ function setListeners() {
       window.setTimeout(function() {
         animateButtonText(jself, 'share now', 300);
       }, 5000);
+      if (!window._notSelected) {
+        _notSelected = 1;
+      } else {
+        $('#circleChooser').focus();
+      }
       return;
     }
     trackClick(this.id);
