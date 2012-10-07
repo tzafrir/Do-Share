@@ -302,9 +302,9 @@ function hashtagAutocomplete(prefix, callback) {
       return;
     }
 
-    callback(results.map(function(result) {
+    callback([prefix].concat(results.map(function(result) {
       return result[0];
-    }));
+    })));
   }, prefix);
 }
 
