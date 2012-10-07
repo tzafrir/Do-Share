@@ -465,7 +465,7 @@ img {
   background: url(img/addphoto_icon.png);
 }
 
-#addPhotoAction.disabled {
+#addPhotoAction.disabled, #addPollAction.disabled {
   cursor: default;
 }
 
