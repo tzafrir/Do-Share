@@ -24,21 +24,26 @@ var POST_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".");
 var PLUSONE_SELECTOR = "button.esw.kP";
 
 function extractProfile(profile) {
-    return { profileLink: profile,
-             profileId: profile.getAttribute('oid'),
+    return {profileId: profile.getAttribute('oid'),
              realName: profile.textContent};
 }
 
+function clickListener(e) {
+  var content = decodeURIComponent(this.getAttribute('data-content'));
+  var profileDetails = JSON.parse(decodeURIComponent(this.getAttribute('data-profileDetails')));
+  e.stopPropagation();
+  var mentioned = {};
+  mentioned[profileDetails.profileId] = profileDetails.realName;
+  chrome.extension.sendRequest({type: 'resharePost',
+      htmlContent: formatCommentPost(content, profileDetails.profileId),
+      mentioned: mentioned,
+      url: getPostUrl(this)});
+}
+
 function addClickListener(button, profileDetails, content) {
-  button.addEventListener("click", function(e) {
-    e.stopPropagation();
-    var mentioned = {};
-    mentioned[profileDetails.profileId] = profileDetails.realName;
-    chrome.extension.sendRequest({type: 'resharePost',
-        htmlContent: formatCommentPost(content, profileDetails.profileId),
-        mentioned: mentioned,
-        url: getPostUrl(button)});
-  }, false);
+  button.setAttribute('data-content', encodeURIComponent(content));
+  button.setAttribute('data-profileDetails', encodeURIComponent(JSON.stringify(profileDetails)));
+  button.addEventListener("click", clickListener, false);
 }
 
 function getPostUrl(button) {
