@@ -1637,11 +1637,14 @@ GooglePlusAPI.prototype.fetchLinkMedia = function(callback, url) {
     if (response.error) {
       self._fireCallback(callback, {status: false, data: response});
     } else {
-      // Response contains either a image/video single element at index 3, or an array of elements
-      // describing a link at index 2. In any case, both of those indices are arrays of length >= 0.
       var items = [];
-      for (var i = 2; i < response.length; ++i) {
-        items = items.concat(response[i]);
+      if (response[3].length > 0) {
+        if (response[2].length > 0) {
+          items.push(response[2].reverse()[0]);
+        }
+        items.push(response[3][0]);
+      } else {
+        items = response[2];
       }
       self._fireCallback(callback, {status: true, data: items});
     }
