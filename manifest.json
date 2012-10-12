@@ -1,7 +1,7 @@
 {
   "name": "Do Share",
   "description": "Control your posts on Google+™",
-  "version": "5.0.3",
+  "version": "5.0.4",
   "background": {
     "page": "background.html"
   },
@@ -45,7 +45,7 @@
      ]
    },
    "sandbox": {
-     "pages": ["sandbox.html"]
+     "pages": ["DSsandbox.html"]
    },
    "permissions": [ "notifications",
                     "unlimitedStorage",

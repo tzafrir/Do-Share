@@ -183,7 +183,7 @@ function fetchOzData(url, callback) {
     initDataHandler = function(initDataMap) {
       callback(initDataMap);
     };
-    document.getElementById('sandbox').contentWindow.postMessage({
+    document.getElementById('DSsandbox').contentWindow.postMessage({
       type: 'initData',
       responseText: responseText
     }, '*');
