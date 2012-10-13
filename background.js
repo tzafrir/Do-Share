@@ -175,21 +175,6 @@ function updateAction(numDrafts, numScheduled) {
   window.setTimeout(refreshAction, ACTION_UPDATE_INTERVAL);
 })();
 
-/**
- * Thanks Hangout Canopy team!
- */
-function fetchOzData(url, callback) {
-  $.ajax(url).done(function(responseText) {
-    initDataHandler = function(initDataMap) {
-      callback(initDataMap);
-    };
-    document.getElementById('DSsandbox').contentWindow.postMessage({
-      type: 'initData',
-      responseText: responseText
-    }, '*');
-  });
-}
-
 function getActiveIdentity(url) {
   if (url) {
     var match = url.match(/u\/[0-9]\/b\/([0-9]+)/);

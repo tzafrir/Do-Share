@@ -44,9 +44,6 @@
        }
      ]
    },
-   "sandbox": {
-     "pages": ["DSsandbox.html"]
-   },
    "permissions": [ "notifications",
                     "unlimitedStorage",
                     "https://plus.google.com/*",
