@@ -198,8 +198,8 @@ function getActiveIdentity(url) {
 }
 
 function fetchPostData(url, callback) {
-  if (!url > '') {
-    console.error('Url is not a string');
+  if (!url) {
+    console.error('Bad parameter url', url);
     return;
   }
 
