@@ -198,53 +198,53 @@ function getActiveIdentity(url) {
 }
 
 function fetchPostData(url, callback) {
-  if (!url) {
+  if (!url || !url.match || !url.split) {
     console.error('Bad parameter url', url);
     return;
   }
 
-  fetchOzData(url, function(dataMap) {
-    var postData = dataMap && (dataMap[20] || (dataMap[59] && dataMap[59][2]));
-    if ((!dataMap) || (!postData)) {
-      _gaq.push(['_trackEvent', 'Failure', 'fetchOzData']);
-      console.error('Not a singleton post url');
-      return;
-    }
+  var ownerId = url.match(/[0-9]{21}/g).reverse()[0];
+  var postId = url.split('/').reverse()[0];
 
-    // TODO: postData[43] has 2nd level via information which could be useful one day.
-    var reshare_person_data = postData[44];
+  if (!(ownerId && postId)) {
+    console.error('Cannot extract ownerId and postId from url', url);
+  }
 
-    var data = {};
-    var name = postData[3];
-    var id = postData[16];
+  plus.lookupPost(function(postContainer) {
+    var data = postContainer.data;
+
+    var dsPost = {};
+    var name = data.owner.name;
+    var id = data.owner.id;
+    var image = data.owner.image;
     var activeIdentity = getActiveIdentity(url);
 
-    data.content = postData[4];
-    data.update_id = postData[8];
-    data.url = 'https://plus.google.com/' + postData[21];
-    data.timeStamp = postData[5];
-    data.isPublic = (postData[32] === 1);
-    if (!data.isPublic && activeIdentity) {
-      data.activeIdentity = activeIdentity;
+    dsPost.content = data.html;
+    dsPost.update_id = data.id;
+    dsPost.url = data.url;
+    dsPost.isPublic = data.is_public;
+    if (!dsPost.isPublic && activeIdentity) {
+      dsPost.activeIdentity = activeIdentity;
     }
 
-    if (!reshare_person_data) {
-      data.author_name = name;
-      data.author_id = id;
-      data.author_photo_url = 'https:' + postData[18];
+    if (!data.share) {
+      dsPost.author_name = name;
+      dsPost.author_id = id;
+      dsPost.author_photo_url = image;
     } else {
-      data.author_name = reshare_person_data[0];
-      data.author_id = reshare_person_data[1];
-      data.author_photo_url = reshare_person_data[4];
-      data.via_name = name;
-      data.via_id = id;
+      dsPost.content = data.share.original_content;
+      dsPost.author_name = data.share.name;
+      dsPost.author_id = data.share.id;
+      dsPost.author_photo_url = data.share.image;
+      dsPost.via_name = name;
+      dsPost.via_id = id;
     }
 
-    data.rawMedia = postData[11];
-    data.medias = processMediaItems(data.rawMedia);
+    dsPost.rawMedia = data.raw_media;
+    dsPost.medias = processMediaItems(dsPost.rawMedia);
 
-    callback(data);
-  });
+    callback(dsPost);
+  }, ownerId, postId);
 }
 
 /**
