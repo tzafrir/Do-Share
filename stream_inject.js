@@ -101,7 +101,11 @@ function processPost(itemDOM) {
 function sharePostClickHandler() {
   var link;
   var itemDOM = this;
-  while (!(link = itemDOM.querySelector('[target=_blank]'))) {
+  while (itemDOM) {
+    link = itemDOM.querySelector('a[target=_blank]');
+    if (link && link.href.match(/[0-9]{21}\/posts/)) {
+      break;
+    }
     itemDOM = itemDOM.parentElement;
   }
   var url = link.href;
@@ -126,7 +130,7 @@ function addButtonToPost(itemDOM) {
   shareNode.appendChild(innerSpan);
 
   shareNode.className = BUTTON_CLASSNAME;
-  shareNode.onclick = sharePostClickHandler;
+  shareNode.addEventListener('click', sharePostClickHandler);
 
   shareNode.setAttribute('data-tooltip', 'Send to Do Share');
 
