@@ -49,7 +49,7 @@ function addDoShareButtonOnInsertion(e) {
     shareButton.setAttribute(ATTRIBUTE, '1');
     var clone = shareButton.cloneNode(true);
     clone.className = clone.className.replace(FADED_SHARE_BUTTON_CLASSNAME, '');
-    clone.onclick = sendToDSClickHandler;
+    clone.addEventListener('click', sendToDSClickHandler);
     clone.innerHTML = 'Send to Do Share';
     shareButton.parentElement.appendChild(clone);
 
