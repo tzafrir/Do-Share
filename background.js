@@ -257,13 +257,12 @@ function profileAutocomplete(prefix, callback) {
 
       for (var i = 0; i < results.length; ++i) {
         var personObject = results[i];
-        var personData = results[i][3][0];
         var person = {
-          name: (personData['n'] ? personData['n'] : personObject[0]),
-          id: personData['g']
+          name: (personObject[3]['l'] && personObject[3]['l'] != '1' ? personObject[3]['l'] : personObject[0]),
+          id: personObject[3]['a']
         };
-        if (personData['p']) {
-          person.photoUrl = 'https:' + personData['p'] + '?sz=24';
+        if (personObject[3]['b']) {
+          person.photoUrl = 'https:' + personObject[3]['b'] + '?sz=24';
         }
         persons[person.id] = person;
       }
