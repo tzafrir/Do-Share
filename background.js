@@ -680,7 +680,7 @@ function getLinkMedia(link, callback) {
   }, link);
 }
 
-function newPost(post) {
+function newPost(post, tabId) {
   function openNewPost() {
     post.content = post.content || '';
     if (Settings.get('promoText') == 'all') {
@@ -688,7 +688,7 @@ function newPost(post) {
     }
     // Set temporary values and open the frontend. Expect frontend to clear these from LS.
     localStorage['_tmp_post'] = JSON.stringify(post);
-    chrome.tabs.create({'url': chrome.extension.getURL('main.html')}, c);
+    chrome.tabs.create({'url': chrome.extension.getURL('main.html'), 'index': tabId}, c);
   }
   if (!post.entities) {
     var lastUsed = localStorage['lastUsedCircles'];
@@ -870,6 +870,14 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   }
   chrome.tabs.create({url: chrome.extension.getURL('main.html'),
                       index: tab.index + 1}, c);
+});
+
+chrome.contextMenus.create({
+  contexts: ['link', 'page', 'selection'],
+  title: 'Send to Do Share',
+  onclick: function(info, tab) {
+    newPost({link: info.linkUrl || info.pageUrl, content: info.selectionText}, tab.index + 1);
+  }
 });
 
 initialize({clearPrevious: true});

@@ -1,7 +1,7 @@
 {
   "name": "Do Share",
   "description": "Control your posts on Google+™",
-  "version": "5.0.9",
+  "version": "5.1.0",
   "background": {
     "page": "background.html"
   },
@@ -48,7 +48,8 @@
                     "unlimitedStorage",
                     "https://plus.google.com/*",
                     "https://plusone.google.com/*",
-                    "background"
+                    "background",
+                    "contextMenus"
    ],
    "optional_permissions": [ "https://picasaweb.google.com/",
                              "https://www.google.com/" ],
