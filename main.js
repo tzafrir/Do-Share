@@ -787,6 +787,7 @@ function setListeners() {
     $('#attachments').addClass('notempty');
     $('#postActions .postAction span').removeClass('enabled');
     $('#postActions .postAction span').addClass('disabled');
+    $('#linkInput').focus();
   });
   $('#addLink').delegate('.disabled', 'click', function() {
     trackClick('addLink.close');
