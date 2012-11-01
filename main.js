@@ -1065,12 +1065,14 @@ function setListeners() {
             photoUrl: 'img/icon_public.png'
           }]);
         }
-        matchingCircles = matchingCircles.concat([
-          {
+        if (!val('share_as_id')) {
+          matchingCircles.push({
             name: 'Extended Circles',
             circleId: 'EXTENDED_CIRCLES',
             photoUrl: 'img/icon_extended.png'
-          },
+          });
+        }
+        matchingCircles = matchingCircles.concat([
           {
             name: 'Your Circles',
             circleId: 'YOUR_CIRCLES',
