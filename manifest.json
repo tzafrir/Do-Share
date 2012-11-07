@@ -1,7 +1,7 @@
 {
   "name": "Do Share",
   "description": "Control your posts on Google+™",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "background": {
     "page": "background.html"
   },

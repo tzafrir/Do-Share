@@ -5,14 +5,20 @@ var ATTRIBUTE = 'doshare';
 var SHAREBOX_ID = ':0.f';
 
 function scanSharebox() {
-  var button = document.querySelector('[guidedhelpid=sharebutton]');
-  button && addButton(button);
+  if (window.location.toString().match(/claimedOrigin=http(|s)%3A%2F%2Fwww.google.com/)) {
+    return;
+  }
+  window.setTimeout(function() {
+    var button = document.querySelector('[guidedhelpid=sharebutton]');
+    button && addButton(button);
+  }, 350);
 }
 
 function addButton(button) {
   var clone = button.cloneNode(true);
   clone.onclick = sendToDoShare;
   clone.innerHTML = 'Send to Do Share';
+  clone.removeAttribute('guidedhelpid');
   button.parentElement.insertBefore(clone, button);
 }
 
