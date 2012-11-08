@@ -14,8 +14,8 @@ var plusId;
 
 function getActiveIdentity() {
   var url = document.location.toString();
-  var match = url.match(/u\/[0-9]\/b\/([0-9]+)/);
-  return match && match[1];
+  var match = url.match(/(u\/[0-9]\/|)b\/([0-9]+)/);
+  return match && match[2];
 }
 
 function getPhotoId() {
