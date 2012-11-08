@@ -69,7 +69,8 @@ var observer = new MutationObserver(function(mutations) {
       var menuitems = added[0].querySelectorAll('div[role="menuitem"]');
       for (var key in menuitems) {
         var node = menuitems[key];
-        if (node.nodeType == Node.ELEMENT_NODE && node.className === 'a-w') {
+        // TODO: fix not to use the string.
+        if (node.nodeType == Node.ELEMENT_NODE && node.innerText === "Report photo") {
           window.setTimeout(addButton, 100);
         }
       }
