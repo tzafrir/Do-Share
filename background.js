@@ -360,6 +360,7 @@ function publish(post, callback) {
         window.setTimeout(function() {
           handlePoll(response.data, post.pollOptions, api);
         }, 1);
+        _gaq.push(['_trackEvent', 'Poll', 'poll']);
       }
       delPost(post.writeTimeStamp, function(){});
       callback(true);
@@ -877,6 +878,7 @@ chrome.contextMenus.create({
   title: 'Send to Do Share',
   onclick: function(info, tab) {
     newPost({link: info.linkUrl || info.pageUrl, content: info.selectionText}, tab.index + 1);
+    _gaq.push(['_trackEvent', 'Source', 'rightClick']);
   }
 });
 
