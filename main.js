@@ -1850,8 +1850,8 @@ function onLoad() {
   if (savedPostJson) {
     savedPost = JSON.parse(savedPostJson);
     mem[savedPost.writeTimeStamp] = savedPost;
-  } else if (webkitIntent) {
-    var intent = webkitIntent;
+  } else if (window.webkitIntent) {
+    var intent = window.webkitIntent;
     if (intent.type == 'text/uri-list') {
       savedPost = {link: intent.data};
       _gaq.push(['_trackEvent', 'Source', 'webIntent']);
