@@ -21,7 +21,7 @@ var COMMENT_CONTENT_CLASSNAME = 'Mi';
 var PROFILE_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".") + ", ." + COMMENT_NAME_CLASSNAME.replace(/ /g, ".");
 var POST_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".");
 
-var PLUSONE_SELECTOR = "button.esw.kP";
+var PLUSONE_SELECTOR = "button.esw.Xia";
 
 function extractProfile(profile) {
     return {profileId: profile.getAttribute('oid'),
@@ -142,10 +142,24 @@ function processFooters(first) {
 
     var newButton = document.createElement('a');
     newButton.setAttribute('role', 'button');
+    newButton.style.display = 'none';
+    newButton.style.marginLeft = '10px';
+    newButton.style.color = '#999';
     newButton.textContent = 'Share';
-    button.parentElement.appendChild(document.createTextNode('\u00a0\u00a0-\u00a0\u00a0'));
-    button.parentElement.appendChild(newButton, null);
+    newButton.setAttribute('share', 1);
+
+    var p = button.parentElement.parentElement.parentElement;
+    var replyChild;
+    for (var j = 0; j < p.children.length; ++j) {
+      var child = p.children[j];
+      if (child.getAttribute('role') == 'button') {
+        replyChild = child;
+      }
+    }
+    p.insertBefore(newButton, replyChild);
+
     addClickListener(newButton, profile, getCommentContent(button.parentElement));
+    displayFirstWhenSecondIsHovered(newButton, parent.parentElement.parentElement);
   }
   window.setTimeout(processFooters, RESCAN_PERIOD);
 }
