@@ -125,7 +125,7 @@ Sched5.prototype._initDb = function(callback) {
     window.IDBTransaction = window.webkitIDBTransaction;
     window.IDBKeyRange = window.webkitIDBKeyRange;
   }
-  var request = indexedDB.open(this._dbName);
+  var request = indexedDB.open(this._dbName, 3);
   var self = this;
   request.onsuccess = function(event) {
 
@@ -137,24 +137,19 @@ Sched5.prototype._initDb = function(callback) {
       console.error(event.target.errorCode);
     };
 
-    var v = 2;
-    if (v != db.version) {
-      var setVrequest = db.setVersion(v);
-
-      setVrequest.onfailure = self._onError(callback);
-      setVrequest.onsuccess = function(e) {
-        if (!db.objectStoreNames.contains(self.STORE_NAME)) {
+    callback(true);
+  };
+  request.onerror = this._onError(callback);
+  request.onupgradeneeded = function(e) {
+    var db = event.target.result;
+    if (!db.objectStoreNames.contains(self.STORE_NAME)) {
           var store = db.createObjectStore(self.STORE_NAME, {keyPath: "item." + self._keyPath});
           var index = store.createIndex(self.TIMESTAMP_INDEX, self.TIMESTAMP_KEYPATH,
           // Things you can only learn by reading the webkit source:
               {'unique': false});
-        }
-        callback(true);
-      };
-    } else {
-      callback(true);
     }
   };
+
   request.onerror = this._onError(callback);
 }
 
