@@ -72,7 +72,7 @@ IDBWrap.prototype._initDb = function(callback) {
     window.IDBTransaction = window.webkitIDBTransaction;
     window.IDBKeyRange = window.webkitIDBKeyRange;
   }
-  var request = indexedDB.open(this._dbName);
+  var request = indexedDB.open(this._dbName, 3);
   var self = this;
   request.onsuccess = function(event) {
 
@@ -84,22 +84,15 @@ IDBWrap.prototype._initDb = function(callback) {
       console.error(event.target.errorCode);
     };
 
-    var v = 2;
-    if (v != db.version) {
-      var setVrequest = db.setVersion(v);
-
-      setVrequest.onfailure = self._onError(callback);
-      setVrequest.onsuccess = function(e) {
-        if (!db.objectStoreNames.contains(self.STORE_NAME)) {
-          db.createObjectStore(self.STORE_NAME, {keyPath: self._keyPath});
-        }
-        callback(true);
-      };
-    } else {
-      callback(true);
-    }
+    callback(true);
   };
   request.onerror = this._onError(callback);
+  request.onupgradeneeded = function(e) {
+    var db = event.target.result;
+    if (!db.objectStoreNames.contains(self.STORE_NAME)) {
+      db.createObjectStore(self.STORE_NAME, {keyPath: self._keyPath});
+    }
+  };
 }
 
 IDBWrap.prototype._fail = function(callback, message) {
