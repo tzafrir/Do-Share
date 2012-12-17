@@ -593,22 +593,19 @@ function showScheduleBar() {
   $('#scheduleBar').show();
 }
 
+var refreshTimeoutId = 0;
 function refreshPosts() {
-  if (document.webkitHidden) {
-    return;
+  window.clearTimeout(refreshTimeoutId);
+  if (!document.webkitHidden) {
+    chrome.extension.sendRequest({'type': 'fetchAll', 'lastUpdate': lastUpdate}, function(result) {
+      if (result.lastUpdate == lastUpdate) {
+        return;
+      }
+      result.posts && renderAllPosts(result.posts);
+      lastUpdate = result.lastUpdate;
+    });
   }
-  chrome.extension.sendRequest({'type': 'fetchAll', 'lastUpdate': lastUpdate}, function(result) {
-    if (result.lastUpdate == lastUpdate) {
-      return;
-    }
-    result.posts && renderAllPosts(result.posts);
-    lastUpdate = result.lastUpdate;
-  });
-}
-
-function refreshIfNeeded() {
-  refreshPosts();
-  window.setTimeout(refreshIfNeeded, 300);
+  refreshTimeoutId = window.setTimeout(refreshPosts, 300);
 }
 
 function populateEditorMediaArea(medias) {
@@ -1861,7 +1858,7 @@ function onLoad() {
   setListeners();
   setDragAndDrop();
   addDraftEditBox(savedPost);
-  refreshIfNeeded();
+  refreshPosts();
   window.setInterval(function() {
     autosave();
   }, 400);
