@@ -336,7 +336,7 @@ function publish(post, callback) {
     }
   }
   if (post.title) {
-    post.content = '*' + post.title.replace(/(\s|&nbsp;)+$/, '') + '*\n\n' + post.content;
+    post.content = '*' + post.title.replace(/(\s|&nbsp;)+($|\n)/g, '$2').replace(/\n/g, '*\n*') + '*\n\n' + post.content;
   }
   if (post.rawMedia && post.rawMedia[0] && post.rawMedia[0][47] && post.rawMedia[0][47][0] &&
       post.rawMedia[0][47][0][1] == 'picasa') {
