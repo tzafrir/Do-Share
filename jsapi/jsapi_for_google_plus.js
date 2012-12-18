@@ -36,6 +36,8 @@ GooglePlusAPI = function(opt) {
   this.PAGES_API               = 'https://plus.google.com/${pagetoken}/_/pages/get/';
   this.PHOTOS_LIGHTBOX_API     = 'https://plus.google.com/${pagetoken}/_/photos/lightbox/';
   this.COMPLETE_API            = 'https://plus.google.com/complete/search';
+  this.COMMUNITIES_API         = 'https://plus.google.com/${pagetoken}/_/communities/getcommunities';
+  this.COMMUNITY_API           = 'https://plus.google.com/${pagetoken}/_/communities/getcommunity';
 
   // Not Yet Implemented API
   this.CIRCLE_ACTIVITIES_API   = 'https://plus.google.com/u/0/_/stream/getactivities/'; // ?sp=[1,2,null,"7f2150328d791ede",null,null,null,"social.google.com",[]]
@@ -1092,6 +1094,67 @@ GooglePlusAPI.prototype.deleteComment = function(callback, commentId) {
 };
 
 /**
+ * Gets all communities for the signed in user.
+ *
+ * @param {function(Object)} callback
+ */
+GooglePlusAPI.prototype.getCommunities = function(callback) {
+  if (!this._verifySession('getCommunities', arguments)) {
+    return;
+  }
+  var data = 'f.req=[[]]&at=' + this._getSession();
+  var self = this;
+  this._requestService(function(response) {
+    var responseData = response[1] && response[1][0];
+    if (response.error || !responseData) {
+      self._fireCallback(callback, {status: false, error: response.error});
+      return;
+    }
+    self._fireCallback(callback, {status: true, data: responseData.map(function(comm) {
+      return {
+        id: comm[0][0],
+        name: comm[0][1][0],
+        tagLine: comm[0][1][1],
+        description: comm[0][1][8],
+        photoUrl: 'http:' + comm[0][1][3],
+        numMembers: comm[3][0]
+      };
+    })});
+  }, this.COMMUNITIES_API, data);
+};
+
+/**
+ * Gets all categories for a community.
+ *
+ * @param {function(Object)} callback
+ * @param {string} communityId The community ID to fetch categories for.
+ */
+GooglePlusAPI.prototype.getCommunity = function(callback, communityId) {
+  if (!this._verifySession('getCommunities', arguments)) {
+    return;
+  }
+  if (!communityId) {
+    self._fireCallback(callback, {status: false, data: 'Missing parameter: communityId'});
+    return;
+  }
+  var self = this;
+  var data = 'f.req=["' + communityId + '", false]&at=' + this._getSession();
+  this._requestService(function(response) {
+    var categories = response[1] && response[1][2] && response[1][2][0];
+    if (response.error || !categories) {
+      self._fireCallback(callback, {status: false, error: response.error});
+      return;
+    }
+    self._fireCallback(callback, {status: true, data: categories.map(function(category) {
+      return {
+        id: category[0],
+        name: category[1]
+      };
+    })});
+  }, this.COMMUNITY_API, data);
+};
+
+/**
  * Gets access to the entire profile for a specific user.
  *
  * @param {function(boolean)} callback
@@ -1550,6 +1613,9 @@ GooglePlusAPI.prototype.search = function(callback, query, opt_extra) {
  *                                                      Defaults to [{type: PUBLIC}] if not present.
  *                            TODO(tzafrir): Make this implicit:
  *                            Boolean:isPicasaImage
+ *                            [String, String]:community - A pair of Community ID, Category ID,
+ *                                                         describing a community to post to. This
+ *                                                         overrides any items in aclItems if present.
  *                            String[]:notify - An array of user IDs to be notified about this post.
  */
 GooglePlusAPI.prototype.newPost = function(callback, postObj) {
@@ -1600,8 +1666,8 @@ GooglePlusAPI.prototype.newPost = function(callback, postObj) {
   data[27] = false;
   data[28] = false;
   data[29] = false;
-  data[36] = [];
-  data[37] = acl;
+  data[36] = postObj.community ? [postObj.community] : [];
+  data[37] = postObj.community ? [[[null,null,null,[postObj.community[0]]]]] : acl;
 
   var params = 'f.req=' + encodeURIComponent(JSON.stringify(data)) +
       '&at=' + encodeURIComponent(this._getSession());
