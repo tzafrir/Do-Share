@@ -1672,7 +1672,7 @@ GooglePlusAPI.prototype.profileAutocomplete = function(callback, prefix) {
   if (!this._verifySession('profileAutocomplete', arguments)) {
     return;
   }
-  var params = "?ds=es_profiles&client=es-sharebox&partnerid=es-profiles" +
+  var params = "?client=es-sharebox-search" +
                '&tok=' + this._suggestToken + '&authuser=0&q=' + prefix;
   var self = this;
   this._requestService(function(response) {
