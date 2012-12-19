@@ -333,7 +333,12 @@ function publish(post, callback) {
   var postBackup = JSON.stringify(post);
   trackPost(post);
   if (post.entities instanceof Array) {
-    post.aclItems = parseEntities(post.entities);
+    var community = post.entities.filter(function(entity){return entity.communityId})[0];
+    if (community) {
+      post.community = [community.communityId, community.categoryId];
+    } else {
+      post.aclItems = parseEntities(post.entities.filter(function(entity) {return !entity.communityId}));
+    }
   }
   var idForSettings = (post.shareAs && post.shareAs.id) || '';
   if (Settings.get('postNumbering' + idForSettings) == '1' && isPublic(post)) {
