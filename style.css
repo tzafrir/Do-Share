@@ -357,14 +357,14 @@ img {
   display: block;
 }
 
-#identityChooserBar {
+#identityChooserBar, #communityCategoryBar {
   display: none;
   width: 100%;
   border: 1px solid #bebebe;
   margin-top: 10px;
 }
 
-#identityChooserBar .identityLine {
+#identityChooserBar .identityLine, #communityCategoryBar .categoryLine {
   width: 100%;
   background: #fff;
   padding: 10px;
@@ -376,6 +376,16 @@ img {
 
 #identityChooserBar .identityLine.selected {
   background: #EFF6E9;
+}
+
+#communityCategoryBar .categoryLine:hover {
+  background-color: #EFF6E9;
+}
+
+#communityCategoryBar .categoryLine {
+  padding-left: 24px;
+  background: url(img/icon_community_category.png) #fff no-repeat;
+  background-position-y: 8px;
 }
 
 #shareUrlContainer {

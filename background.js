@@ -861,6 +861,13 @@ function onRequest(request, sender, callback) {
   } else if (type == 'getCommunities') {
     var api = getApi(request.identityId);
     callback(communityCache[api.getInfo().id]);
+  } else if (type == 'getCommunityCategories') {
+    var api = getApi(request.identityId);
+    api.getCommunity(function(response) {
+      if (response.status) {
+        callback(response.data);
+      }
+    }, request.communityId);
   } else if (type == 'oauthAuthenticate') {
     oauth.authorize(callback);
   } else if (type == 'reInit') {

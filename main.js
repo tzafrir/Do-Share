@@ -1027,6 +1027,10 @@ function setListeners() {
       $('#closeCircleChooser').css({opacity: 0});
     },
     select: function(event, ui) {
+      if (ui.item.communityId) {
+        selectCommunityCategory(ui.item.communityId, ui.item.originalName);
+        return true;
+      }
       if (ui.item.circleId == 'NO_PUBLIC') {
         $('#circleChooser').autocomplete('search', '');
         return false;
@@ -1036,6 +1040,9 @@ function setListeners() {
       $('#circleChooser').autocomplete('search', '');
     },
     source: function(request, callback) {
+      if (audienceChooser.getEntities()[0] && audienceChooser.getEntities()[0].communityId) {
+        return;
+      }
       var identityId = val('share_as_id');
       chrome.extension.sendRequest({type: 'getCircles', identityId: identityId}, function(circles) {
         var curTimeStamp = $('#write_time_stamp').val();
@@ -1093,12 +1100,13 @@ function setListeners() {
         });
         chrome.extension.sendRequest({type: 'getCommunities', identityId: identityId}, function(communities) {
           matchingCircles = matchingCircles.concat(communities.map(function(c) {
+            c.originalName = c.name;
             c.name += ' (community, ' + c.numMembers + ')';
             c.communityId = c.id;
             c.photoUrl += '?sz=24';
             return c;
           }).filter(function(c) {
-            return !!c.name.toLowerCase().match(request.term.toLowerCase());
+            return !!c.originalName.toLowerCase().match(request.term.toLowerCase());
           }));
           callback(matchingCircles);
           if (request.term.length > 0) {
@@ -1666,9 +1674,40 @@ function redrawIdentities() {
   });
 }
 
+function selectCommunityCategory(communityId, communityName) {
+  chrome.extension.sendRequest({type: 'getCommunityCategories', communityId: communityId, identityId: val('share_as_id')},
+      function(categories) {
+    $('#communityCategoryBar .categoryLine').remove();
+    $('#circleChooser').blur();
+    if (categories.length == 1) {
+      audienceChooser.addCommunity({
+        name: communityName,
+        categoryName: categories[0].name,
+        communityId: communityId,
+        categoryId: categories[0].id
+      });
+      return;
+    }
+    categories.forEach(function(c) {
+      var div = $('<div class="categoryLine">' + c.name + '</div>');
+      div.click(function(e) {
+        audienceChooser.addCommunity({
+          name: communityName,
+          categoryName: c.name,
+          communityId: communityId,
+          categoryId: c.id
+        });
+        $('#communityCategoryBar').hide('blind', 200);
+      });
+      $('#communityCategoryBar').append(div);
+    });
+    $('#communityCategoryBar').show('blind', 400);
+  });
+}
+
 /**
  * Entity {
- *   circleId OR personId
+ *   circleId OR personId OR (communityId, categoryId)
  *   name
  * }
  */
@@ -1681,10 +1720,15 @@ function AudienceChooser(entities) {
 AudienceChooser.prototype.updateChooser = function() {
   $('.audienceChooserEntity').remove();
   var self = this;
+  if (this._entities[0] && this._entities[0].communityId) {
+    $('#circleChooser').hide();
+  } else {
+    $('#circleChooser').show();
+  }
   $(this._entities.map(function(entity) {
     return $('<div class="audienceChooserEntity ' +
-        (entity.circleId ? 'c_' + entity.circleId : 'p_' + entity.personId) + '">' +
-        entity.name + '</div>').append(
+        ((entity.communityId) ? 'com_' + entity.communityId : (entity.circleId ? 'c_' + entity.circleId : 'p_' + entity.personId)) + '">' +
+        (entity.communityId ? entity.name + ' (' + entity.categoryName + ')' : entity.name) + '</div>').append(
           $('<span>x</span>')
               .addClass('deleteEntityButton')
               .click(function(evt) {
@@ -1725,6 +1769,11 @@ AudienceChooser.prototype.keepOnlyPublic = function() {
   this._entities = this._entities.filter(function(entity) {
     return entity.circleId == 'PUBLIC';
   });
+  this.updateChooser();
+}
+
+AudienceChooser.prototype.addCommunity = function(entity) {
+  this._entities = [entity];
   this.updateChooser();
 }
 
