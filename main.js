@@ -770,9 +770,10 @@ function changeTimeIfDraft() {
 
 function setListeners() {
   function setPositions() {
-    $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap', collision: 'none'});
+    $('#sendFeedback').position({my:'left top', at:'right top', of:'#appWrap', offset: '0 -30', collision: 'none'});
     $('#tellOthers').position({my: 'left', at: 'right', of: '#sendFeedback', offset: '20 0', collision: 'none'});
-    $('#openSettings').position({my: 'right top', at: 'left top', of: '#appWrap', offset: '-90 -45', collision: 'none'});
+    $('#community').position({my: 'right', at: 'left', of: '#sendFeedback', offset: '-20 0', collision: 'none'});
+    $('#openSettings').position({my: 'right top', at: 'left top', of: '#appWrap', offset: '-90 -75', collision: 'none'});
   };
   setPositions();
   $(window).resize(function() {

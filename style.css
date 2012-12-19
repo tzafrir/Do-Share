@@ -68,6 +68,7 @@ img {
 #appWrap, #circleChooserBar {
   width: 620px;
   margin: 0 auto;
+  margin-top: 30px;
 }
 
 #settingsWrap {
@@ -979,6 +980,11 @@ meter::-webkit-meter-optimum-value {
   box-shadow: 0 2px 0 #dadada;
   padding: 10px 5px 10px 5px;
   cursor: pointer;
+}
+
+.topTab a {
+  color: #fff;
+  text-decoration: none;
 }
 
 #openSettings {
