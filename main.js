@@ -1036,7 +1036,8 @@ function setListeners() {
       $('#circleChooser').autocomplete('search', '');
     },
     source: function(request, callback) {
-      chrome.extension.sendRequest({type: 'getCircles', identityId: val('share_as_id')}, function(circles) {
+      var identityId = val('share_as_id');
+      chrome.extension.sendRequest({type: 'getCircles', identityId: identityId}, function(circles) {
         var curTimeStamp = $('#write_time_stamp').val();
         var matchingCircles = [];
 
@@ -1090,15 +1091,25 @@ function setListeners() {
           // Drop circles that are already chosen.
           return !document.querySelector('.c_' + circle.circleId);
         });
-        callback(matchingCircles);
-        if (request.term.length > 0) {
-          chrome.extension.sendRequest({type: 'profileAutocomplete', prefix: request.term}, function(profiles) {
-            profiles.forEach(function(profileResult) {
-              profileResult.personId = profileResult.id;
+        chrome.extension.sendRequest({type: 'getCommunities', identityId: identityId}, function(communities) {
+          matchingCircles = matchingCircles.concat(communities.map(function(c) {
+            c.name += ' (community, ' + c.numMembers + ')';
+            c.communityId = c.id;
+            c.photoUrl += '?sz=24';
+            return c;
+          }).filter(function(c) {
+            return !!c.name.toLowerCase().match(request.term.toLowerCase());
+          }));
+          callback(matchingCircles);
+          if (request.term.length > 0) {
+            chrome.extension.sendRequest({type: 'profileAutocomplete', prefix: request.term}, function(profiles) {
+              profiles.forEach(function(profileResult) {
+                profileResult.personId = profileResult.id;
+              });
+              callback(matchingCircles.concat(profiles));
             });
-            callback(matchingCircles.concat(profiles));
-          });
-        }
+          }
+        });
       });
     }
   }).focus(function() {

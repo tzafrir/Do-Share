@@ -31,6 +31,7 @@ var apis = {};
 var postTrackers = {};
 var identities = [];
 var sentPosts = {};
+var communityCache = {};
 
 var initTimeoutId;
 function initialize(opts) {
@@ -59,12 +60,18 @@ function initialize(opts) {
           var newIdentities = [];
           result.forEach(function(api) {
             function addApi() {
-              apis[api.getInfo().id] = api;
+              var identity = api.getInfo().id;
+              apis[identity] = api;
               newIdentities.push(api.getInfo());
               api.refreshCircles(function() {
                 if (--count == 0) {
                   console.error = console._error;
                   identities = newIdentities;
+                }
+              });
+              api.getCommunities(function(response) {
+                if (response.status) {
+                  communityCache[identity] = response.data;
                 }
               });
               if (!postTrackers[api.getInfo().id]) {
@@ -851,6 +858,9 @@ function onRequest(request, sender, callback) {
         callback(response.data);
       }
     });
+  } else if (type == 'getCommunities') {
+    var api = getApi(request.identityId);
+    callback(communityCache[api.getInfo().id]);
   } else if (type == 'oauthAuthenticate') {
     oauth.authorize(callback);
   } else if (type == 'reInit') {
