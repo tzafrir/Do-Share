@@ -257,8 +257,10 @@ function profileAutocomplete(prefix, callback) {
 
       for (var i = 0; i < results.length; ++i) {
         var personObject = results[i];
+        var l = personObject[3]['l'];
+        var bad = {'1': 1, '16': 1, '17': 1};
         var person = {
-          name: (personObject[3]['l'] && personObject[3]['l'] != '1' ? personObject[3]['l'] : personObject[0]),
+          name: (l && !(l in bad) ? l : personObject[0]),
           id: personObject[3]['a']
         };
         if (personObject[3]['b']) {
