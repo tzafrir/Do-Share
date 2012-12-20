@@ -17,6 +17,8 @@ var COMMENT_NAME_CLASSNAME = "Sg Ob qm";
 
 var COMMENT_CONTENT_CLASSNAME = 'Mi';
 
+var PLUSONE_CONTAINER_CLASSNAME = 'fr4Yue';
+
 // Major DRY violation here...
 var PROFILE_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".") + ", ." + COMMENT_NAME_CLASSNAME.replace(/ /g, ".");
 var POST_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".");
@@ -152,7 +154,7 @@ function processFooters(first) {
     var replyChild;
     for (var j = 0; j < p.children.length; ++j) {
       var child = p.children[j];
-      if (child.getAttribute('role') == 'button') {
+      if (child.getAttribute('role') == 'button' || child.className.match(PLUSONE_CONTAINER_CLASSNAME)) {
         replyChild = child;
       }
     }
