@@ -2,11 +2,9 @@ var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-27041781-6']);
 
 function trackPost(post) {
-  var pub = false;
-  if (isPublic(post)) {
-    pub = true;
-  }
-  _gaq.push(['_trackEvent', 'Post', (pub ? 'public' : 'limited')]);
+  var pub = isPublic(post);
+  var com = isToCommunity(post);
+  _gaq.push(['_trackEvent', 'Post', (pub ? 'public' : (com ? 'community' : 'limited'))]);
   _gaq.push(['_trackEvent', 'PagePost', (post.shareAs ? 'yes' : 'no')]);
   if (post.circlesNotifyArray && post.circlesNotifyArray.length) {
     _gaq.push(['_trackEvent', 'NotifyCircles', (pub ? 'public' : 'limited'), 'NotifyCircles', post.circlesNotifyArray.length]);
@@ -17,6 +15,10 @@ function isPublic(post) {
   return !!(post.entities && post.entities.filter(function(entity) {
     return entity.circleId == 'PUBLIC';
   }).length);
+}
+
+function isToCommunity(post) {
+  return !!(post.entities[0] && post.entities[0].communityId);
 }
 
 var ACTION_UPDATE_INTERVAL = 666;
