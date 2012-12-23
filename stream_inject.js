@@ -17,6 +17,8 @@ var EDIT_BUTTON_CLASSNAME = 'c-b-M';
 
 var NOTIFICATIONS_SELECTOR = '.P9a';
 
+var PRIVATE_COMMUNITY_CLASSNAME = 'Gub';
+
 function onNodeInserted(e) {
   // This happens when a new stream is selected
   if (e.target && e.target.id && e.target.id.indexOf('update') == 0) {
@@ -117,6 +119,10 @@ function addButtonToPost(itemDOM) {
   var plusOne = itemDOM.querySelector('[g\\:entity]');
   if (!plusOne) {
     console.error('!plusone');
+    return;
+  }
+  // Do not add icon if in a private community
+  if (document.getElementsByClassName(PRIVATE_COMMUNITY_CLASSNAME).length) {
     return;
   }
   var shareNode = document.createElement('div');
