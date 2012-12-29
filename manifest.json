@@ -1,7 +1,7 @@
 {
   "name": "Do Share",
-  "description": "Control your posts on Google+™",
-  "version": "6.0.3",
+  "description": "Write and schedule your posts on Google+™",
+  "version": "6.0.4",
   "background": {
     "page": "background.html"
   },
@@ -34,15 +34,6 @@
    } ],
    "browser_action": {
      "default_title": "Do Share"
-   },
-   "intents": {
-     "http://webintents.org/share": [
-       {
-         "type" : ["text/uri-list"],
-         "title" : "Send to Do Share",
-         "href" : "/main.html"
-       }
-     ]
    },
    "permissions": [ "notifications",
                     "unlimitedStorage",
