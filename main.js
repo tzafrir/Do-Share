@@ -1457,11 +1457,11 @@ function dateTimePickerSetup() {
       window.setTimeout(function() {
         var j = inst.dpDiv;
         j.position({
-          my: 'center top',
-          at: 'center bottom',
+          my: 'left top',
+          at: 'left bottom',
           of: '#scheduleBar',
           collision: 'none',
-          offset: '0 -1'
+          offset: '-6 -1'
         });
         j.hide();
         j.show('blind', 150);
