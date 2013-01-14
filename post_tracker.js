@@ -36,7 +36,7 @@ PostTracker.prototype._countPosts = function(callback) {
         callback(count);
         return;
       }
-      if (post.type ==  'google+' && post.is_public) {
+      if (post.type == 'google+' && post.is_public) {
         count++;
       }
     }

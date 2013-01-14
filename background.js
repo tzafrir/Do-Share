@@ -376,7 +376,9 @@ function publish(post, callback) {
         window.setTimeout(function() {
           handlePoll(response.data, post.pollOptions, api);
         }, 1);
-        _gaq.push(['_trackEvent', 'Poll', 'poll']);
+        if (post.pollOptions.isActive) {
+          _gaq.push(['_trackEvent', 'hasPoll', 'poll']);
+        }
       }
       delPost(post.writeTimeStamp, function(){});
       callback(true);
