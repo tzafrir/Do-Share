@@ -449,6 +449,7 @@ function fetchAll(reqLastUpdate, callback) {
     return;
   }
   var wrapCallback = function() {
+    s._cacheExpired = true;
     s.count(function(count) {
       if (count == 0) {
         callback(result);
@@ -462,6 +463,7 @@ function fetchAll(reqLastUpdate, callback) {
       }
     });
   };
+  db._cacheExpired = true;
   db.count(function(count) {
     if (count == 0) {
       wrapCallback();
