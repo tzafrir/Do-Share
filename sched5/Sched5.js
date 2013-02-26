@@ -65,12 +65,13 @@ Sched5.prototype.schedule = function(item, timeStamp, callback) {
  * Run callback on every scheduled container.
  *
  * @param {Function(Object)} callback The callback to be run.
+ * @param {Function(Object)} doneCallback Callback to run when all items are processed.
  */
-Sched5.prototype.processAllItems = function(callback) {
+Sched5.prototype.processAllItems = function(callback, doneCallback) {
   var keyRange = IDBKeyRange.lowerBound(0);
   this._processAllContainersByRange(keyRange, function(itemContainer) {
     callback(itemContainer.item);
-  });
+  }, doneCallback);
 }
 
 /**
@@ -106,7 +107,7 @@ Sched5.prototype.processItem = function(key, callback) {
 
   cursorRequest.onsuccess = function(e) {
     var result = e.target.result;
-    if(!result) {
+    if (!result) {
       return;
     }
     callback(result.value.item);
@@ -164,13 +165,16 @@ Sched5.prototype._getItemStore = function() {
   return trans.objectStore(this.STORE_NAME);
 }
 
-Sched5.prototype._processAllContainersByRange = function(keyRange, callback) {
+Sched5.prototype._processAllContainersByRange = function(keyRange, callback, doneCallback) {
   var index = this._getItemStore().index(this.TIMESTAMP_INDEX);
   var cursorRequest = index.openCursor(keyRange);
 
   cursorRequest.onsuccess = function(e) {
     var result = e.target.result;
-    if(!result) {
+    if (!result) {
+      if (doneCallback instanceof Function) {
+        doneCallback();
+      }
       return;
     }
     callback(result.value);
