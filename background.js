@@ -448,33 +448,14 @@ function fetchAll(reqLastUpdate, callback) {
     callback(result);
     return;
   }
-  var wrapCallback = function() {
-    s._cacheExpired = true;
-    s.count(function(count) {
-      if (count == 0) {
-        callback(result);
-      } else {
-        s.processAllItems(function(item) {
-          result.posts.push(item);
-          if (--count == 0) {
-            callback(result);
-          }
-        });
-      }
+  db._processAllItemsByRange(undefined, function(post) {
+    result.posts.push(post);
+  }, function() {
+    s.processAllItems(function(item) {
+      result.posts.push(item);
+    }, function() {
+      callback(result);
     });
-  };
-  db._cacheExpired = true;
-  db.count(function(count) {
-    if (count == 0) {
-      wrapCallback();
-    } else {
-      db._processAllItemsByRange(undefined, function(post) {
-        result.posts.push(post);
-        if (--count == 0) {
-          wrapCallback();
-        }
-      });
-    }
   });
 }
 
