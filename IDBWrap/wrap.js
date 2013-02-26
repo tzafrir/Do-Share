@@ -108,7 +108,7 @@ IDBWrap.prototype._getItemStore = function() {
   } catch(e){console.log(e)}
 }
 
-IDBWrap.prototype._processAllItemsByRange = function(keyRange, callback) {
+IDBWrap.prototype._processAllItemsByRange = function(keyRange, callback, doneCallback) {
   if (!keyRange) {
     keyRange = IDBKeyRange.lowerBound(0);
   }
@@ -118,6 +118,9 @@ IDBWrap.prototype._processAllItemsByRange = function(keyRange, callback) {
   cursorRequest.onsuccess = function(e) {
     var result = e.target.result;
     if(!result) {
+      if (doneCallback instanceof Function) {
+        doneCallback();
+      }
       return;
     }
     callback(result.value);
