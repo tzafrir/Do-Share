@@ -12,20 +12,20 @@ var settings;
 var selfId;
 
 // Forgive us, gods of programming
-var POST_NAME_CLASSNAME = "Sg Ob Tc";
-var COMMENT_NAME_CLASSNAME = "Sg Ob qm";
+var POST_NAME_CLASSNAME = "tv Ub Hf";
+var COMMENT_NAME_CLASSNAME = "tv Ub TD";
 
-var COMMENT_CONTENT_CLASSNAME = 'Mi';
+var COMMENT_CONTENT_CLASSNAME = 'Ct';
 
-var FLAGS_CONTAINER_CLASSNAME = 'N7 lP';
+var FLAGS_CONTAINER_CLASSNAME = 'wp DI';
 
-var REPLY_BUTTON_CLASSNAME = 'a-n DQKAUb FWMtkb';
+var REPLY_BUTTON_CLASSNAME = 'd-s Kv dR';
 
 // Major DRY violation here...
 var PROFILE_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".") + ", ." + COMMENT_NAME_CLASSNAME.replace(/ /g, ".");
 var POST_NAME_SELECTOR = "." + POST_NAME_CLASSNAME.replace(/ /g, ".");
 
-var PLUSONE_SELECTOR = "button.esw.Xia";
+var PLUSONE_SELECTOR = "button.esw.Ae";
 
 function extractProfile(profile) {
     return {profileId: profile.getAttribute('oid'),
