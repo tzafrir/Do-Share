@@ -9,7 +9,7 @@ var STREAM_UPDATE_SELECTOR = 'div[id^="update"]:not([tz_doshare])';
 
 var BUTTON_CLASSNAME = 'dk';
 var BUTTONS_SELECTOR = 'div.esw, div.' + BUTTON_CLASSNAME;
-var SPAN_CLASSNAME = 'sr';
+var SPAN_CLASSNAME = 'Dg Ut';
 
 var SHARE_BUTTON_CLASSNAME = 'c-b-da';
 var FADED_SHARE_BUTTON_CLASSNAME = 'c-b-E';
