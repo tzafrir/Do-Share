@@ -653,7 +653,10 @@ function post(post, callback) {
         } else {
           post.rawMedia = [plus._createPicasaImageItem(response.data)];
           post.medias = processMediaItems(post.rawMedia);
-          postThis();
+          plus.copyPhotosByShare(function(data) {
+            post.picasaObject = plus._createNewPicasaImageItem(response.data, data[1][1], data[1][2][0]);
+            postThis();
+          }, response.data[1][5]);
         }
       }, post.image_id);
     } else {
@@ -710,6 +713,7 @@ function newPost(post, tabId) {
       } else {
         post.rawMedia = [api._createPicasaImageItem(response.data)];
         post.medias = processMediaItems(post.rawMedia);
+        post.picasaObject = api._createNewPicasaImageItem(response.data);
         openNewPost();
       }
     }, post.image_id);

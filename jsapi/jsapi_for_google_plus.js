@@ -35,6 +35,7 @@ GooglePlusAPI = function(opt) {
   this.LINK_DETAILS_API        = 'https://plus.google.com/${pagetoken}/_/sharebox/linkpreview/';
   this.PAGES_API               = 'https://plus.google.com/${pagetoken}/_/pages/get/';
   this.PHOTOS_LIGHTBOX_API     = 'https://plus.google.com/${pagetoken}/_/photos/lightbox/';
+  this.COPY_FOR_SHARE_API      = 'https://plus.google.com/${pagetoken}/_/photos/copyphotosbyshare/?rt=j';
   this.COMPLETE_API            = 'https://plus.google.com/complete/search';
   this.COMMUNITIES_API         = 'https://plus.google.com/${pagetoken}/_/communities/getcommunities';
   this.COMMUNITY_API           = 'https://plus.google.com/${pagetoken}/_/communities/getcommunity';
@@ -600,6 +601,39 @@ GooglePlusAPI.prototype._createPicasaImageItem = function(imageMetadata) {
 
   return mediaItem;
 };
+
+GooglePlusAPI.prototype._createNewPicasaImageItem = function(imageMetadata, copiedId, copiedAlbumId) {
+  var imageData = imageMetadata[1];
+  var albumLink = imageData[0];
+
+  var result = JSAPIHelper.nullArray(8);
+  result[0] = [334, 339, 338, 336, 335];
+  result[4] = [{'39387941': [true, false]}];
+
+  var obj = JSAPIHelper.nullArray(83);
+
+  var imageInfo = imageData[64][0];
+  obj[0] = "https://plus.google.com/" + imageInfo[3] + "/" + imageInfo[0];
+
+  obj[1] = imageData[2][0].replace('https:', '');
+  obj[2] = imageData[8];
+  obj[3] = imageData[4];
+  obj[7] = [];
+  obj[10] = [];
+  obj[18] = '617';
+  obj[19] = '701';
+  obj[26] = this.getInfo().id;
+  obj[37] = copiedId;
+  obj[38] = copiedAlbumId;
+  obj[39] = "albumid=" + copiedAlbumId + "&photoid=" + copiedId;
+  obj[40] = 1;
+  obj[41] = [];
+  obj[46] = [];
+  obj[82] = [];
+
+  result[7] = {'40655821': obj};
+  return result;
+}
 
 GooglePlusAPI.prototype._isPhotoJson = function(text) {
   return !!text.match("&&&START&&&");
@@ -1652,10 +1686,11 @@ GooglePlusAPI.prototype.newPost = function(callback, postObj) {
   data[0] = content || '';
   data[1] = 'oz:' + this.getInfo().id + '.' + new Date().getTime().toString(16) + '.0';
   data[2] = sharedPostId;
-  if (postObj.isPicasaImage) {
-    data[4] = true;
+  if (!postObj.isPicasaImage) {
+    data[6] = JSON.stringify(postObj.rawMedia || sMedia);
+  } else {
+    data[6] = '[]';
   }
-  data[6] = JSON.stringify(postObj.rawMedia || sMedia);
   data[9] = true;
   data[10] = notify.map(function(userId) {
     return [null, userId];
@@ -1668,6 +1703,10 @@ GooglePlusAPI.prototype.newPost = function(callback, postObj) {
   data[29] = false;
   data[36] = postObj.community ? [postObj.community] : [];
   data[37] = postObj.community ? [[[null,null,null,[postObj.community[0]]]]] : acl;
+
+  if (postObj.isPicasaImage) {
+    data[34] = postObj.picasaObject;
+  }
 
   var params = 'f.req=' + encodeURIComponent(JSON.stringify(data)) +
       '&at=' + encodeURIComponent(this._getSession());
@@ -1756,6 +1795,20 @@ GooglePlusAPI.prototype.hashtagAutocomplete = function(callback, prefix) {
   this._requestService(function(response) {
     self._fireCallback(callback, response);
   }, this.COMPLETE_API + params);
+}
+
+GooglePlusAPI.prototype.copyPhotosByShare = function(callback, photoId) {
+  if (!this._verifySession('copyPhotosByShare', arguments)) {
+    return;
+  }
+  var self = this;
+
+  data = "f.req=" + encodeURIComponent(JSON.stringify([[photoId],null,null,null,null,3])) +
+         "&at=" + encodeURIComponent(this._getSession());
+
+  this._requestService(function(response) {
+    self._fireCallback(callback, response);
+  }, this.COPY_FOR_SHARE_API, data); 
 }
 
 /**
